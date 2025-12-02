@@ -1,127 +1,371 @@
-[00:00:01.038] Server  LOG      ✓ Ready in 778ms
-[00:00:05.682] Server  LOG      ○ Compiling / ...
-[00:00:11.647] Server  WARN     ⚠ Cross origin request detected from 192.168.0.149 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.233] Server  LOG      ✓ Ready in 917ms
+[00:00:01.318] Server  WARN     ⚠ Cross origin request detected from 192.168.0.162 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:12.103] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:12.969] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:07:37.823] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:07:37.823] Browser WARN    Image with src "http://192.168.0.149:3000/images/error/404.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:09:18.657] Server  LOG      ✓ Compiled in 0ms
-[00:09:19.462] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:09:20.367] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:10:30.860] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo-dark.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:11:16.407] Server  LOG      ✓ Compiled in 66ms
-[00:12:32.120] Server  LOG      ✓ Compiled in 80ms
-[00:14:27.031] Server  LOG      ✓ Compiled in 130ms
-[00:16:57.576] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:19:57.189] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:19:57.430] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:19:57.430] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:38:48.575] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:38:49.228] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:38:49.229] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:38:49.229] Browser WARN    Image with src "http://192.168.0.149:3000/images/error/404.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:38:50.433] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:57:13.885] Server  LOG      ✓ Compiled in 258ms
-[00:58:14.063] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:58:14.396] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:58:14.396] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:58:20.447] Server  LOG      ✓ Compiled in 107ms
-[00:58:24.799] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:58:25.001] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:58:25.002] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:58:39.566] Browser ERROR   uncaughtError: Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: object. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+[00:00:04.358] Server  LOG      ○ Compiling /signin ...
+[00:00:11.245] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:00:11.447] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:11.694] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:00:47.700] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:00:47.722] Server  LOG      ✓ Compiled in 185ms
+[00:00:48.548] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:00:48.835] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:49.950] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:00:59.385] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:00:59.406] Server  LOG      ✓ Compiled in 156ms
+[00:01:00.039] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:01:00.289] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:00.950] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:02:11.122] Server  LOG      ✓ Compiled in 317ms
+[00:02:11.946] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
 
-Check the render method of `SignIn`.
-[00:58:43.648] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:58:43.915] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:58:44.127] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[01:06:31.448] Server  LOG      ✓ Compiled in 116ms
-[01:06:31.574] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:13.928] Server  LOG      ✓ Compiled in 66ms
+[00:02:14.946] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:1:13
+Parsing ecmascript source code failed
+> 1 | "use client"l;
+    |             ^
+  2 | import SignInForm from "@/components/auth/SignInForm";
+  3 | import { Metadata } from "next";
+  4 |
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:14.946] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:1:13
+Parsing ecmascript source code failed
+> 1 | "use client"l;
+    |             ^
+  2 | import SignInForm from "@/components/auth/SignInForm";
+  3 | import { Metadata } from "next";
+  4 |
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:14.946] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:1:13
+Parsing ecmascript source code failed
+> 1 | "use client"l;
+    |             ^
+  2 | import SignInForm from "@/components/auth/SignInForm";
+  3 | import { Metadata } from "next";
+  4 |
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:36.379] Server  LOG      ✓ Compiled in 76ms
+[00:02:36.946] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:36.946] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:43.810] Server  ERROR    ⨯ ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+
+[00:02:43.929] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:44.785] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:44.785] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:45.158] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:45.328] Browser ERROR   uncaughtError: Error: ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+
+[00:02:45.453] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:02:45.557] Browser ERROR   ./src/app/(full-width-pages)/(auth)/signin/page.tsx:5:14
+Ecmascript file had an error
+  3 | import { Metadata } from "next";
+  4 |
+> 5 | export const metadata: Metadata = {
+    |              ^^^^^^^^
+  6 |   title: "Next.js SignIn Page | TailAdmin - Next.js Dashboard Template",
+  7 |   description: "This is Next.js Signin Page TailAdmin Dashboard Template",
+  8 | };
+
+You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component Browser]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Client Component SSR]
+    ./src/app/(full-width-pages)/(auth)/signin/page.tsx [Server Component]
+[00:03:14.739] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:03:15.005] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:15.212] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:03:28.904] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:03:29.154] Server  LOG      ✓ Compiled in 75ms
+[00:03:29.478] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:03:29.710] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:29.881] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:03:39.004] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:03:39.185] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:39.401] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:04:01.066] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:04:01.356] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:01.546] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:05:00.211] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:05:00.439] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:00.657] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:22:26.053] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:22:26.073] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:22:26.472] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:22:26.738] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:22:36.272] Server  ERROR    ⨯ Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:22:36.504] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:22:36.730] Browser ERROR   uncaughtError: Error: NextRouter was not mounted. https://nextjs.org/docs/messages/next-router-not-mounted
+[00:26:05.732] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:26:05.741] Server  LOG      ✓ Compiled in 246ms
+[00:26:07.372] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:26:07.685] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
 This will cause a hydration error.%s <button> button 
 
   ...
-    <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
-      <RedirectBoundary>
-        <RedirectErrorBoundary router={{...}}>
-          <InnerLayoutRouter url="/signin" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
-            <SegmentViewNode type="page" pagePath="(full-widt...">
-              <SegmentTrieNode>
-              <SignIn>
-                <SignInForm>
+    <RedirectErrorBoundary router={{...}}>
+      <InnerLayoutRouter url="/signin" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+        <SegmentViewNode type="page" pagePath="(full-widt...">
+          <SegmentTrieNode>
+          <ClientPageRoot Component={function SignIn} serverProvidedParams={{...}}>
+            <SignIn params={Promise} searchParams={Promise}>
+              <SignInForm>
+                <div className="flex flex-...">
+                  <div>
                   <div className="flex flex-...">
                     <div>
-                    <div className="flex flex-...">
+                      <div>
                       <div>
                         <div>
                         <div>
-                          <div>
-                          <div>
-                          <form onSubmit={function}>
-                            <div className="space-y-6">
-                              <div>
-                              <div>
-                              <div>
-                              <div>
->                               <button type="submit" className="w-full">
-                                  <Button className="w-full" size="sm">
->                                   <button
->                                     className={"inline-flex items-center justify-center font-medium gap-2 rounded-l..."}
->                                     onClick={undefined}
->                                     disabled={false}
->                                   >
-                          ...
-            ...
-          ...
+                        <form onSubmit={function}>
+                          <div className="space-y-6">
+                            <div>
+                            <div>
+                            <div>
+                            <div>
+>                             <button type="submit" className="w-full">
+                                <Button className="w-full" size="sm">
+>                                 <button
+>                                   className={"inline-flex items-center justify-center font-medium gap-2 rounded-lg ..."}
+>                                   onClick={undefined}
+>                                   disabled={false}
+>                                 >
+                        ...
+        ...
+      ...
 
-[01:06:31.574] Browser ERROR   <%s> cannot contain a nested %s.
+[00:26:07.685] Browser ERROR   <%s> cannot contain a nested %s.
 See this log for the ancestor stack trace. button <button>
-[01:06:36.627] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[01:06:37.052] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
-This will cause a hydration error.%s <button> button 
-
-  ...
-    <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
-      <RedirectBoundary>
-        <RedirectErrorBoundary router={{...}}>
-          <InnerLayoutRouter url="/signin" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
-            <SegmentViewNode type="page" pagePath="(full-widt...">
-              <SegmentTrieNode>
-              <SignIn>
-                <SignInForm>
-                  <div className="flex flex-...">
-                    <div>
-                    <div className="flex flex-...">
-                      <div>
-                        <div>
-                        <div>
-                          <div>
-                          <div>
-                          <form onSubmit={function}>
-                            <div className="space-y-6">
-                              <div>
-                              <div>
-                              <div>
-                              <div>
->                               <button type="submit" className="w-full">
-                                  <Button className="w-full" size="sm">
->                                   <button
->                                     className={"inline-flex items-center justify-center font-medium gap-2 rounded-l..."}
->                                     onClick={undefined}
->                                     disabled={false}
->                                   >
-                          ...
-            ...
-          ...
-
-[01:06:37.052] Browser ERROR   <%s> cannot contain a nested %s.
-See this log for the ancestor stack trace. button <button>
-[01:06:37.052] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:26:07.685] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -132,45 +376,83 @@ See this log for the ancestor stack trace. button <button>
 It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
 
 https://react.dev/link/hydration-mismatch
-[01:06:37.052] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[01:11:17.785] Server  LOG      ✓ Compiled in 172ms
-[01:11:29.667] Server  LOG      ✓ Compiled in 65ms
-[03:40:05.842] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:00:19.283] Server  LOG      ✓ Compiled in 580ms
-[04:01:48.595] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:01:49.192] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:08:39.530] Server  LOG      ✓ Compiled in 329ms
-[04:09:06.111] Server  LOG      ✓ Compiled in 534ms
-[04:09:07.374] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:09:08.444] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:10:05.927] Server  LOG      ✓ Compiled in 90ms
-[04:11:41.483] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:11:41.668] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:11:41.668] Browser WARN    Image with src "http://192.168.0.149:3000/images/error/404.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:11:41.783] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/signin" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <body
+                            className="outfit_43d50961-module__KOAtAG__className dark:bg-gray-900"
+-                           cz-shortcut-listen="true"
+                          >
+                  ...
+
+[00:26:07.685] Browser WARN    Image with src "http://192.168.0.162:4000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:27:02.662] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:27:02.922] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
+This will cause a hydration error.%s <button> button 
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/signin" tree={[...]} params={{}} cacheNode={{lazyData:null, ...}} segmentPath={[...]} ...>
+            <SegmentViewNode type="page" pagePath="(full-widt...">
+              <SegmentTrieNode>
+              <SignIn>
+                <SignInForm>
+                  <div className="flex flex-...">
+                    <div>
+                    <div className="flex flex-...">
+                      <div>
+                        <div>
+                        <div>
+                          <div>
+                          <div>
+                          <form onSubmit={function}>
+                            <div className="space-y-6">
+                              <div>
+                              <div>
+                              <div>
+                              <div>
+>                               <button type="submit" className="w-full">
+                                  <Button className="w-full" size="sm">
+>                                   <button
+>                                     className={"inline-flex items-center justify-center font-medium gap-2 rounded-l..."}
+>                                     onClick={undefined}
+>                                     disabled={false}
+>                                   >
+                          ...
+            ...
+          ...
+
+[00:27:02.922] Browser ERROR   <%s> cannot contain a nested %s.
+See this log for the ancestor stack trace. button <button>
+[00:27:02.923] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+[00:27:02.923] Browser WARN    Image with src "http://192.168.0.162:4000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:27:02.923] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
 Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[04:11:44.209] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:11:44.453] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:14:50.340] Server  LOG      ✓ Compiled in 207ms
-[04:14:59.788] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:15:00.051] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[04:15:00.051] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:15:00.051] Browser WARN    Image with src "http://192.168.0.149:3000/images/error/404.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:15:01.491] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:15:01.930] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:18:35.046] Server  LOG      ✓ Compiled in 0ms
-[04:18:35.786] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:18:37.415] Browser WARN    Image with src "/images/logo/logo.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[04:18:37.630] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:21:04.838] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo-dark.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:22:14.472] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:22:14.746] Browser WARN    Image with src "/images/shape/grid-01.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[04:22:14.746] Browser WARN    Image with src "http://192.168.0.149:3000/images/shape/grid-01.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:22:14.746] Browser WARN    Image with src "http://192.168.0.149:3000/images/error/404.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[04:22:16.746] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:22:17.000] Browser WARN    Image with src "/images/logo/logo.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[04:22:17.113] Browser WARN    Image with src "http://192.168.0.149:3000/images/logo/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
