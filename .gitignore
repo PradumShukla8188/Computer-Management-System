@@ -1,13 +1,8 @@
 .next/
 out/
 dist/
-
-# Turbopack cache (Next.js 14+)
 .turbo/
-
-# ----------------------------
-# Node Modules
-# ----------------------------
 node_modules/
 
 package-lock.json
+public

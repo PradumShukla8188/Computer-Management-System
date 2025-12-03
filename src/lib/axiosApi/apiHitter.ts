@@ -19,18 +19,21 @@ export async function ApiHitter(method: keyof ApiMethods, apiName: APIENDPOINTS_
             data: bodyData,
         });
 
-        if (showSuccess) {
-            message.success(successMessage || 'Success');
+        if (showSuccess && res.data?.success === true) {
+            message.success(successMessage || res.data?.message || 'Success');
+        }
+
+        if (res.data?.success === false) {
+            if (showError) message.error(res.data?.message || 'Something went wrong');
+            throw new Error(res.data?.message || "API failed");
         }
 
         return res.data;
+
     } catch (err: any) {
-        const errorMsg = err?.response?.data?.message || err?.response?.data?.error || err?.message || 'Something went wrong';
-
-        if (showError) {
-            message.error(errorMsg);
-        }
-
-        throw err; // needed for React Query
+        const errorMsg = err?.response?.data?.message || err?.message || "Something went wrong";
+        if (showError) message.error(errorMsg);
+        throw err;
     }
 }
+

@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import Cookies from "js-cookie";
 
 interface LoginFormValues {
   email: string;
@@ -30,6 +31,7 @@ export default function SignInForm() {
     onSuccess: (res) => {
         if (res?.success === true) {
         router.push("/");
+        Cookies.set("token", res?.data?.token)
       }
     },
 
@@ -187,11 +189,11 @@ export default function SignInForm() {
 
                 {/* Submit */}
                 <div>
-                  <button type="submit" className="w-full">
-                    <Button className="w-full" size="sm">
+                  <div  className="w-full">
+                    <Button className="w-full" size="sm" onClick={handleSubmit(onSubmit)}>
                       Sign in
                     </Button>
-                  </button>
+                  </div>
                 </div>
               </div>
             </form>
