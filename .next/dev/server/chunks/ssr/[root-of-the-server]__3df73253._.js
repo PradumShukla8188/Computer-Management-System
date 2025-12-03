@@ -1268,7 +1268,7 @@ function UserDropdown() {
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             width: 44,
                             height: 44,
-                            src: "/images/user/owner.jpg",
+                            src: "/images/user/user-12.jpg",
                             alt: "User"
                         }, void 0, false, {
                             fileName: "[project]/src/components/header/UserDropdown.tsx",
@@ -1282,7 +1282,7 @@ function UserDropdown() {
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                         className: "block mr-1 font-medium text-theme-sm",
-                        children: "Musharof"
+                        children: "SST"
                     }, void 0, false, {
                         fileName: "[project]/src/components/header/UserDropdown.tsx",
                         lineNumber: 34,
@@ -1303,7 +1303,7 @@ function UserDropdown() {
                             strokeLinejoin: "round"
                         }, void 0, false, {
                             fileName: "[project]/src/components/header/UserDropdown.tsx",
-                            lineNumber: 46,
+                            lineNumber: 45,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
@@ -1326,24 +1326,24 @@ function UserDropdown() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "block font-medium text-gray-700 text-theme-sm dark:text-gray-400",
-                                children: "Musharof Chowdhury"
+                                children: "SST Computer"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                lineNumber: 62,
+                                lineNumber: 61,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400",
-                                children: "randomuser@pimjo.com"
+                                children: "sst@gmail.com"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                lineNumber: 65,
+                                lineNumber: 64,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/header/UserDropdown.tsx",
-                        lineNumber: 61,
+                        lineNumber: 60,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -1370,24 +1370,24 @@ function UserDropdown() {
                                                 fill: ""
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                                lineNumber: 86,
+                                                lineNumber: 85,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                            lineNumber: 78,
+                                            lineNumber: 77,
                                             columnNumber: 15
                                         }, this),
                                         "Edit profile"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                    lineNumber: 72,
+                                    lineNumber: 71,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                lineNumber: 71,
+                                lineNumber: 70,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -1411,24 +1411,24 @@ function UserDropdown() {
                                                 fill: ""
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                                lineNumber: 111,
+                                                lineNumber: 110,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                            lineNumber: 103,
+                                            lineNumber: 102,
                                             columnNumber: 15
                                         }, this),
                                         "Account settings"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                    lineNumber: 97,
+                                    lineNumber: 96,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                lineNumber: 96,
+                                lineNumber: 95,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -1452,30 +1452,30 @@ function UserDropdown() {
                                                 fill: ""
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                                lineNumber: 136,
+                                                lineNumber: 135,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                            lineNumber: 128,
+                                            lineNumber: 127,
                                             columnNumber: 15
                                         }, this),
                                         "Support"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                    lineNumber: 122,
+                                    lineNumber: 121,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                lineNumber: 121,
+                                lineNumber: 120,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/header/UserDropdown.tsx",
-                        lineNumber: 70,
+                        lineNumber: 69,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1496,25 +1496,25 @@ function UserDropdown() {
                                     fill: ""
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                    lineNumber: 159,
+                                    lineNumber: 158,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                                lineNumber: 151,
+                                lineNumber: 150,
                                 columnNumber: 11
                             }, this),
                             "Sign out"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/header/UserDropdown.tsx",
-                        lineNumber: 147,
+                        lineNumber: 146,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/header/UserDropdown.tsx",
-                lineNumber: 56,
+                lineNumber: 55,
                 columnNumber: 7
             }, this)
         ]
@@ -3542,7 +3542,7 @@ const navItems = [
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         name: "Dashboard",
-        path: "/"
+        path: "/dashboard"
     },
     /* -------------------------
      STUDENTS
@@ -3810,7 +3810,7 @@ const othersItems = [
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$pie$2d$chart$2e$svg$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__PieChartIcon$3e$__["PieChartIcon"], {}, void 0, false, {
             fileName: "[project]/src/layout/AppSidebar.tsx",
-            lineNumber: 182,
+            lineNumber: 152,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         name: "Charts",
@@ -3830,7 +3830,7 @@ const othersItems = [
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$box$2d$cube$2e$svg$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BoxCubeIcon$3e$__["BoxCubeIcon"], {}, void 0, false, {
             fileName: "[project]/src/layout/AppSidebar.tsx",
-            lineNumber: 190,
+            lineNumber: 160,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         name: "UI Elements",
@@ -3870,7 +3870,7 @@ const othersItems = [
     {
         icon: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$plug$2d$in$2e$svg$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__PlugInIcon$3e$__["PlugInIcon"], {}, void 0, false, {
             fileName: "[project]/src/layout/AppSidebar.tsx",
-            lineNumber: 202,
+            lineNumber: 172,
             columnNumber: 11
         }, ("TURBOPACK compile-time value", void 0)),
         name: "Authentication",
@@ -3904,7 +3904,7 @@ const AppSidebar = ()=>{
                                     children: nav.icon
                                 }, void 0, false, {
                                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                                    lineNumber: 233,
+                                    lineNumber: 203,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 (isExpanded || isHovered || isMobileOpen) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3912,20 +3912,20 @@ const AppSidebar = ()=>{
                                     children: nav.name
                                 }, void 0, false, {
                                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                                    lineNumber: 242,
+                                    lineNumber: 212,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 (isExpanded || isHovered || isMobileOpen) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$chevron$2d$down$2e$svg$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDownIcon$3e$__["ChevronDownIcon"], {
                                     className: `ml-auto w-5 h-5 transition-transform duration-200  ${openSubmenu?.type === menuType && openSubmenu?.index === index ? "rotate-180 text-brand-500" : ""}`
                                 }, void 0, false, {
                                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                                    lineNumber: 245,
+                                    lineNumber: 215,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/layout/AppSidebar.tsx",
-                            lineNumber: 223,
+                            lineNumber: 193,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)) : nav.path && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                             href: nav.path,
@@ -3936,7 +3936,7 @@ const AppSidebar = ()=>{
                                     children: nav.icon
                                 }, void 0, false, {
                                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                                    lineNumber: 261,
+                                    lineNumber: 231,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 (isExpanded || isHovered || isMobileOpen) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3944,13 +3944,13 @@ const AppSidebar = ()=>{
                                     children: nav.name
                                 }, void 0, false, {
                                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                                    lineNumber: 270,
+                                    lineNumber: 240,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/layout/AppSidebar.tsx",
-                            lineNumber: 256,
+                            lineNumber: 226,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0)),
                         nav.subItems && (isExpanded || isHovered || isMobileOpen) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3964,6 +3964,9 @@ const AppSidebar = ()=>{
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                                 className: "mt-2 space-y-1 ml-9",
                                 children: nav.subItems.map((subItem)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                        style: {
+                                            marginTop: '5px'
+                                        },
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                             href: subItem.path,
                                             className: `menu-dropdown-item ${isActive(subItem.path) ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive"}`,
@@ -3977,7 +3980,7 @@ const AppSidebar = ()=>{
                                                             children: "new"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/layout/AppSidebar.tsx",
-                                                            lineNumber: 301,
+                                                            lineNumber: 271,
                                                             columnNumber: 27
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         subItem.pro && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3985,45 +3988,45 @@ const AppSidebar = ()=>{
                                                             children: "pro"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/layout/AppSidebar.tsx",
-                                                            lineNumber: 311,
+                                                            lineNumber: 281,
                                                             columnNumber: 27
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                                                    lineNumber: 299,
+                                                    lineNumber: 269,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/layout/AppSidebar.tsx",
-                                            lineNumber: 291,
+                                            lineNumber: 261,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, subItem.name, false, {
                                         fileName: "[project]/src/layout/AppSidebar.tsx",
-                                        lineNumber: 290,
+                                        lineNumber: 260,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)))
                             }, void 0, false, {
                                 fileName: "[project]/src/layout/AppSidebar.tsx",
-                                lineNumber: 288,
+                                lineNumber: 258,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/layout/AppSidebar.tsx",
-                            lineNumber: 276,
+                            lineNumber: 246,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, nav.name, true, {
                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                    lineNumber: 221,
+                    lineNumber: 191,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)))
         }, void 0, false, {
             fileName: "[project]/src/layout/AppSidebar.tsx",
-            lineNumber: 219,
+            lineNumber: 189,
             columnNumber: 5
         }, ("TURBOPACK compile-time value", void 0));
     const [openSubmenu, setOpenSubmenu] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
@@ -4110,7 +4113,7 @@ const AppSidebar = ()=>{
                                 height: 40
                             }, void 0, false, {
                                 fileName: "[project]/src/layout/AppSidebar.tsx",
-                                lineNumber: 417,
+                                lineNumber: 387,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -4121,7 +4124,7 @@ const AppSidebar = ()=>{
                                 height: 40
                             }, void 0, false, {
                                 fileName: "[project]/src/layout/AppSidebar.tsx",
-                                lineNumber: 424,
+                                lineNumber: 394,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
@@ -4132,17 +4135,17 @@ const AppSidebar = ()=>{
                         height: 32
                     }, void 0, false, {
                         fileName: "[project]/src/layout/AppSidebar.tsx",
-                        lineNumber: 433,
+                        lineNumber: 403,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                    lineNumber: 414,
+                    lineNumber: 384,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/layout/AppSidebar.tsx",
-                lineNumber: 410,
+                lineNumber: 380,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4157,40 +4160,40 @@ const AppSidebar = ()=>{
                                     className: `mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`,
                                     children: isExpanded || isHovered || isMobileOpen ? "Menu" : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$horizontal$2d$dots$2e$svg$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__HorizontaLDots$3e$__["HorizontaLDots"], {}, void 0, false, {
                                         fileName: "[project]/src/layout/AppSidebar.tsx",
-                                        lineNumber: 455,
+                                        lineNumber: 425,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                                    lineNumber: 446,
+                                    lineNumber: 416,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 renderMenuItems(navItems, "main")
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/layout/AppSidebar.tsx",
-                            lineNumber: 445,
+                            lineNumber: 415,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/src/layout/AppSidebar.tsx",
-                        lineNumber: 444,
+                        lineNumber: 414,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/src/layout/AppSidebar.tsx",
-                    lineNumber: 443,
+                    lineNumber: 413,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/layout/AppSidebar.tsx",
-                lineNumber: 442,
+                lineNumber: 412,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/src/layout/AppSidebar.tsx",
-        lineNumber: 397,
+        lineNumber: 367,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

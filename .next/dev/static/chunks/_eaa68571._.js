@@ -113,57 +113,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$group$2e$svg
 "[project]/src/components/ecommerce/EcommerceMetrics.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
-// "use client";
-// import Badge from "../ui/badge/Badge";
-// import { ArrowDownIcon, ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
-// export const EcommerceMetrics = () => {
-//   return (
-//     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
-//       {/* <!-- Metric Item Start --> */}
-//       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-//         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-//           <GroupIcon className="text-gray-800 size-6 dark:text-white/90" />
-//         </div>
-//         <div className="flex items-end justify-between mt-5">
-//           <div>
-//             <span className="text-sm text-gray-500 dark:text-gray-400">
-//               Students
-//             </span>
-//             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-//               3,782
-//             </h4>
-//           </div>
-//           <Badge color="success">
-//             <ArrowUpIcon />
-//             11.01%
-//           </Badge>
-//         </div>
-//       </div>
-//       {/* <!-- Metric Item End --> */}
-//       {/* <!-- Metric Item Start --> */}
-//       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-//         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-//           <BoxIconLine className="text-gray-800 dark:text-white/90" />
-//         </div>
-//         <div className="flex items-end justify-between mt-5">
-//           <div>
-//             <span className="text-sm text-gray-500 dark:text-gray-400">
-//               Courses
-//             </span>
-//             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-//               5,359
-//             </h4>
-//           </div>
-//           <Badge color="error">
-//             <ArrowDownIcon className="text-error-500" />
-//             9.05%
-//           </Badge>
-//         </div>
-//       </div>
-//       {/* <!-- Metric Item End --> */}
-//     </div>
-//   );
-// };
 __turbopack_context__.s([
     "EcommerceMetrics",
     ()=>EcommerceMetrics
@@ -259,12 +208,12 @@ const EcommerceMetrics = ()=>{
                             className: "text-gray-800 size-6 dark:text-white/90"
                         }, void 0, false, {
                             fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                            lineNumber: 145,
+                            lineNumber: 89,
                             columnNumber: 15
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                        lineNumber: 144,
+                        lineNumber: 88,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -277,7 +226,7 @@ const EcommerceMetrics = ()=>{
                                         children: item.title
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                                        lineNumber: 150,
+                                        lineNumber: 94,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -285,13 +234,13 @@ const EcommerceMetrics = ()=>{
                                         children: item.value
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                                        lineNumber: 153,
+                                        lineNumber: 97,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                                lineNumber: 149,
+                                lineNumber: 93,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2f$Badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -299,38 +248,38 @@ const EcommerceMetrics = ()=>{
                                 children: [
                                     item.isPositive ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$arrow$2d$up$2e$svg$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowUpIcon$3e$__["ArrowUpIcon"], {}, void 0, false, {
                                         fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                                        lineNumber: 160,
+                                        lineNumber: 104,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$icons$2f$arrow$2d$down$2e$svg$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowDownIcon$3e$__["ArrowDownIcon"], {
                                         className: "text-error-500"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                                        lineNumber: 162,
+                                        lineNumber: 106,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     item.change
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                                lineNumber: 158,
+                                lineNumber: 102,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                        lineNumber: 148,
+                        lineNumber: 92,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, idx, true, {
                 fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-                lineNumber: 140,
+                lineNumber: 84,
                 columnNumber: 11
             }, ("TURBOPACK compile-time value", void 0));
         })
     }, void 0, false, {
         fileName: "[project]/src/components/ecommerce/EcommerceMetrics.tsx",
-        lineNumber: 136,
+        lineNumber: 80,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -469,7 +418,7 @@ function MonthlySalesChart() {
     };
     const series = [
         {
-            name: "Sales",
+            name: "New Students",
             data: [
                 168,
                 385,
@@ -501,7 +450,7 @@ function MonthlySalesChart() {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                         className: "text-lg font-semibold text-gray-800 dark:text-white/90",
-                        children: "Monthly Sales"
+                        children: "Monthly New Students"
                     }, void 0, false, {
                         fileName: "[project]/src/components/ecommerce/MonthlySalesChart.tsx",
                         lineNumber: 113,
@@ -845,7 +794,7 @@ function StatisticsChart() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                 className: "text-lg font-semibold text-gray-800 dark:text-white/90",
-                                children: "Statistics"
+                                children: "Monthly Student Statistics"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/ecommerce/StatisticsChart.tsx",
                                 lineNumber: 126,

@@ -1,5 +1,6 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
+import 'antd/dist/reset.css'; //ant design
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -20,7 +21,7 @@ export default function RootLayout({
         <ThemeProvider>
           <SidebarProvider>
             <ReactQueryWrapper>
-                {children}
+              {children}
             </ReactQueryWrapper>
           </SidebarProvider>
         </ThemeProvider>
