@@ -25,6 +25,7 @@
     "autoprefixer": "^10.4.22",
     "axios": "^1.13.2",
     "crypto-js": "^4.2.0",
+    "dotenv": "^17.2.3",
     "flatpickr": "^4.6.13",
     "js-cookie": "^3.0.5",
     "next": "16.0.3",
