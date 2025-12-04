@@ -1,14 +1,16 @@
 import React, { ReactNode } from "react";
 
 interface ButtonProps {
-  children: ReactNode; // Button text or content
-  size?: "sm" | "md"; // Button size
-  variant?: "primary" | "outline"; // Button variant
-  startIcon?: ReactNode; // Icon before the text
-  endIcon?: ReactNode; // Icon after the text
-  onClick?: () => void; // Click handler
-  disabled?: boolean; // Disabled state
-  className?: string; // Disabled state
+  children: ReactNode;
+  size?: "sm" | "md";
+  variant?: "primary" | "outline";
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  loading?: boolean; // 🔥 new — stops multiple submits
+  type?: "button" | "submit" | "reset"; // 🔥 required for forms
+  className?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -18,16 +20,18 @@ const Button: React.FC<ButtonProps> = ({
   startIcon,
   endIcon,
   onClick,
-  className = "",
   disabled = false,
+  loading = false,
+  type = "button", // default behaviour
+  className = "",
 }) => {
-  // Size Classes
+  // Button sizes
   const sizeClasses = {
     sm: "px-4 py-3 text-sm",
     md: "px-5 py-3.5 text-sm",
   };
 
-  // Variant Classes
+  // Variants
   const variantClasses = {
     primary:
       "bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300",
@@ -37,17 +41,21 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      className={`inline-flex items-center justify-center font-medium gap-2 rounded-lg transition ${className} ${
-        sizeClasses[size]
-      } ${variantClasses[variant]} ${
-        disabled ? "cursor-not-allowed opacity-50" : ""
-      }`}
+      type={type}
       onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || loading}
+      className={`inline-flex items-center justify-center font-medium gap-2 rounded-lg transition ${sizeClasses[size]} ${variantClasses[variant]} ${
+        disabled || loading ? "cursor-not-allowed opacity-60" : ""
+      } ${className}`}
     >
-      {startIcon && <span className="flex items-center">{startIcon}</span>}
+      {loading && (
+        <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+      )}
+      {!loading && startIcon && <span>{startIcon}</span>}
+
       {children}
-      {endIcon && <span className="flex items-center">{endIcon}</span>}
+
+      {!loading && endIcon && <span>{endIcon}</span>}
     </button>
   );
 };
