@@ -3,5 +3,5 @@ out/
 dist/
 .turbo/
 node_modules/
-
+.env
 package-lock.json
