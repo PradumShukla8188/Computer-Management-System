@@ -39,8 +39,9 @@ const navItems: NavItem[] = [
   {
     name: "Students",
     icon: <UserCircleIcon />, // <-- Replace with your actual icon
+    path: "/student",
     subItems: [
-      { name: "Add Students", path: "/students/add", pro: false },
+      { name: "Add Students", path: "/students", pro: false },
       { name: "All Students", path: "/students", pro: false },
     ],
   },

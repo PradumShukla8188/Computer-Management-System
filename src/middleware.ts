@@ -4,12 +4,12 @@ import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value; // or session cookie
-  console.log("token------>>", token)
+  console.log("token------>>", token);
 
   const { pathname } = req.nextUrl;
 
   // Public routes
-  const publicRoutes = ["/signin", "/signup", "/"];
+  const publicRoutes = ["/signin", "/signup"];
 
   // If user is already logged in, prevent opening login page
   if (token && publicRoutes.includes(pathname)) {
