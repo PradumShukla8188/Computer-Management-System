@@ -20,11 +20,15 @@ interface LoginFormValues {
 }
 
 interface LoginResponse {
-  success: boolean;
   data?: {
+    success: boolean;
     token: string;
+    message?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
   };
-  message?: string;
 }
 
 export default function SignInForm() {
@@ -49,9 +53,6 @@ export default function SignInForm() {
 
   // Debug: Watch form values
   const formValues = watch();
-  console.log("Form values:", formValues);
-  console.log("Form errors:", errors);
-  console.log("Is form valid?", isValid);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (body: LoginFormValues) =>
@@ -61,7 +62,8 @@ export default function SignInForm() {
         showError: true,
       }),
     onSuccess: (res: LoginResponse) => {
-      if (res?.success && res?.data?.token) {
+      console.log("ressss", res);
+      if (res?.data?.token) {
         const isProduction = process.env.NODE_ENV === "production";
 
         Cookies.set("token", res.data.token, {
@@ -72,8 +74,6 @@ export default function SignInForm() {
 
         router.push("/");
         router.refresh();
-      } else {
-        setSubmitError(res?.message || "Login failed. Please try again.");
       }
     },
     onError: (error: Error) => {
@@ -87,21 +87,21 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="flex flex-col flex-1 lg:w-1/2 w-full">
-      <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
+    <div className="flex w-full flex-1 flex-col lg:w-1/2">
+      <div className="mx-auto mb-5 w-full max-w-md sm:pt-10">
         <Link
           href="/"
-          className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700"
         >
           <ChevronLeftIcon />
           Back to dashboard
         </Link>
       </div>
 
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
         <div>
           <div className="mb-5 sm:mb-8">
-            <h1 className="mb-2 font-semibold text-gray-800 sm:text-title-md">
+            <h1 className="sm:text-title-md mb-2 font-semibold text-gray-800">
               Sign In
             </h1>
             <p className="text-sm text-gray-500">
@@ -110,7 +110,7 @@ export default function SignInForm() {
           </div>
 
           {submitError && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3">
               <p className="text-sm text-red-600">{submitError}</p>
             </div>
           )}
@@ -129,13 +129,15 @@ export default function SignInForm() {
                     required: "Email is required",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address"
-                    }
+                      message: "Invalid email address",
+                    },
                   })}
                   error={!!errors.email}
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
 
@@ -152,21 +154,23 @@ export default function SignInForm() {
                       required: "Password is required",
                       minLength: {
                         value: 6,
-                        message: "Password must be at least 6 characters"
-                      }
+                        message: "Password must be at least 6 characters",
+                      },
                     })}
                     error={!!errors.password}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer p-1"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer p-1"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
-                      <EyeIcon className="fill-gray-500 w-5 h-5" />
+                      <EyeIcon className="h-5 w-5 fill-gray-500" />
                     ) : (
-                      <EyeCloseIcon className="fill-gray-5 00 w-5 h-5" />
+                      <EyeCloseIcon className="fill-gray-5 00 h-5 w-5" />
                     )}
                   </button>
                 </div>
@@ -197,7 +201,7 @@ export default function SignInForm() {
 
                 <Link
                   href="/reset-password"
-                  className="text-sm text-brand-500 hover:text-brand-600 transition-colors"
+                  className="text-brand-500 hover:text-brand-600 text-sm transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -214,13 +218,6 @@ export default function SignInForm() {
                 >
                   {isPending ? "Signing in..." : "Sign in"}
                 </Button>
-
-                {/* Debug info */}
-                <div className="mt-2 text-xs text-gray-500">
-                  <p>Form valid: {isValid ? "Yes" : "No"}</p>
-                  <p>Email: {formValues.email || "(empty)"}</p>
-                  <p>Password length: {formValues.password?.length || 0}</p>
-                </div>
               </div>
             </div>
           </form>
