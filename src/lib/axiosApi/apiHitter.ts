@@ -7,6 +7,7 @@ interface ApiOptions {
     showSuccess?: boolean;
     successMessage?: string;
     showError?: boolean;
+    headers?: object;
 }
 
 export async function ApiHitter(method: keyof ApiMethods, apiName: APIENDPOINTS_TYPE, bodyData: object, params: string | number, options: ApiOptions = {}) {

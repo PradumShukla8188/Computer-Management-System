@@ -23,3 +23,9 @@ export interface addStudent {
   uploadEducationProof: string;
   uploadIdentityProof: string;
 }
+
+export interface courseData {
+    _id: string;
+    name: string;
+    durationInMonths: number
+}

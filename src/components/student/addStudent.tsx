@@ -1,26 +1,25 @@
 "use client";
 
-import React from "react";
-import {
-  Form,
-  Input,
-  DatePicker,
-  Select,
-  Button,
-  Upload,
-  message,
-  Card,
-  Row,
-  Col,
-  InputNumber,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import axios from "axios";
-import dayjs from "dayjs";
-import DropzoneComponent from "../form/form-elements/DropZone";
-import { useMutation } from "@tanstack/react-query";
+import { addStudent, courseData } from "@/interfaces/addStudent";
 import { ApiHitter } from "@/lib/axiosApi/apiHitter";
-import { addStudent } from "@/interfaces/addStudent";
+import { UploadOutlined } from "@ant-design/icons";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+    Button,
+    Card,
+    Col,
+    DatePicker,
+    Form,
+    Input,
+    InputNumber,
+    Row,
+    Select,
+    Upload,
+    message,
+} from "antd";
+import type { UploadFile } from "antd/es/upload/interface";
+import dayjs from "dayjs";
+import { useState } from "react";
 
 const { Option } = Select;
 
@@ -37,21 +36,143 @@ const religionOptions = [
 const categoryOptions = ["General", "OBC", "SC", "ST", "Other"];
 const examModeOptions = ["Online", "Offline"];
 
+// Allowed file types
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ALLOWED_DOC_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+
 export default function AddStudent() {
   const [form] = Form.useForm();
-
-  const [previews, setPreviews] = React.useState({
-    studentPhoto: null,
-    uploadEducationProof: null,
-    uploadIdentityProof: null,
+  const [fileList, setFileList] = useState<{
+    studentPhoto: UploadFile[];
+    uploadEducationProof: UploadFile[];
+    uploadIdentityProof: UploadFile[];
+  }>({
+    studentPhoto: [],
+    uploadEducationProof: [],
+    uploadIdentityProof: [],
   });
 
-  // Handle preview
-  const handlePreview = (file: any, field: any) => {
-    const url = URL.createObjectURL(file);
-    setPreviews((prev) => ({ ...prev, [field]: url }));
+  const [previews, setPreviews] = useState({
+    studentPhoto: null as string | null,
+    uploadEducationProof: null as string | null,
+    uploadIdentityProof: null as string | null,
+  });
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
+
+
+// Get courses
+const { data: courseData, isLoading: coursesLoading } = useQuery({
+  queryKey: ['courses'],
+  queryFn: async () => {
+    const response = await ApiHitter("GET", "GET_COURSE_LIST", {}, "", {
+      showError: true,
+      showSuccess: false
+    });
+    return response?.data || [];
+  },
+});
+const handleCourseChange = (courseId: string) => {
+  setSelectedCourseId(courseId);
+
+  // Find the selected course
+  const selectedCourse = courseData?.find((course: courseData) => course._id === courseId);
+
+  if (selectedCourse) {
+    // Set the duration in the form
+    form.setFieldsValue({
+      courseDuration: `${selectedCourse.durationInMonths} months`
+    });
+  } else {
+    // Clear duration if no course selected
+    form.setFieldsValue({
+      courseDuration: ""
+    });
+  }
+};
+
+  // Handle file upload and preview
+  const handleFileChange = (info: any, field: keyof typeof fileList) => {
+    const { file } = info;
+
+    // Check file type
+    if (field === 'studentPhoto' && file.originFileObj) {
+      const fileType = file.originFileObj.type;
+      if (!ALLOWED_IMAGE_TYPES.includes(fileType)) {
+        message.error('Please upload only image files (JPEG, JPG, PNG, WebP) for student photo!');
+        return;
+      }
+    }
+
+    // Update file list
+    setFileList(prev => ({
+      ...prev,
+      [field]: file.status === 'removed' ? [] : [file]
+    }));
+
+    // Generate preview for images
+    if (file.originFileObj && file.status !== 'removed') {
+      const isImage = ALLOWED_IMAGE_TYPES.includes(file.originFileObj.type);
+      if (isImage) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setPreviews(prev => ({
+            ...prev,
+            [field]: e.target?.result as string
+          }));
+        };
+        reader.readAsDataURL(file.originFileObj);
+      } else {
+        setPreviews(prev => ({
+          ...prev,
+          [field]: null
+        }));
+      }
+    } else {
+      setPreviews(prev => ({
+        ...prev,
+        [field]: null
+      }));
+    }
   };
 
+  // Custom upload request (prevents automatic upload)
+  const dummyRequest = ({ file, onSuccess }: any) => {
+    setTimeout(() => {
+      onSuccess("ok", file);
+    }, 0);
+  };
+
+  // Custom before upload validation
+  const beforeUpload = (file: File, field: string) => {
+    let isValid = true;
+    let errorMessage = '';
+
+    if (field === 'studentPhoto') {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        isValid = false;
+        errorMessage = 'Student photo must be an image (JPEG, JPG, PNG, WebP)!';
+      }
+    } else {
+      if (!ALLOWED_DOC_TYPES.includes(file.type)) {
+        isValid = false;
+        errorMessage = 'Document must be an image or PDF!';
+      }
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      isValid = false;
+      errorMessage = 'File size must be less than 5MB!';
+    }
+
+    if (!isValid) {
+      message.error(errorMessage);
+      return Upload.LIST_IGNORE;
+    }
+
+    return true;
+  };
+
+//   add student
   const { mutate: addStudent, isPending } = useMutation({
     mutationFn: (body: addStudent) =>
       ApiHitter("POST", "ADD_STUDENT", body, "", {
@@ -61,54 +182,105 @@ export default function AddStudent() {
       }),
 
     onSuccess: (res) => {
-      console.log("res", res);
+      console.log("Student added successfully:", res);
+      message.success("Student added successfully!");
+      form.resetFields();
+      setFileList({
+        studentPhoto: [],
+        uploadEducationProof: [],
+        uploadIdentityProof: [],
+      });
+      setPreviews({
+        studentPhoto: null,
+        uploadEducationProof: null,
+        uploadIdentityProof: null,
+      });
+    },
+    onError: (error) => {
+      console.error("Error adding student:", error);
+      message.error("Failed to add student");
     },
   });
 
-  const { mutate: upload, isPending: uploading } = useMutation({
-    mutationFn: (body: addStudent) =>
-      ApiHitter("POST", "UPLOAD", body, "", {
-        showSuccess: true,
-        showError: true,
-      }),
+//   upload api
+  const { mutateAsync: uploadFile } = useMutation({
+    mutationFn: async ({ file, type }: { file: File; type: string }) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', type);
 
-    onSuccess: (res) => {
-      console.log("res", res);
+      return ApiHitter("POST", "UPLOAD", formData, "", {
+        showSuccess: false,
+        showError: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     },
   });
 
   const handleSubmit = async (values: any) => {
     try {
+      // Validate required files
+      if (!fileList.studentPhoto.length) {
+        message.error("Please upload student photo!");
+        return;
+      }
+
+      // Convert dates
       values.dob = dayjs(values.dob).toISOString();
       values.dateOfAdmission = dayjs(values.dateOfAdmission).toISOString();
+      values.studentPhoto = "uploads/photos/student123.jpg";
+      values.uploadEducationProof = "uploads/photos/student123.jpg";
+      values.uploadIdentityProof = "uploads/photos/student123.jpg";
 
-      const formData = new FormData();
-      ["studentPhoto", "uploadEducationProof", "uploadIdentityProof"].forEach(
-        (key) => {
-          const file = values[key]?.file?.originFileObj;
-          if (file) formData.append(key, file);
-        },
-      );
+      // Upload files
+    //   const uploadPromises = [];
 
-      // STEP 1 → Upload files first
-      const uploadRes = await upload(formData as any, {
-        onSuccess: () => {},
-      });
+    //   if (fileList.studentPhoto[0]?.originFileObj) {
+    //     uploadPromises.push(
+    //       uploadFile({
+    //         file: fileList.studentPhoto[0].originFileObj,
+    //         type: 'student_photo'
+    //       }).then(res => ({ key: 'studentPhoto', url: res?.data?.url || "www.example.com" }))
+    //     );
+    //   }
 
-      // Upload Response should return URLs
-      const uploadedUrls = {
-        studentPhoto: uploadRes?.data?.studentPhoto,
-        uploadEducationProof: uploadRes?.data?.educationProof,
-        uploadIdentityProof: uploadRes?.data?.identityProof,
-      };
+    //   if (fileList.uploadEducationProof[0]?.originFileObj) {
+    //     uploadPromises.push(
+    //       uploadFile({
+    //         file: fileList.uploadEducationProof[0].originFileObj,
+    //         type: 'education_proof'
+    //       }).then(res => ({ key: 'educationProof', url: res?.data?.url || "www.example.com" }))
+    //     );
+    //   }
 
-      // STEP 2 → Now add student with URLs
-      addStudent({
-        ...values,
-        ...uploadedUrls,
-      });
-    } catch (error) {
-      message.error("❌ Failed to upload or submit student");
+    //   if (fileList.uploadIdentityProof[0]?.originFileObj) {
+    //     uploadPromises.push(
+    //       uploadFile({
+    //         file: fileList.uploadIdentityProof[0].originFileObj,
+    //         type: 'identity_proof'
+    //       }).then(res => ({ key: 'identityProof', url: res?.data?.url || "www.example.com" }))
+    //     );
+    //   }
+
+    //   const uploadResults = await Promise.allSettled(uploadPromises);
+
+      // Prepare student data
+      const studentData: any = { ...values };
+
+    //   uploadResults.forEach(result => {
+    //     if (result.status === 'fulfilled' && result.value.url) {
+    //       studentData[result.value.key] = result.value.url;
+    //     }
+    //   });
+
+      // Add student
+      addStudent(studentData);
+
+    } catch (err) {
+      console.error("Submission error:", err);
+      message.error("❌ Failed to submit student");
     }
   };
 
@@ -148,7 +320,7 @@ export default function AddStudent() {
                   { required: true, message: "Please select date of birth" },
                 ]}
               >
-                <DatePicker className="w-full" />
+                <DatePicker className="w-full" format="YYYY-MM-DD" />
               </Form.Item>
             </Col>
 
@@ -315,30 +487,44 @@ export default function AddStudent() {
 
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
-              <Form.Item
+            <Form.Item
                 label="Select Course"
                 name="selectedCourse"
                 rules={[{ required: true, message: "Course required" }]}
-              >
-                <Input />
-              </Form.Item>
+            >
+                <Select
+                placeholder="Select a course"
+                loading={coursesLoading}
+                onChange={handleCourseChange}
+                >
+                {courseData?.map((course: courseData) => (
+                    <Option key={course._id} value={course._id }>
+                    {course.name}
+                    </Option>
+                ))}
+                </Select>
+            </Form.Item>
             </Col>
+
             <Col xs={24} md={12}>
-              <Form.Item
+            <Form.Item
                 label="Course Duration"
                 name="courseDuration"
-                rules={[{ required: true, message: "Duration required" }]}
-              >
-                <Input />
-              </Form.Item>
+            >
+                <Input
+                readOnly
+                className="bg-gray-50"
+                />
+            </Form.Item>
             </Col>
+
             <Col xs={24} md={12}>
               <Form.Item
                 label="Date of Admission"
                 name="dateOfAdmission"
                 rules={[{ required: true, message: "Select admission date" }]}
               >
-                <DatePicker className="w-full" />
+                <DatePicker className="w-full" format="YYYY-MM-DD" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
@@ -356,7 +542,7 @@ export default function AddStudent() {
                 name="totalFees"
                 rules={[{ required: true, message: "Fees required" }]}
               >
-                <InputNumber />
+                <InputNumber className="w-full" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
@@ -384,107 +570,157 @@ export default function AddStudent() {
           <Row gutter={[18, 18]}>
             {/* Student Photo */}
             <Col xs={24} sm={12} md={8}>
-              <Form.Item label="Student Photo" name="studentPhoto">
+              <Form.Item
+                label="Student Photo *"
+                required
+              >
                 <Upload
+                  listType="picture-card"
+                  fileList={fileList.studentPhoto}
                   maxCount={1}
-                  beforeUpload={() => false}
-                  onChange={(info) => {
-                    if (info.file.originFileObj) {
-                      handlePreview(info.file.originFileObj, "studentPhoto");
-                    }
+                  beforeUpload={(file) => beforeUpload(file, 'studentPhoto')}
+                  customRequest={dummyRequest}
+                  onChange={(info) => handleFileChange(info, 'studentPhoto')}
+                  onRemove={() => {
+                    setFileList(prev => ({ ...prev, studentPhoto: [] }));
+                    setPreviews(prev => ({ ...prev, studentPhoto: null }));
                   }}
-                  className="cursor-pointer rounded-md border border-blue-300 bg-blue-50 p-3 text-center transition-all hover:bg-blue-100"
+                  accept="image/*"
+                  className="w-full"
                 >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="w-full font-medium"
-                  >
-                    Upload Photo
-                  </Button>
+                  {fileList.studentPhoto.length === 0 && (
+                    <div className="flex flex-col items-center justify-center">
+                      <UploadOutlined style={{ fontSize: '24px' }} />
+                      <div className="mt-2">Upload Photo</div>
+                      <div className="text-xs text-gray-500">JPG, PNG, WebP</div>
+                    </div>
+                  )}
                 </Upload>
 
-                {previews.studentPhoto && (
-                  <img
-                    src={previews.studentPhoto}
-                    alt="Preview"
-                    className="mt-2 h-24 w-24 rounded-md border object-cover shadow-sm"
-                  />
-                )}
+                {/* {previews.studentPhoto && (
+                  <div className="mt-2">
+                    <img
+                      src={previews.studentPhoto}
+                      alt="Student Preview"
+                      className="h-32 w-32 rounded-lg border object-cover shadow-sm"
+                    />
+                  </div>
+                )} */}
               </Form.Item>
             </Col>
 
             {/* Education Proof */}
             <Col xs={24} sm={12} md={8}>
-              <Form.Item label="Education Proof" name="uploadEducationProof">
+              <Form.Item
+                label="Education Proof"
+              >
                 <Upload
+                  listType="picture-card"
+                  fileList={fileList.uploadEducationProof}
                   maxCount={1}
-                  beforeUpload={() => false}
-                  onChange={(info) => {
-                    if (info.file.originFileObj) {
-                      handlePreview(
-                        info.file.originFileObj,
-                        "uploadEducationProof",
-                      );
-                    }
+                  beforeUpload={(file) => beforeUpload(file, 'document')}
+                  customRequest={dummyRequest}
+                  onChange={(info) => handleFileChange(info, 'uploadEducationProof')}
+                  onRemove={() => {
+                    setFileList(prev => ({ ...prev, uploadEducationProof: [] }));
+                    setPreviews(prev => ({ ...prev, uploadEducationProof: null }));
                   }}
-                  className="cursor-pointer rounded-md border border-green-300 bg-green-50 p-3 text-center transition-all hover:bg-green-100"
+                  accept="image/*,.pdf"
+                  className="w-full"
                 >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="w-full font-medium"
-                  >
-                    Upload Document
-                  </Button>
+                  {fileList.uploadEducationProof.length === 0 && (
+                    <div className="flex flex-col items-center justify-center">
+                      <UploadOutlined style={{ fontSize: '24px' }} />
+                      <div className="mt-2">Upload Document</div>
+                      <div className="text-xs text-gray-500">JPG, PNG, PDF</div>
+                    </div>
+                  )}
                 </Upload>
 
-                {previews.uploadEducationProof && (
-                  <p className="mt-2 rounded bg-green-100 px-2 py-1 text-sm font-medium text-green-700">
-                    ✓ File added
-                  </p>
-                )}
+                {/* {previews.uploadEducationProof ? (
+                  <div className="mt-2">
+                    <img
+                      src={previews.uploadEducationProof}
+                      alt="Education Proof Preview"
+                      className="h-32 w-32 rounded-lg border object-cover shadow-sm"
+                    />
+                  </div>
+                ) : fileList.uploadEducationProof.length > 0 && (
+                  <div className="mt-2 rounded bg-blue-50 p-2">
+                    <div className="text-sm font-medium text-blue-700">
+                      ✓ {fileList.uploadEducationProof[0].name}
+                    </div>
+                    <div className="text-xs text-blue-600">
+                      (PDF document uploaded)
+                    </div>
+                  </div>
+                )} */}
               </Form.Item>
             </Col>
 
             {/* Identity Proof */}
             <Col xs={24} sm={12} md={8}>
-              <Form.Item label="Identity Proof" name="uploadIdentityProof">
+              <Form.Item
+                label="Identity Proof"
+              >
                 <Upload
+                  listType="picture-card"
+                  fileList={fileList.uploadIdentityProof}
                   maxCount={1}
-                  beforeUpload={() => false}
-                  onChange={(info) => {
-                    if (info.file.originFileObj) {
-                      handlePreview(
-                        info.file.originFileObj,
-                        "uploadIdentityProof",
-                      );
-                    }
+                  beforeUpload={(file) => beforeUpload(file, 'document')}
+                  customRequest={dummyRequest}
+                  onChange={(info) => handleFileChange(info, 'uploadIdentityProof')}
+                  onRemove={() => {
+                    setFileList(prev => ({ ...prev, uploadIdentityProof: [] }));
+                    setPreviews(prev => ({ ...prev, uploadIdentityProof: null }));
                   }}
-                  className="cursor-pointer rounded-md border border-purple-300 bg-purple-50 p-3 text-center transition-all hover:bg-purple-100"
+                  accept="image/*,.pdf"
+                  className="w-full"
                 >
-                  <Button
-                    icon={<UploadOutlined />}
-                    className="w-full font-medium"
-                  >
-                    Upload ID
-                  </Button>
+                  {fileList.uploadIdentityProof.length === 0 && (
+                    <div className="flex flex-col items-center justify-center">
+                      <UploadOutlined style={{ fontSize: '24px' }} />
+                      <div className="mt-2">Upload ID</div>
+                      <div className="text-xs text-gray-500">JPG, PNG, PDF</div>
+                    </div>
+                  )}
                 </Upload>
 
-                {previews.uploadIdentityProof && (
-                  <p className="mt-2 rounded bg-purple-100 px-2 py-1 text-sm font-medium text-purple-700">
-                    ✓ File added
-                  </p>
-                )}
+                {/* {previews.uploadIdentityProof ? (
+                  <div className="mt-2">
+                    <img
+                      src={previews.uploadIdentityProof}
+                      alt="Identity Proof Preview"
+                      className="h-32 w-32 rounded-lg border object-cover shadow-sm"
+                    />
+                  </div>
+                ) : fileList.uploadIdentityProof.length > 0 && (
+                  <div className="mt-2 rounded bg-green-50 p-2">
+                    <div className="text-sm font-medium text-green-700">
+                      ✓ {fileList.uploadIdentityProof[0].name}
+                    </div>
+                    <div className="text-xs text-green-600">
+                      (PDF document uploaded)
+                    </div>
+                  </div>
+                )} */}
               </Form.Item>
             </Col>
           </Row>
+
+          <div className="mb-4 text-sm text-gray-600">
+            <p>* Required: Student Photo (Max 5MB, JPG/PNG/WebP)</p>
+            <p>* Documents: Max 5MB each, JPG/PNG/PDF format</p>
+          </div>
 
           <Button
             type="primary"
             htmlType="submit"
             size="large"
-            className="mt-4 w-full rounded-lg text-lg font-semibold"
+            loading={isPending}
+            className="mt-4 w-half rounded-lg text-lg font-semibold"
           >
-            Submit Student Details
+            {isPending ? "Submitting..." : "Submit Student Details"}
           </Button>
         </Form>
       </Card>

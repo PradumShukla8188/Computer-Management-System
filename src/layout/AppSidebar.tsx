@@ -1,21 +1,21 @@
 "use client";
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 import {
-  BoxCubeIcon,
-  // CalenderIcon,
-  ChevronDownIcon,
-  GridIcon,
-  HorizontaLDots,
-  // ListIcon,
-  // PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  // TableIcon,
-  UserCircleIcon,
+    BoxCubeIcon,
+    // CalenderIcon,
+    ChevronDownIcon,
+    GridIcon,
+    HorizontaLDots,
+    // ListIcon,
+    // PageIcon,
+    PieChartIcon,
+    PlugInIcon,
+    // TableIcon,
+    UserCircleIcon,
 } from "../icons/index";
 // import SidebarWidget from "./SidebarWidget";
 
@@ -30,7 +30,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    path: "/dashboard",
+    path: "/",
     // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
   /* -------------------------
@@ -41,8 +41,8 @@ const navItems: NavItem[] = [
     icon: <UserCircleIcon />, // <-- Replace with your actual icon
     path: "/student",
     subItems: [
-      { name: "Add Students", path: "/students", pro: false },
-      { name: "All Students", path: "/students", pro: false },
+      { name: "Add Students", path: "/student", pro: false },
+      { name: "All Students", path: "/student", pro: false },
     ],
   },
 
@@ -366,7 +366,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
+      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200
         ${isExpanded || isMobileOpen
           ? "w-[290px]"
           : isHovered

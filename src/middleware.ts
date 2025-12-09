@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value; // or session cookie
-  console.log("token------>>", token);
 
   const { pathname } = req.nextUrl;
 
