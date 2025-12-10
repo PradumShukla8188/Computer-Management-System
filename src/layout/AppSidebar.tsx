@@ -41,8 +41,7 @@ const navItems: NavItem[] = [
     icon: <UserCircleIcon />, // <-- Replace with your actual icon
     path: "/student",
     subItems: [
-      { name: "Add Students", path: "/student", pro: false },
-      { name: "All Students", path: "/student", pro: false },
+      { name: "Add Students", path: "/student/add", pro: false },
     ],
   },
 
@@ -191,9 +190,8 @@ const AppSidebar: React.FC = () => {
       {navItems.map((nav, index) => (
         <li key={nav.name}>
           {nav.subItems ? (
-            <button
-              onClick={() => handleSubmenuToggle(index, menuType)}
-              className={`menu-item group  ${openSubmenu?.type === menuType && openSubmenu?.index === index
+            <div
+              className={`menu-item group  ${(openSubmenu?.type === menuType && openSubmenu?.index === index) || (nav.path && isActive(nav.path))
                 ? "menu-item-active"
                 : "menu-item-inactive"
                 } cursor-pointer ${!isExpanded && !isHovered
@@ -201,27 +199,53 @@ const AppSidebar: React.FC = () => {
                   : "lg:justify-start"
                 }`}
             >
-              <span
-                className={` ${openSubmenu?.type === menuType && openSubmenu?.index === index
-                  ? "menu-item-icon-active"
-                  : "menu-item-icon-inactive"
-                  }`}
-              >
-                {nav.icon}
-              </span>
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <span className={`menu-item-text`}>{nav.name}</span>
+              {nav.path ? (
+                <Link href={nav.path} className="flex items-center flex-1">
+                  <span
+                    className={` ${(openSubmenu?.type === menuType && openSubmenu?.index === index) || isActive(nav.path)
+                      ? "menu-item-icon-active"
+                      : "menu-item-icon-inactive"
+                      }`}
+                  >
+                    {nav.icon}
+                  </span>
+                  {(isExpanded || isHovered || isMobileOpen) && (
+                    <span className={`menu-item-text`}>{nav.name}</span>
+                  )}
+                </Link>
+              ) : (
+                <button
+                  onClick={() => handleSubmenuToggle(index, menuType)}
+                  className="flex items-center flex-1"
+                >
+                  <span
+                    className={` ${openSubmenu?.type === menuType && openSubmenu?.index === index
+                      ? "menu-item-icon-active"
+                      : "menu-item-icon-inactive"
+                      }`}
+                  >
+                    {nav.icon}
+                  </span>
+                  {(isExpanded || isHovered || isMobileOpen) && (
+                    <span className={`menu-item-text`}>{nav.name}</span>
+                  )}
+                </button>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
-                <ChevronDownIcon
-                  className={`ml-auto w-5 h-5 transition-transform duration-200  ${openSubmenu?.type === menuType &&
-                    openSubmenu?.index === index
-                    ? "rotate-180 text-brand-500"
-                    : ""
-                    }`}
-                />
+                <button
+                  onClick={() => handleSubmenuToggle(index, menuType)}
+                  className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                >
+                  <ChevronDownIcon
+                    className={`w-5 h-5 transition-transform duration-200  ${openSubmenu?.type === menuType &&
+                      openSubmenu?.index === index
+                      ? "rotate-180 text-brand-500"
+                      : ""
+                      }`}
+                  />
+                </button>
               )}
-            </button>
+            </div>
           ) : (
             nav.path && (
               <Link

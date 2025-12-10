@@ -286,18 +286,31 @@ const handleCourseChange = (courseId: string) => {
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl bg-gray-50 p-4 md:p-8">
-      <h1 className="mb-6 text-left text-3xl font-bold text-gray-800">
-        ➕ Add New Student
-      </h1>
+      {/* Header Section */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+            ➕ Add New Student
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Fill in the details to register a new student
+          </p>
+        </div>
+      </div>
 
-      <Card className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
+      <Card className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           {/* ---------------- PERSONAL DETAILS ---------------- */}
-          <section className="mb-2 py-3">
-            <h2 className="mb-3 border-l-4 border-blue-600 pl-2 text-xl font-semibold text-gray-800">
-              👤 Personal Details
-            </h2>
-          </section>
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
+                <span className="text-lg">👤</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Personal Details
+              </h2>
+            </div>
+          </div>
 
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
@@ -388,11 +401,16 @@ const handleCourseChange = (courseId: string) => {
           </Row>
 
           {/* ---------------- CONTACT INFO ---------------- */}
-          <section className="mb-2 py-3">
-            <h2 className="mb-3 border-l-4 border-green-600 pl-2 text-xl font-semibold text-gray-800">
-              📞 Contact Information
-            </h2>
-          </section>
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                <span className="text-lg">📞</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Contact Information
+              </h2>
+            </div>
+          </div>
 
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
@@ -433,11 +451,16 @@ const handleCourseChange = (courseId: string) => {
           </Row>
 
           {/* ---------------- ADDRESS ---------------- */}
-          <section className="mb-2 py-3">
-            <h2 className="mb-3 border-l-4 border-purple-600 pl-2 text-xl font-semibold text-gray-800">
-              📍 Address Details
-            </h2>
-          </section>
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900">
+                <span className="text-lg">📍</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Address Details
+              </h2>
+            </div>
+          </div>
 
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
@@ -479,11 +502,16 @@ const handleCourseChange = (courseId: string) => {
           </Row>
 
           {/* ---------------- EDUCATION ---------------- */}
-          <section className="mb-2 py-3">
-            <h2 className="mb-3 border-l-4 border-yellow-500 pl-2 text-xl font-semibold text-gray-800">
-              🎓 Education Details
-            </h2>
-          </section>
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
+                <span className="text-lg">🎓</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Education Details
+              </h2>
+            </div>
+          </div>
 
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
@@ -561,11 +589,16 @@ const handleCourseChange = (courseId: string) => {
           </Row>
 
           {/* ---------------- FILE UPLOAD ---------------- */}
-          <section className="mb-2 py-3">
-            <h2 className="mb-3 border-l-4 border-red-500 pl-2 text-xl font-semibold text-gray-800">
-              📄 Upload Documents
-            </h2>
-          </section>
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900">
+                <span className="text-lg">📄</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Upload Documents
+              </h2>
+            </div>
+          </div>
 
           <Row gutter={[18, 18]}>
             {/* Student Photo */}
@@ -713,15 +746,17 @@ const handleCourseChange = (courseId: string) => {
             <p>* Documents: Max 5MB each, JPG/PNG/PDF format</p>
           </div>
 
-          <Button
-            type="primary"
-            htmlType="submit"
-            size="large"
-            loading={isPending}
-            className="mt-4 w-half rounded-lg text-lg font-semibold"
-          >
-            {isPending ? "Submitting..." : "Submit Student Details"}
-          </Button>
+          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              loading={isPending}
+              className="rounded-lg bg-blue-600 hover:bg-blue-700 px-8 h-12 text-base font-semibold"
+            >
+              {isPending ? "Submitting..." : "Submit Student Details"}
+            </Button>
+          </div>
         </Form>
       </Card>
     </div>

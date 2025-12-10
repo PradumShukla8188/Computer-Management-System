@@ -8,7 +8,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Public routes
-  const publicRoutes = ["/signin", "/signup"];
+  const publicRoutes = ["/signin", "/signup", "/student", "/student/add"];
 
   // If user is already logged in, prevent opening login page
   if (token && publicRoutes.includes(pathname)) {

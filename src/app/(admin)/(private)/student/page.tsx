@@ -1,19 +1,11 @@
-import AddStudent from "@/components/student/addStudent"
+import StudentList from "@/components/student/StudentList";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Student | Add ",
-  description: "This is page for adding students in this pannel.",
+  title: "Students | All Students",
+  description: "View and manage all registered students in the system.",
 };
-const Student = () => {
-    
-  return (
-    <>
-      <div className="studentForm">
-       <AddStudent/>
-      </div>
-    </>
-  )
-}
 
-export default Student
+export default function StudentListPage() {
+  return <StudentList />;
+}
