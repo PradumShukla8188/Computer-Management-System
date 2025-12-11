@@ -1,33 +1,33 @@
 "use client";
 
 import { ApiHitter } from "@/lib/axiosApi/apiHitter";
+import {
+    DeleteOutlined,
+    DownloadOutlined,
+    EditOutlined,
+    EyeOutlined,
+    MoreOutlined,
+    PlusOutlined,
+    SearchOutlined,
+    UserOutlined,
+} from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Button,
-  Card,
-  Input,
-  Select,
-  Table,
-  Tag,
-  Tooltip,
-  Avatar,
-  Space,
-  Dropdown,
+    Avatar,
+    Button,
+    Card,
+    Dropdown,
+    Input,
+    Select,
+    Space,
+    Table,
+    Tag,
+    Tooltip,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import {
-  SearchOutlined,
-  PlusOutlined,
-  EyeOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  MoreOutlined,
-  UserOutlined,
-  DownloadOutlined,
-} from "@ant-design/icons";
-import Link from "next/link";
-import { useState, useMemo } from "react";
 import dayjs from "dayjs";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
 const { Option } = Select;
 
@@ -60,145 +60,6 @@ interface Student {
   enrollmentNo?: string;
 }
 
-// Static demo data
-const staticStudents: Student[] = [
-  {
-    _id: "1",
-    name: "Rahul Sharma",
-    email: "rahul.sharma@email.com",
-    mobile: "9876543210",
-    gender: "Male",
-    dob: "2000-05-15",
-    fatherName: "Rajesh Sharma",
-    motherName: "Sunita Sharma",
-    category: "General",
-    religion: "Hindu",
-    residentialAddress: "123 Main Street, Sector 15",
-    state: "Delhi",
-    district: "New Delhi",
-    country: "India",
-    pinCode: "110001",
-    selectedCourse: "1",
-    courseName: "Computer Science",
-    courseDuration: "12 months",
-    dateOfAdmission: "2024-01-15",
-    session: "2024-2025",
-    totalFees: 45000,
-    examMode: "Online",
-    studentPhoto: "/images/user/user-17.jpg",
-    status: "Active",
-    enrollmentNo: "CS2024001",
-  },
-  {
-    _id: "2",
-    name: "Priya Patel",
-    email: "priya.patel@email.com",
-    mobile: "9876543211",
-    gender: "Female",
-    dob: "2001-08-22",
-    fatherName: "Amit Patel",
-    motherName: "Rekha Patel",
-    category: "OBC",
-    religion: "Hindu",
-    residentialAddress: "456 Park Avenue, Civil Lines",
-    state: "Gujarat",
-    district: "Ahmedabad",
-    country: "India",
-    pinCode: "380001",
-    selectedCourse: "2",
-    courseName: "Data Science",
-    courseDuration: "6 months",
-    dateOfAdmission: "2024-02-01",
-    session: "2024-2025",
-    totalFees: 35000,
-    examMode: "Offline",
-    studentPhoto: "/images/user/user-18.jpg",
-    status: "Active",
-    enrollmentNo: "DS2024002",
-  },
-  {
-    _id: "3",
-    name: "Amit Kumar",
-    email: "amit.kumar@email.com",
-    mobile: "9876543212",
-    gender: "Male",
-    dob: "1999-12-10",
-    fatherName: "Suresh Kumar",
-    motherName: "Geeta Kumar",
-    category: "SC",
-    religion: "Hindu",
-    residentialAddress: "789 Gandhi Road",
-    state: "Uttar Pradesh",
-    district: "Lucknow",
-    country: "India",
-    pinCode: "226001",
-    selectedCourse: "3",
-    courseName: "Web Development",
-    courseDuration: "9 months",
-    dateOfAdmission: "2024-01-20",
-    session: "2024-2025",
-    totalFees: 40000,
-    examMode: "Online",
-    studentPhoto: "/images/user/user-19.jpg",
-    status: "Pending",
-    enrollmentNo: "WD2024003",
-  },
-  {
-    _id: "4",
-    name: "Sneha Gupta",
-    email: "sneha.gupta@email.com",
-    mobile: "9876543213",
-    gender: "Female",
-    dob: "2002-03-05",
-    fatherName: "Vivek Gupta",
-    motherName: "Anjali Gupta",
-    category: "General",
-    religion: "Hindu",
-    residentialAddress: "321 Nehru Nagar",
-    state: "Maharashtra",
-    district: "Mumbai",
-    country: "India",
-    pinCode: "400001",
-    selectedCourse: "1",
-    courseName: "Computer Science",
-    courseDuration: "12 months",
-    dateOfAdmission: "2024-03-01",
-    session: "2024-2025",
-    totalFees: 45000,
-    examMode: "Online",
-    studentPhoto: "/images/user/user-20.jpg",
-    status: "Active",
-    enrollmentNo: "CS2024004",
-  },
-  {
-    _id: "5",
-    name: "Mohammad Ali",
-    email: "mohammad.ali@email.com",
-    mobile: "9876543214",
-    gender: "Male",
-    dob: "2000-11-18",
-    fatherName: "Ahmed Ali",
-    motherName: "Fatima Ali",
-    category: "General",
-    religion: "Muslim",
-    residentialAddress: "567 Jama Masjid Road",
-    state: "Delhi",
-    district: "Old Delhi",
-    country: "India",
-    pinCode: "110006",
-    selectedCourse: "2",
-    courseName: "Data Science",
-    courseDuration: "6 months",
-    dateOfAdmission: "2024-02-15",
-    session: "2024-2025",
-    totalFees: 35000,
-    examMode: "Offline",
-    studentPhoto: "/images/user/user-21.jpg",
-    status: "Inactive",
-    enrollmentNo: "DS2024005",
-  },
-];
-
 export default function StudentList() {
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -213,13 +74,12 @@ export default function StudentList() {
           showError: false,
           showSuccess: false,
         });
-        return response?.data || staticStudents;
-      } catch {
-        // Return static data if API fails
-        return staticStudents;
+        return response?.data
+      } catch(err) {
+        console.log("errr", err)
+        return err
       }
     },
-    initialData: staticStudents,
   });
 
   // Filter students based on search and filters
