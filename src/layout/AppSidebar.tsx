@@ -65,12 +65,12 @@ const navItems: NavItem[] = [
   {
     name: "Courses",
     icon: <UserCircleIcon />, // <-- Replace icon
+    path: "/courses",
     subItems: [
       { name: "Add", path: "/courses/add", pro: false },
       { name: "Edit", path: "/courses/edit", pro: false },
       { name: "View", path: "/courses/view", pro: false },
       { name: "Delete", path: "/courses/delete", pro: false },
-      { name: "List", path: "/courses", pro: false },
     ],
   },
 
@@ -333,8 +333,15 @@ const AppSidebar: React.FC = () => {
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // const isActive = (path: string) => path === pathname;
-  const isActive = useCallback((path: string) => path === pathname, [pathname]);
+  // Check if the current path matches or starts with the given path
+  const isActive = useCallback((path: string) => {
+    // For root path, exact match only
+    if (path === '/') {
+      return pathname === '/';
+    }
+    // For other paths, check if pathname starts with the path
+    return pathname === path || pathname.startsWith(path + '/');
+  }, [pathname]);
 
   useEffect(() => {
     // Check if the current path matches any submenu item

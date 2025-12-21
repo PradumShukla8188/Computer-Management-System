@@ -1,5 +1,6 @@
 "use client";
 
+import { Student } from "@/interfaces/addStudent";
 import { ApiHitter } from "@/lib/axiosApi/apiHitter";
 import {
     DeleteOutlined,
@@ -31,34 +32,6 @@ import { useMemo, useState } from "react";
 
 const { Option } = Select;
 
-// Student interface based on addStudent form
-interface Student {
-  _id: string;
-  name: string;
-  email: string;
-  mobile: string;
-  gender: string;
-  dob: string;
-  fatherName: string;
-  motherName: string;
-  category: string;
-  religion: string;
-  residentialAddress: string;
-  state: string;
-  district: string;
-  country: string;
-  pinCode: string;
-  selectedCourse: string;
-  courseName?: string;
-  courseDuration: string;
-  dateOfAdmission: string;
-  session: string;
-  totalFees: number;
-  examMode: string;
-  studentPhoto: string;
-  status?: "Active" | "Inactive" | "Pending";
-  enrollmentNo?: string;
-}
 
 export default function StudentList() {
   const [searchText, setSearchText] = useState("");
@@ -69,22 +42,17 @@ export default function StudentList() {
   const { data: studentsData, isLoading } = useQuery({
     queryKey: ["students"],
     queryFn: async () => {
-      try {
-        const response = await ApiHitter("GET", "GET_STUDENT_LIST", {}, "", {
-          showError: false,
-          showSuccess: false,
-        });
-        return response?.data
-      } catch(err) {
-        console.log("errr", err)
-        return err
-      }
+      const response = await ApiHitter("GET", "GET_STUDENT_LIST", {}, "", {
+        showError: false,
+        showSuccess: false,
+      });
+      return response?.data || [];
     },
   });
 
   // Filter students based on search and filters
   const filteredStudents = useMemo(() => {
-    let result = studentsData || [];
+    let result = Array.isArray(studentsData) ? studentsData : [];
 
     if (searchText) {
       const search = searchText.toLowerCase();
@@ -114,8 +82,10 @@ export default function StudentList() {
 
   // Get unique courses for filter
   const uniqueCourses = useMemo((): string[] => {
+    if (!Array.isArray(studentsData)) return [];
+    
     const courses = new Set(
-      (studentsData || []).map((s: Student) => s.courseName).filter(Boolean) as string[]
+      studentsData.map((s: Student) => s.courseName).filter(Boolean) as string[]
     );
     return Array.from(courses);
   }, [studentsData]);
@@ -384,8 +354,7 @@ export default function StudentList() {
                 Active Students
               </p>
               <p className="text-2xl font-bold text-gray-800 dark:text-white">
-                {studentsData?.filter((s: Student) => s.status === "Active")
-                  .length || 0}
+                {Array.isArray(studentsData) ? studentsData.filter((s: Student) => s.status === "Active").length : 0}
               </p>
             </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
@@ -401,8 +370,7 @@ export default function StudentList() {
                 Pending Approvals
               </p>
               <p className="text-2xl font-bold text-gray-800 dark:text-white">
-                {studentsData?.filter((s: Student) => s.status === "Pending")
-                  .length || 0}
+                {Array.isArray(studentsData) ? studentsData.filter((s: Student) => s.status === "Pending").length : 0}
               </p>
             </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">

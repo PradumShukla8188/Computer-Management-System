@@ -1,15 +1,28 @@
-import ViewStudent from "@/components/student/ViewStudent";
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
+import { CustomLoader } from "@/components/common";
+
+const ViewStudent = dynamic(
+  () => import("@/components/student/ViewStudent"),
+  { ssr: true, loading: () => <CustomLoader /> }
+);
 
 export const metadata: Metadata = {
   title: "Student | View",
   description: "This is page for view students seperately.",
 };
-const Student = () => {
 
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+const Student = async ({ params }: PageProps) => {
+  const { id } = await params;
   return (
     <>
-       <ViewStudent/>
+       <ViewStudent id={id} />
     </>
   )
 }

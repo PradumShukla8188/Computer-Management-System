@@ -1,0 +1,860 @@
+"use client";
+
+import { addStudent, courseData } from "@/interfaces/addStudent";
+import { ApiHitter } from "@/lib/axiosApi/apiHitter";
+import { UploadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Upload,
+  message,
+  Spin,
+} from "antd";
+import type { UploadFile } from "antd/es/upload/interface";
+import dayjs from "dayjs";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+const { Option } = Select;
+
+const genderOptions = ["Male", "Female", "Other"];
+const religionOptions = [
+  "Hindu",
+  "Muslim",
+  "Sikh",
+  "Christian",
+  "Jain",
+  "Buddhist",
+  "Other",
+];
+const categoryOptions = ["General", "OBC", "SC", "ST", "Other"];
+const examModeOptions = ["Online", "Offline"];
+
+// Allowed file types
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ALLOWED_DOC_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+
+interface StudentFormProps {
+  mode: "add" | "edit";
+  studentId?: string;
+  initialData?: any;
+}
+
+export default function StudentForm({ mode, studentId, initialData }: StudentFormProps) {
+  const [form] = Form.useForm();
+  const router = useRouter();
+  const isEditMode = mode === "edit";
+
+  const [fileList, setFileList] = useState<{
+    studentPhoto: UploadFile[];
+    uploadEducationProof: UploadFile[];
+    uploadIdentityProof: UploadFile[];
+  }>({
+    studentPhoto: [],
+    uploadEducationProof: [],
+    uploadIdentityProof: [],
+  });
+  
+  // Store backend URLs
+  const [uploadedUrls, setUploadedUrls] = useState<{
+    studentPhoto: string | null;
+    uploadEducationProof: string | null;
+    uploadIdentityProof: string | null;
+  }>({
+    studentPhoto: null,
+    uploadEducationProof: null,
+    uploadIdentityProof: null,
+  });
+
+  // Previews for local display
+  const [previews, setPreviews] = useState({
+    studentPhoto: null as string | null,
+    uploadEducationProof: null as string | null,
+    uploadIdentityProof: null as string | null,
+  });
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
+  const [selectedReligion, setSelectedReligion] = useState<string>("");
+
+  // Fetch student data for edit mode
+  const { data: studentData, isLoading: studentLoading } = useQuery({
+    queryKey: ['student', studentId],
+    queryFn: async () => {
+      if (!studentId) return null;
+      const response = await ApiHitter("GET", "GET_STUDENT_LIST", {}, studentId, {
+        showError: true,
+        showSuccess: false
+      });
+      return response?.data || null;
+    },
+    enabled: isEditMode && !!studentId,
+  });
+
+  // Get courses
+  const { data: courseData, isLoading: coursesLoading } = useQuery({
+    queryKey: ['courses'],
+    queryFn: async () => {
+      const response = await ApiHitter("GET", "GET_COURSE_LIST", {}, "", {
+        showError: true,
+        showSuccess: false
+      });
+      return response?.data || [];
+    },
+  });
+
+  // Prefill form when editing
+  useEffect(() => {
+    if (isEditMode && (studentData || initialData)) {
+      const data = studentData || initialData;
+      form.setFieldsValue({
+        ...data,
+        dob: data.dob ? dayjs(data.dob) : null,
+        dateOfAdmission: data.dateOfAdmission ? dayjs(data.dateOfAdmission) : null,
+      });
+      setSelectedCourseId(data.selectedCourse || "");
+      setSelectedReligion(data.religion || "");
+      
+      // Set existing images in fileList for proper display in Upload component
+      if (data.studentPhoto) {
+        setFileList(prev => ({
+          ...prev,
+          studentPhoto: [{
+            uid: '-1',
+            name: 'student-photo',
+            status: 'done',
+            url: data.studentPhoto,
+          }]
+        }));
+        setUploadedUrls(prev => ({ ...prev, studentPhoto: data.studentPhoto }));
+      }
+      
+      if (data.uploadEducationProof) {
+        setFileList(prev => ({
+          ...prev,
+          uploadEducationProof: [{
+            uid: '-2',
+            name: 'education-proof',
+            status: 'done',
+            url: data.uploadEducationProof,
+          }]
+        }));
+        setUploadedUrls(prev => ({ ...prev, uploadEducationProof: data.uploadEducationProof }));
+      }
+      
+      if (data.uploadIdentityProof) {
+        setFileList(prev => ({
+          ...prev,
+          uploadIdentityProof: [{
+            uid: '-3',
+            name: 'identity-proof',
+            status: 'done',
+            url: data.uploadIdentityProof,
+          }]
+        }));
+        setUploadedUrls(prev => ({ ...prev, uploadIdentityProof: data.uploadIdentityProof }));
+      }
+    }
+  }, [studentData, initialData, isEditMode, form]);
+
+  const handleCourseChange = (courseId: string) => {
+    setSelectedCourseId(courseId);
+
+    // Find the selected course
+    const selectedCourse = courseData?.find((course: courseData) => course._id === courseId);
+
+    if (selectedCourse) {
+      // Set the duration in the form
+      form.setFieldsValue({
+        courseDuration: `${selectedCourse.durationInMonths} months`
+      });
+    } else {
+      // Clear duration if no course selected
+      form.setFieldsValue({
+        courseDuration: ""
+      });
+    }
+  };
+
+  // Handle file upload and preview
+  const handleFileChange = (info: any, field: keyof typeof fileList) => {
+    const { file } = info;
+
+    // Check file type
+    if (field === 'studentPhoto' && file.originFileObj) {
+      const fileType = file.originFileObj.type;
+      if (!ALLOWED_IMAGE_TYPES.includes(fileType)) {
+        message.error('Please upload only image files (JPEG, JPG, PNG, WebP) for student photo!');
+        return;
+      }
+    }
+
+    // Update file list
+    setFileList(prev => ({
+      ...prev,
+      [field]: file.status === 'removed' ? [] : [file]
+    }));
+
+    // Generate preview for images
+    if (file.originFileObj && file.status !== 'removed') {
+      const isImage = ALLOWED_IMAGE_TYPES.includes(file.originFileObj.type);
+      if (isImage) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setPreviews(prev => ({
+            ...prev,
+            [field]: e.target?.result as string
+          }));
+        };
+        reader.readAsDataURL(file.originFileObj);
+      } else {
+        setPreviews(prev => ({
+          ...prev,
+          [field]: null
+        }));
+      }
+    } else {
+      setPreviews(prev => ({
+        ...prev,
+        [field]: null
+      }));
+    }
+  };
+
+  // Real upload request
+  const uploadFileRequest = async (options: any, field: keyof typeof uploadedUrls) => {
+    const { file, onSuccess, onError } = options;
+
+    const formData = new FormData();
+    formData.append('files', file);
+
+    try {
+      const response = await ApiHitter("POST", "UPLOAD", formData, "", {
+        showSuccess: false,
+        showError: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response && response.length > 0) {
+        const uploadedUrl = response[0].path; // Backend returns array of files
+        setUploadedUrls(prev => ({ ...prev, [field]: uploadedUrl }));
+        message.success(`${field} uploaded successfully`);
+        onSuccess("ok");
+      } else {
+        throw new Error("Upload failed - No URL returned");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      onError({ err });
+      message.error(`${field} upload failed`);
+    }
+  };
+
+  // Custom before upload validation
+  const beforeUpload = (file: File, field: string) => {
+    let isValid = true;
+    let errorMessage = '';
+
+    if (field === 'studentPhoto') {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        isValid = false;
+        errorMessage = 'Student photo must be an image (JPEG, JPG, PNG, WebP)!';
+      }
+    } else {
+      if (!ALLOWED_DOC_TYPES.includes(file.type)) {
+        isValid = false;
+        errorMessage = 'Document must be an image or PDF!';
+      }
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      isValid = false;
+      errorMessage = 'File size must be less than 5MB!';
+    }
+
+    if (!isValid) {
+      message.error(errorMessage);
+      return Upload.LIST_IGNORE;
+    }
+
+    return true;
+  };
+
+  // Add student mutation
+  const { mutate: addStudentMutation, isPending: isAddPending } = useMutation({
+    mutationFn: (body: addStudent) =>
+      ApiHitter("POST", "ADD_STUDENT", body, "", {
+        showSuccess: true,
+        successMessage: "Student added successfully",
+        showError: true,
+      }),
+
+    onSuccess: (res) => {
+      message.success(res?.message || "Student added successfully!");
+      form.resetFields();
+      setFileList({
+        studentPhoto: [],
+        uploadEducationProof: [],
+        uploadIdentityProof: [],
+      });
+      setPreviews({
+        studentPhoto: null,
+        uploadEducationProof: null,
+        uploadIdentityProof: null,
+      });
+      setUploadedUrls({
+        studentPhoto: null,
+        uploadEducationProof: null,
+        uploadIdentityProof: null,
+      });
+      router.push("/student");
+    },
+    onError: (error: any) => {
+      console.error("Error adding student:", error);
+      message.error(error?.response?.data?.message || "Failed to add student");
+    },
+  });
+
+  // Edit student mutation
+  const { mutate: editStudentMutation, isPending: isEditPending } = useMutation({
+    mutationFn: (body: addStudent) =>
+      ApiHitter("POST", "EDIT_STUDENT", body, studentId || "", {
+        showSuccess: true,
+        successMessage: "Student updated successfully",
+        showError: true,
+      }),
+
+    onSuccess: () => {
+      message.success("Student updated successfully!");
+      router.push("/student");
+    },
+    onError: (error) => {
+      console.error("Error updating student:", error);
+      message.error("Failed to update student");
+    },
+  });
+
+  const isPending = isAddPending || isEditPending;
+
+  const handleSubmit = async (values: any) => {
+    try {
+      // Validate required files only for add mode
+      if (!isEditMode && !fileList.studentPhoto.length && !previews.studentPhoto) {
+        message.error("Please upload student photo!");
+        return;
+      }
+
+      // Convert dates
+      values.dob = dayjs(values.dob).toISOString();
+      values.dateOfAdmission = dayjs(values.dateOfAdmission).toISOString();
+      
+      // Use uploaded URLs or existing ones, fallback only if absolutely necessary (or handle validation)
+      values.studentPhoto = uploadedUrls.studentPhoto || null;
+      values.uploadEducationProof = uploadedUrls.uploadEducationProof || null;
+      values.uploadIdentityProof = uploadedUrls.uploadIdentityProof || null;
+
+      // Prepare student data
+      const studentData: any = { ...values };
+
+      // Call appropriate mutation
+      if (isEditMode) {
+        editStudentMutation(studentData);
+      } else {
+        addStudentMutation(studentData);
+      }
+
+    } catch (err) {
+      console.error("Submission error:", err);
+      message.error("❌ Failed to submit student");
+    }
+  };
+
+  if (isEditMode && studentLoading) {
+    return (
+      <div className="mx-auto min-h-screen max-w-6xl bg-gray-50 p-4 md:p-8 flex items-center justify-center">
+        <Spin size="large" tip="Loading student data..." />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto min-h-screen max-w-6xl bg-gray-50 p-4 md:p-8">
+      {/* Header Section */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Link href="/student">
+            <Button 
+              type="text" 
+              icon={<ArrowLeftOutlined />}
+              className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+            />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+              {isEditMode ? "✏️ Edit Student" : "➕ Add New Student"}
+            </h1>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {isEditMode ? "Update student details" : "Fill in the details to register a new student"}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <Card className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+          {/* ---------------- PERSONAL DETAILS ---------------- */}
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
+                <span className="text-lg">👤</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Personal Details
+              </h2>
+            </div>
+          </div>
+
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Student Name"
+                name="name"
+                rules={[
+                  { required: true, message: "Student name is required" },
+                ]}
+              >
+                <Input placeholder="Enter student full name" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Date of Birth"
+                name="dob"
+                rules={[
+                  { required: true, message: "Please select date of birth" },
+                ]}
+              >
+                <DatePicker className="w-full" format="YYYY-MM-DD" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Gender"
+                name="gender"
+                rules={[{ required: true, message: "Please select gender" }]}
+              >
+                <Select placeholder="Select gender">
+                  {genderOptions.map((g) => (
+                    <Option key={g}>{g}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Religion"
+                name="religion"
+                rules={[{ required: true, message: "Please select religion" }]}
+              >
+                <Select 
+                  placeholder="Select religion"
+                  onChange={(value) => {
+                    setSelectedReligion(value);
+                    // Clear category if religion is not Hindu
+                    if (value !== "Hindu") {
+                      form.setFieldValue("category", undefined);
+                    }
+                  }}
+                >
+                  {religionOptions.map((r) => (
+                    <Option key={r}>{r}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            {selectedReligion === "Hindu" && (
+              <Col xs={24} md={12}>
+                <Form.Item
+                  label="Category"
+                  name="category"
+                  rules={[{ required: true, message: "Please select category" }]}
+                >
+                  <Select placeholder="Select category">
+                    {categoryOptions.map((c) => (
+                      <Option key={c}>{c}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Father Name"
+                name="fatherName"
+                rules={[{ required: true, message: "Father's name required" }]}
+              >
+                <Input placeholder="Enter Father's Name" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Mother Name"
+                name="motherName"
+                rules={[{ required: true, message: "Mother's name required" }]}
+              >
+                <Input placeholder="Enter Mother's Name" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* ---------------- CONTACT INFO ---------------- */}
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                <span className="text-lg">📞</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Contact Information
+              </h2>
+            </div>
+          </div>
+
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Mobile"
+                name="mobile"
+                rules={[{ required: true, message: "Mobile number required" }]}
+              >
+                <Input 
+                  placeholder="e.g. 9876543210" 
+                  disabled={isEditMode}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "Enter a valid email",
+                  },
+                ]}
+              >
+                <Input 
+                  placeholder="example@gmail.com" 
+                  disabled={isEditMode}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col span={24}>
+              <Form.Item
+                label="Residential Address"
+                name="residentialAddress"
+                rules={[{ required: true, message: "Address required" }]}
+              >
+                <Input.TextArea rows={2} placeholder="Full address" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* ---------------- ADDRESS ---------------- */}
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900">
+                <span className="text-lg">📍</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Address Details
+              </h2>
+            </div>
+          </div>
+
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="State"
+                name="state"
+                rules={[{ required: true, message: "State required" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="District"
+                name="district"
+                rules={[{ required: true, message: "District required" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Country"
+                name="country"
+                rules={[{ required: true, message: "Country required" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Pin Code"
+                name="pinCode"
+                rules={[{ required: true, message: "Pin code required" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* ---------------- EDUCATION ---------------- */}
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
+                <span className="text-lg">🎓</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Education Details
+              </h2>
+            </div>
+          </div>
+
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Select Course"
+                name="selectedCourse"
+                rules={[{ required: true, message: "Course required" }]}
+              >
+                <Select
+                  placeholder="Select a course"
+                  loading={coursesLoading}
+                  onChange={handleCourseChange}
+                  disabled={isEditMode}
+                >
+                  {courseData?.map((course: courseData) => (
+                    <Option key={course._id} value={course._id}>
+                      {course.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Course Duration"
+                name="courseDuration"
+              >
+                <Input
+                  readOnly
+                  className="bg-gray-50"
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Date of Admission"
+                name="dateOfAdmission"
+                rules={[{ required: true, message: "Select admission date" }]}
+              >
+                <DatePicker 
+                  className="w-full" 
+                  format="YYYY-MM-DD" 
+                  disabled={isEditMode}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Session"
+                name="session"
+                rules={[{ required: true, message: "Session required" }]}
+              >
+                <Input disabled={isEditMode} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Total Fees"
+                name="totalFees"
+                rules={[{ required: true, message: "Fees required" }]}
+              >
+                <InputNumber className="w-full" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Exam Mode"
+                name="examMode"
+                rules={[{ required: true, message: "Select exam mode" }]}
+              >
+                <Select placeholder="Choose mode">
+                  {examModeOptions.map((m) => (
+                    <Option key={m}>{m}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* ---------------- FILE UPLOAD ---------------- */}
+          <div className="mb-6 mt-8">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900">
+                <span className="text-lg">📄</span>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Upload Documents
+              </h2>
+            </div>
+          </div>
+
+          <Row gutter={[18, 18]}>
+            <Col xs={24} sm={12} md={8}>
+              <Form.Item
+                label={isEditMode ? "Student Photo (Optional)" : "Student Photo *"}
+                required={!isEditMode}
+              >
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList.studentPhoto}
+                  maxCount={1}
+                  beforeUpload={(file) => beforeUpload(file, 'studentPhoto')}
+                  customRequest={(options) => uploadFileRequest(options, 'studentPhoto')}
+                  onChange={(info) => handleFileChange(info, 'studentPhoto')}
+                  onRemove={() => {
+                    setFileList(prev => ({ ...prev, studentPhoto: [] }));
+                    setPreviews(prev => ({ ...prev, studentPhoto: null }));
+                    setUploadedUrls(prev => ({ ...prev, studentPhoto: null }));
+                  }}
+                  accept="image/*"
+                  className="w-full"
+                >
+                  {fileList.studentPhoto.length === 0 && (
+                    <div className="flex flex-col items-center justify-center">
+                      <UploadOutlined style={{ fontSize: '24px' }} />
+                      <div className="mt-2">{isEditMode ? "Update Photo" : "Upload Photo"}</div>
+                      <div className="text-xs text-gray-500">JPG, PNG, WebP</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+            </Col>
+
+            {/* Education Proof */}
+            <Col xs={24} sm={12} md={8}>
+              <Form.Item
+                label="Education Proof"
+              >
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList.uploadEducationProof}
+                  maxCount={1}
+                  beforeUpload={(file) => beforeUpload(file, 'document')}
+                  customRequest={(options) => uploadFileRequest(options, 'uploadEducationProof')}
+                  onChange={(info) => handleFileChange(info, 'uploadEducationProof')}
+                  onRemove={() => {
+                    setFileList(prev => ({ ...prev, uploadEducationProof: [] }));
+                    setPreviews(prev => ({ ...prev, uploadEducationProof: null }));
+                    setUploadedUrls(prev => ({ ...prev, uploadEducationProof: null }));
+                  }}
+                  accept="image/*,.pdf"
+                  className="w-full"
+                >
+                  {fileList.uploadEducationProof.length === 0 && (
+                    <div className="flex flex-col items-center justify-center">
+                      <UploadOutlined style={{ fontSize: '24px' }} />
+                      <div className="mt-2">Upload Document</div>
+                      <div className="text-xs text-gray-500">JPG, PNG, PDF</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+            </Col>
+
+            {/* Identity Proof */}
+            <Col xs={24} sm={12} md={8}>
+              <Form.Item
+                label="Identity Proof"
+              >
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList.uploadIdentityProof}
+                  maxCount={1}
+                  beforeUpload={(file) => beforeUpload(file, 'document')}
+                  customRequest={(options) => uploadFileRequest(options, 'uploadIdentityProof')}
+                  onChange={(info) => handleFileChange(info, 'uploadIdentityProof')}
+                  onRemove={() => {
+                    setFileList(prev => ({ ...prev, uploadIdentityProof: [] }));
+                    setPreviews(prev => ({ ...prev, uploadIdentityProof: null }));
+                    setUploadedUrls(prev => ({ ...prev, uploadIdentityProof: null }));
+                  }}
+                  accept="image/*,.pdf"
+                  className="w-full"
+                >
+                  {fileList.uploadIdentityProof.length === 0 && (
+                    <div className="flex flex-col items-center justify-center">
+                      <UploadOutlined style={{ fontSize: '24px' }} />
+                      <div className="mt-2">Upload ID</div>
+                      <div className="text-xs text-gray-500">JPG, PNG, PDF</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <div className="mb-4 text-sm text-gray-600">
+            <p>* {isEditMode ? "Photo is optional when editing" : "Required: Student Photo (Max 5MB, JPG/PNG/WebP)"}</p>
+            <p>* Documents: Max 5MB each, JPG/PNG/PDF format</p>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 flex gap-4">
+            <Link href="/student">
+              <Button
+                size="large"
+                className="rounded-lg px-8 h-12"
+              >
+                Cancel
+              </Button>
+            </Link>
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              loading={isPending}
+              className="rounded-lg bg-blue-600 hover:bg-blue-700 px-8 h-12 text-base font-semibold"
+            >
+              {isPending 
+                ? (isEditMode ? "Updating..." : "Submitting...") 
+                : (isEditMode ? "Update Student" : "Submit Student Details")
+              }
+            </Button>
+          </div>
+        </Form>
+      </Card>
+    </div>
+  );
+}
