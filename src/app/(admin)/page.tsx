@@ -1,8 +1,22 @@
 import type { Metadata } from "next";
-import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
-import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
-import StatisticsChart from "@/components/ecommerce/StatisticsChart";
-// import React from "react";
+import dynamic from "next/dynamic";
+import { CustomLoader } from "@/components/common";
+
+const EcommerceMetrics = dynamic(
+  () => import("@/components/ecommerce/EcommerceMetrics").then(mod => ({ default: mod.EcommerceMetrics })),
+  { ssr: true, loading: () => <CustomLoader height="200px" /> }
+);
+
+const MonthlySalesChart = dynamic(
+  () => import("@/components/ecommerce/MonthlySalesChart"),
+  { ssr: true, loading: () => <CustomLoader height="400px" /> }
+);
+
+const StatisticsChart = dynamic(
+  () => import("@/components/ecommerce/StatisticsChart"),
+  { ssr: true, loading: () => <CustomLoader height="400px" /> }
+);
+
 // import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
 // import AddStudent from "@/components/student/addStudent";
 // import RecentOrders from "@/components/ecommerce/RecentOrders";

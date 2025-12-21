@@ -1,19 +1,17 @@
-import AddStudent from "@/components/student/addStudent"
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
+import { CustomLoader } from "@/components/common";
+
+const StudentList = dynamic(() => import("@/components/student/StudentList"), { 
+  ssr: true, 
+  loading: () => <CustomLoader /> 
+});
 
 export const metadata: Metadata = {
-  title: "Student | Add ",
-  description: "This is page for adding students in this pannel.",
+  title: "Students | All Students",
+  description: "View and manage all registered students in the system.",
 };
-const Student = () => {
-    
-  return (
-    <>
-      <div className="studentForm">
-       <AddStudent/>
-      </div>
-    </>
-  )
-}
 
-export default Student
+export default function StudentListPage() {
+  return <StudentList />;
+}

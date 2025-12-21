@@ -1,23 +1,28 @@
-// middleware.ts
+// proxy.ts
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const token = req.cookies.get("token")?.value; // or session cookie
-  console.log("token------>>", token);
 
   const { pathname } = req.nextUrl;
 
-  // Public routes
+  // Public routes (exact match)
   const publicRoutes = ["/signin", "/signup"];
+  
+  // Routes that should be public with prefix matching
+  const publicPrefixes: string[] = [];
+
+  const isPublicRoute = publicRoutes.includes(pathname) || 
+    publicPrefixes.some(prefix => pathname.startsWith(prefix));
 
   // If user is already logged in, prevent opening login page
-  if (token && publicRoutes.includes(pathname)) {
+  if (token && (pathname === "/signin" || pathname === "/signup")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   // If user is NOT logged in and trying to access private routes
-  if (!token && !publicRoutes.includes(pathname)) {
+  if (!token && !isPublicRoute) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
 

@@ -7,16 +7,23 @@ interface ApiOptions {
     showSuccess?: boolean;
     successMessage?: string;
     showError?: boolean;
+    headers?: object;
 }
 
 export async function ApiHitter(method: keyof ApiMethods, apiName: APIENDPOINTS_TYPE, bodyData: object, params: string | number, options: ApiOptions = {}) {
     const { showSuccess = false, successMessage, showError = true } = options;
 
     try {
+        let url = `${apiEndPoints[apiName]}`;
+        if (params && typeof params !== 'object') {
+            url += `/${params}`;
+        }
+
         const res = await axiosInstance({
             method: apiMethods[method],
-            url: params ? `${apiEndPoints[apiName]}/${params}` : `${apiEndPoints[apiName]}`,
+            url: url,
             data: bodyData,
+            headers: options?.headers
         });
 
         if (showSuccess && res.data?.success === true) {
