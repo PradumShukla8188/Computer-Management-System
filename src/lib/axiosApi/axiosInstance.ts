@@ -26,8 +26,15 @@ axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
     if (error?.response?.status === 401) {
-      console.warn("Unauthorized → handle logout or refresh token");
-      // you can auto-logout or refresh token here
+      console.warn("Unauthorized → logging out");
+      
+      // Clear token from cookies
+      Cookies.remove("token");
+      
+      // Redirect to signin
+      if (typeof window !== "undefined") {
+        window.location.href = "/signin";
+      }
     }
     return Promise.reject(error);
   },
