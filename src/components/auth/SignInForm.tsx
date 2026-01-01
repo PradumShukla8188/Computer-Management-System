@@ -62,7 +62,7 @@ export default function SignInForm() {
         showError: true,
       }),
     onSuccess: (res: LoginResponse) => {
-      console.log("ressss", res);
+      console.log("login success res ==>", res);
       if (res?.data?.token) {
         const isProduction = process.env.NODE_ENV === "production";
 

@@ -13,3 +13,6 @@ export const apiMethods: ApiMethods = {
     PUT: "put",
     PATCH: "patch",
 };
+
+
+

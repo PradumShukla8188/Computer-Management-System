@@ -5,18 +5,19 @@ import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 import {
-    BoxCubeIcon,
-    // CalenderIcon,
-    ChevronDownIcon,
-    GridIcon,
-    HorizontaLDots,
-    // ListIcon,
-    // PageIcon,
-    PieChartIcon,
-    PlugInIcon,
-    // TableIcon,
-    UserCircleIcon,
+  BoxCubeIcon,
+  // CalenderIcon,
+  ChevronDownIcon,
+  GridIcon,
+  HorizontaLDots,
+  // ListIcon,
+  // PageIcon,
+  PieChartIcon,
+  PlugInIcon,
+  // TableIcon,
+  UserCircleIcon,
 } from "../icons/index";
+import Logo from "@/components/common/logo";
 // import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
@@ -33,35 +34,10 @@ const navItems: NavItem[] = [
     path: "/",
     // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
-  /* -------------------------
-     STUDENTS
- -------------------------- */
-  {
-    name: "Students",
-    icon: <UserCircleIcon />, // <-- Replace with your actual icon
-    path: "/student",
-    subItems: [
-      { name: "Add Students", path: "/student/add", pro: false },
-    ],
-  },
 
   /* -------------------------
-      EXAM & MARKS
-  -------------------------- */
-  {
-    name: "Exam & Marks",
-    icon: <UserCircleIcon />, // <-- Replace icon
-    subItems: [
-      { name: "Download Admit Card", path: "/exam/admit-card", pro: false },
-      { name: "Update Marks", path: "/exam/update-marks", pro: false },
-      { name: "View Marks", path: "/exam/view-marks", pro: false },
-      { name: "Certification Issued", path: "/exam/certificates", pro: false },
-    ],
-  },
-
-  /* -------------------------
-      COURSES
-  -------------------------- */
+    COURSES
+-------------------------- */
   {
     name: "Courses",
     icon: <UserCircleIcon />, // <-- Replace icon
@@ -71,6 +47,41 @@ const navItems: NavItem[] = [
       { name: "Edit", path: "/courses/edit", pro: false },
       { name: "View", path: "/courses/view", pro: false },
       { name: "Delete", path: "/courses/delete", pro: false },
+    ],
+  },
+
+  /* -------------------------
+     STUDENTS
+ -------------------------- */
+  {
+    name: "Students",
+    icon: <UserCircleIcon />, // <-- Replace with your actual icon
+    path: "/student",
+    subItems: [
+      { name: "Add Students", path: "/student/add", pro: false },
+      { name: "Download Admit Card", path: "/student/admit-card", pro: false },
+    ],
+  },
+
+  /* -------------------------
+      EXAM & MARKS
+  -------------------------- */
+  {
+    name: "Exams",
+    icon: <UserCircleIcon />,
+    subItems: [
+      { name: "Add Exam", path: "/exam/create", pro: false },
+      // { name: "View Exams", path: "/exam/view", pro: false },
+    ],
+  },
+
+  {
+    name: "Marks",
+    icon: <UserCircleIcon />, // <-- Replace icon
+    subItems: [
+      { name: "Update Marks", path: "/exam/update-marks", pro: false },
+      { name: "View Marks", path: "/exam/view-marks", pro: false },
+      // { name: "Certification Issued", path: "/exam/certificates", pro: false },
     ],
   },
 
@@ -418,11 +429,12 @@ const AppSidebar: React.FC = () => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/images/logo/SST-logo.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={75}
+                height={50}
               />
+              {/* <Logo /> */}
               <Image
                 className="hidden dark:block"
                 src="/images/logo/logo-dark.svg"
