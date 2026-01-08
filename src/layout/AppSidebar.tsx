@@ -92,8 +92,8 @@ const navItems: NavItem[] = [
     name: "Student Fees",
     icon: <UserCircleIcon />, // <-- Replace icon
     subItems: [
-      { name: "Add Fee", path: "/fees/add", pro: false },
-      { name: "Fees Collection List", path: "/fees/list", pro: false },
+      { name: "Add Fee", path: "/student-fees/add-fees", pro: false },
+      { name: "Fees Collection List", path: "/student-fees", pro: false },
     ],
   },
 
@@ -429,7 +429,7 @@ const AppSidebar: React.FC = () => {
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/SST-logo.png"
+                src="/images/logo/SSTCI.jpg"
                 alt="Logo"
                 width={75}
                 height={50}

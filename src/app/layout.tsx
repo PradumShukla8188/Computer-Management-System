@@ -1,5 +1,6 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
+import '@/styles/custom.css';
 import 'antd/dist/reset.css'; //ant design
 
 import { SidebarProvider } from '@/context/SidebarContext';

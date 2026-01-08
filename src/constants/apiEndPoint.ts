@@ -11,6 +11,8 @@ export const apiEndPoints = {
   ADD_COURSE: "/course/create",
   // EDIT_COURSE: "/course/edit",
   DELETE_COURSE: "/course/delete",
+
+  GET_STUDENT_FEES_LIST: "/student/fees/list"
 };
 
 export type APIENDPOINTS_TYPE = keyof typeof apiEndPoints;
