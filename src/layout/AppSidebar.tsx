@@ -17,7 +17,7 @@ import {
   // TableIcon,
   UserCircleIcon,
 } from "../icons/index";
-import Logo from "@/components/common/logo";
+// import Logo from "@/components/common/logo";
 // import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
@@ -79,9 +79,9 @@ const navItems: NavItem[] = [
     name: "Marks",
     icon: <UserCircleIcon />, // <-- Replace icon
     subItems: [
+      { name: "Add Marks", path: "/exam/certificates", pro: false },
       { name: "Update Marks", path: "/exam/update-marks", pro: false },
       { name: "View Marks", path: "/exam/view-marks", pro: false },
-      // { name: "Certification Issued", path: "/exam/certificates", pro: false },
     ],
   },
 
@@ -105,42 +105,42 @@ const navItems: NavItem[] = [
     icon: <UserCircleIcon />,
     subItems: [
       { name: "Add Exam", path: "/online-exam/add", pro: false },
-      { name: "Edit", path: "/online-exam/edit", pro: false },
-      { name: "View", path: "/online-exam/view", pro: false },
-      { name: "Delete", path: "/online-exam/delete", pro: false },
-      { name: "List", path: "/online-exam", pro: false },
+      // { name: "Edit", path: "/online-exam/edit", pro: false },
+      // { name: "View", path: "/online-exam/view", pro: false },
+      // { name: "Delete", path: "/online-exam/delete", pro: false },
+      // { name: "List", path: "/online-exam", pro: false },
     ],
   },
 
   /* -------------------------
       PRACTICAL EXAM
   -------------------------- */
-  {
-    name: "Practical Exam",
-    icon: <UserCircleIcon />,
-    subItems: [
-      { name: "Add Exam", path: "/practical-exam/add", pro: false },
-      { name: "Edit", path: "/practical-exam/edit", pro: false },
-      { name: "View", path: "/practical-exam/view", pro: false },
-      { name: "Delete", path: "/practical-exam/delete", pro: false },
-      { name: "List", path: "/practical-exam", pro: false },
-    ],
-  },
+  // {
+  //   name: "Practical Exam",
+  //   icon: <UserCircleIcon />,
+  //   subItems: [
+  //     { name: "Add Exam", path: "/practical-exam/add", pro: false },
+  //     { name: "Edit", path: "/practical-exam/edit", pro: false },
+  //     { name: "View", path: "/practical-exam/view", pro: false },
+  //     { name: "Delete", path: "/practical-exam/delete", pro: false },
+  //     { name: "List", path: "/practical-exam", pro: false },
+  //   ],
+  // },
 
   /* -------------------------
       MANAGE STAFF
   -------------------------- */
-  {
-    name: "Manage Staff",
-    icon: <UserCircleIcon />,
-    subItems: [
-      { name: "Add", path: "/staff/add", pro: false },
-      { name: "Edit", path: "/staff/edit", pro: false },
-      { name: "View", path: "/staff/view", pro: false },
-      { name: "List", path: "/staff/list", pro: false },
-      { name: "Delete", path: "/staff/delete", pro: false },
-    ],
-  },
+  // {
+  //   name: "Manage Staff",
+  //   icon: <UserCircleIcon />,
+  //   subItems: [
+  //     { name: "Add", path: "/staff/add", pro: false },
+  //     { name: "Edit", path: "/staff/edit", pro: false },
+  //     { name: "View", path: "/staff/view", pro: false },
+  //     { name: "List", path: "/staff/list", pro: false },
+  //     { name: "Delete", path: "/staff/delete", pro: false },
+  //   ],
+  // },
 
   /* -------------------------
       STUDENT NOTICE
