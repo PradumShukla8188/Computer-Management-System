@@ -1,6 +1,6 @@
 import { APIENDPOINTS_TYPE, apiEndPoints } from '@/constants/apiEndPoint';
 import { ApiMethods, apiMethods } from '@/constants/basicConstants';
-import { message } from 'antd';
+import { toast } from '@/lib/toast';
 import { axiosInstance } from './axiosInstance';
 
 interface ApiOptions {
@@ -27,11 +27,11 @@ export async function ApiHitter(method: keyof ApiMethods, apiName: APIENDPOINTS_
         });
 
         if (showSuccess && res.data?.success === true) {
-            message.success(successMessage || res.data?.message || 'Success');
+            toast.success(successMessage || res.data?.message || 'Success');
         }
 
         if (res.data?.success === false) {
-            if (showError) message.error(res.data?.message || 'Something went wrong');
+            if (showError) toast.error(res.data?.message || 'Something went wrong');
             throw new Error(res.data?.message || "API failed");
         }
 
@@ -39,7 +39,7 @@ export async function ApiHitter(method: keyof ApiMethods, apiName: APIENDPOINTS_
 
     } catch (err: any) {
         const errorMsg = err?.response?.data?.message || err?.message || "Something went wrong";
-        if (showError) message.error(errorMsg);
+        if (showError) toast.error(errorMsg);
         throw err;
     }
 }

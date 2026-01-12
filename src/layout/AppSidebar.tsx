@@ -18,7 +18,7 @@ import {
   UserCircleIcon,
 } from "../icons/index";
 // import Logo from "@/components/common/logo";
-// import SidebarWidget from "./SidebarWidget";
+
 
 type NavItem = {
   name: string;
@@ -79,9 +79,8 @@ const navItems: NavItem[] = [
     name: "Marks",
     icon: <UserCircleIcon />, // <-- Replace icon
     subItems: [
-      { name: "Add Marks", path: "/exam/certificates", pro: false },
-      { name: "Update Marks", path: "/exam/update-marks", pro: false },
-      { name: "View Marks", path: "/exam/view-marks", pro: false },
+      { name: "Add", path: "/mark/add", pro: false },
+      { name: "List", path: "/mark/list", pro: false },
     ],
   },
 
@@ -111,36 +110,6 @@ const navItems: NavItem[] = [
       // { name: "List", path: "/online-exam", pro: false },
     ],
   },
-
-  /* -------------------------
-      PRACTICAL EXAM
-  -------------------------- */
-  // {
-  //   name: "Practical Exam",
-  //   icon: <UserCircleIcon />,
-  //   subItems: [
-  //     { name: "Add Exam", path: "/practical-exam/add", pro: false },
-  //     { name: "Edit", path: "/practical-exam/edit", pro: false },
-  //     { name: "View", path: "/practical-exam/view", pro: false },
-  //     { name: "Delete", path: "/practical-exam/delete", pro: false },
-  //     { name: "List", path: "/practical-exam", pro: false },
-  //   ],
-  // },
-
-  /* -------------------------
-      MANAGE STAFF
-  -------------------------- */
-  // {
-  //   name: "Manage Staff",
-  //   icon: <UserCircleIcon />,
-  //   subItems: [
-  //     { name: "Add", path: "/staff/add", pro: false },
-  //     { name: "Edit", path: "/staff/edit", pro: false },
-  //     { name: "View", path: "/staff/view", pro: false },
-  //     { name: "List", path: "/staff/list", pro: false },
-  //     { name: "Delete", path: "/staff/delete", pro: false },
-  //   ],
-  // },
 
   /* -------------------------
       STUDENT NOTICE
