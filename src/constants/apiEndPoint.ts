@@ -12,7 +12,26 @@ export const apiEndPoints = {
   // EDIT_COURSE: "/course/edit",
   DELETE_COURSE: "/course/delete",
 
-  GET_STUDENT_FEES_LIST: "/student/fees/list"
+  GET_STUDENT_FEES_LIST: "/student/fees/list",
+  GET_SUBJECT_LIST: "/course/subjects",
+  ADD_SUBJECT: "/course/subject/create",
+  // EDIT_SUBJECT:"/course/subject/edit",
+  DELETE_SUBJECT: "/course/subject/delete",
+  ADD_STUDENT_MARKS: "/marks",
+  GET_STUDENT_MARKS: "/marks",
+  EDIT_STUDENT_MARKS: "/marks",
+  DELETE_STUDENT_MARKS: "/marks",
+  GET_ALL_STUDENT_MARKS: "/marks/list",
+  UPDATE_STUDENT_MARKS: "/marks",
+  ADD_EXAM: "/exam",
+  GET_EXAMS_LIST: "/exam",
+  GET_EXAM_BY_ID: "/exam",
+  EDIT_EXAM: "/exam",
+  DELETE_EXAM: "/exam",
+  GET_NOTICE: '/notice',
+  ADD_NOTICE: '/notice',
+  DELETE_NOTICE: '/notice',
+
 };
 
 export type APIENDPOINTS_TYPE = keyof typeof apiEndPoints;

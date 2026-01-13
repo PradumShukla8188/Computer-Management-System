@@ -5,17 +5,17 @@ import { ApiHitter } from "@/lib/axiosApi/apiHitter";
 import { UploadOutlined } from "@ant-design/icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-    Button,
-    Card,
-    Col,
-    DatePicker,
-    Form,
-    Input,
-    InputNumber,
-    Row,
-    Select,
-    Upload,
-    message,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+  Upload,
+  message,
 } from "antd";
 import type { UploadFile } from "antd/es/upload/interface";
 import dayjs from "dayjs";
@@ -40,6 +40,22 @@ const examModeOptions = ["Online", "Offline"];
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const ALLOWED_DOC_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
 
+const normalizeUrl = (rawUrl?: string) => {
+  if (!rawUrl) return null;
+
+  // remove quotes
+  const cleaned = rawUrl.replace(/"/g, '').trim();
+
+  // handle comma-separated base + path
+  if (cleaned.includes(',')) {
+    const parts = cleaned.split(',');
+    return `${parts[0]}${parts[1]}`;
+  }
+
+  return cleaned;
+};
+
+
 export default function AddStudent() {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<{
@@ -60,35 +76,35 @@ export default function AddStudent() {
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
 
 
-// Get courses
-const { data: courseData, isLoading: coursesLoading } = useQuery({
-  queryKey: ['courses'],
-  queryFn: async () => {
-    const response = await ApiHitter("GET", "GET_COURSE_LIST", {}, "", {
-      showError: true,
-      showSuccess: false
-    });
-    return response?.data || [];
-  },
-});
-const handleCourseChange = (courseId: string) => {
-  setSelectedCourseId(courseId);
+  // Get courses
+  const { data: courseData, isLoading: coursesLoading } = useQuery({
+    queryKey: ['courses'],
+    queryFn: async () => {
+      const response = await ApiHitter("GET", "GET_COURSE_LIST", {}, "", {
+        showError: true,
+        showSuccess: false
+      });
+      return response?.data || [];
+    },
+  });
+  const handleCourseChange = (courseId: string) => {
+    setSelectedCourseId(courseId);
 
-  // Find the selected course
-  const selectedCourse = courseData?.find((course: courseData) => course._id === courseId);
+    // Find the selected course
+    const selectedCourse = courseData?.find((course: courseData) => course._id === courseId);
 
-  if (selectedCourse) {
-    // Set the duration in the form
-    form.setFieldsValue({
-      courseDuration: `${selectedCourse.durationInMonths} months`
-    });
-  } else {
-    // Clear duration if no course selected
-    form.setFieldsValue({
-      courseDuration: ""
-    });
-  }
-};
+    if (selectedCourse) {
+      // Set the duration in the form
+      form.setFieldsValue({
+        courseDuration: `${selectedCourse.durationInMonths} months`
+      });
+    } else {
+      // Clear duration if no course selected
+      form.setFieldsValue({
+        courseDuration: ""
+      });
+    }
+  };
 
   // Handle file upload and preview
   const handleFileChange = (info: any, field: keyof typeof fileList) => {
@@ -172,7 +188,7 @@ const handleCourseChange = (courseId: string) => {
     return true;
   };
 
-//   add student
+  //   add student
   const { mutate: addStudent, isPending } = useMutation({
     mutationFn: (body: addStudent) =>
       ApiHitter("POST", "ADD_STUDENT", body, "", {
@@ -202,7 +218,7 @@ const handleCourseChange = (courseId: string) => {
     },
   });
 
-//   upload api
+  //   upload api
   const { mutateAsync: uploadFile } = useMutation({
     mutationFn: async ({ file, type }: { file: File; type: string }) => {
       const formData = new FormData();
@@ -221,68 +237,141 @@ const handleCourseChange = (courseId: string) => {
 
   const handleSubmit = async (values: any) => {
     try {
-      // Validate required files
       if (!fileList.studentPhoto.length) {
         message.error("Please upload student photo!");
         return;
       }
 
-      // Convert dates
       values.dob = dayjs(values.dob).toISOString();
       values.dateOfAdmission = dayjs(values.dateOfAdmission).toISOString();
-      values.studentPhoto = "uploads/photos/student123.jpg";
-      values.uploadEducationProof = "uploads/photos/student123.jpg";
-      values.uploadIdentityProof = "uploads/photos/student123.jpg";
 
-      // Upload files
-    //   const uploadPromises = [];
+      const uploadTasks = [];
 
-    //   if (fileList.studentPhoto[0]?.originFileObj) {
-    //     uploadPromises.push(
-    //       uploadFile({
-    //         file: fileList.studentPhoto[0].originFileObj,
-    //         type: 'student_photo'
-    //       }).then(res => ({ key: 'studentPhoto', url: res?.data?.url || "www.example.com" }))
-    //     );
-    //   }
+      if (fileList.studentPhoto[0]?.originFileObj) {
+        uploadTasks.push(
+          uploadFile({
+            file: fileList.studentPhoto[0].originFileObj,
+            type: 'student_photo',
+          }).then(res => ({
+            key: 'studentPhoto',
+            url: normalizeUrl(res?.data?.[0]?.url),
+          }))
+        );
+      }
 
-    //   if (fileList.uploadEducationProof[0]?.originFileObj) {
-    //     uploadPromises.push(
-    //       uploadFile({
-    //         file: fileList.uploadEducationProof[0].originFileObj,
-    //         type: 'education_proof'
-    //       }).then(res => ({ key: 'educationProof', url: res?.data?.url || "www.example.com" }))
-    //     );
-    //   }
+      if (fileList.uploadEducationProof[0]?.originFileObj) {
+        uploadTasks.push(
+          uploadFile({
+            file: fileList.uploadEducationProof[0].originFileObj,
+            type: 'education_proof',
+          }).then(res => ({
+            key: 'educationProof',
+            url: normalizeUrl(res?.data?.[0]?.url),
+          }))
+        );
+      }
 
-    //   if (fileList.uploadIdentityProof[0]?.originFileObj) {
-    //     uploadPromises.push(
-    //       uploadFile({
-    //         file: fileList.uploadIdentityProof[0].originFileObj,
-    //         type: 'identity_proof'
-    //       }).then(res => ({ key: 'identityProof', url: res?.data?.url || "www.example.com" }))
-    //     );
-    //   }
+      if (fileList.uploadIdentityProof[0]?.originFileObj) {
+        uploadTasks.push(
+          uploadFile({
+            file: fileList.uploadIdentityProof[0].originFileObj,
+            type: 'identity_proof',
+          }).then(res => ({
+            key: 'identityProof',
+            url: normalizeUrl(res?.data?.[0]?.url),
+          }))
+        );
+      }
 
-    //   const uploadResults = await Promise.allSettled(uploadPromises);
+      const uploadResults = await Promise.all(uploadTasks);
 
-      // Prepare student data
       const studentData: any = { ...values };
 
-    //   uploadResults.forEach(result => {
-    //     if (result.status === 'fulfilled' && result.value.url) {
-    //       studentData[result.value.key] = result.value.url;
-    //     }
-    //   });
+      uploadResults.forEach(({ key, url }) => {
+        if (url) {
+          studentData[key] = url;
+        }
+      });
 
-      // Add student
+      console.log("FINAL PAYLOAD 👉", studentData);
+
       addStudent(studentData);
-
-    } catch (err) {
-      console.error("Submission error:", err);
-      message.error("❌ Failed to submit student");
+    } catch (error) {
+      console.error(error);
+      message.error("Failed to submit student");
     }
   };
+
+
+  // const handleSubmit = async (values: any) => {
+  //   try {
+  //     // Validate required files
+  //     if (!fileList.studentPhoto.length) {
+  //       message.error("Please upload student photo!");
+  //       return;
+  //     }
+
+  //     // Convert dates
+  //     values.dob = dayjs(values.dob).toISOString();
+  //     values.dateOfAdmission = dayjs(values.dateOfAdmission).toISOString();
+
+  //     const uploadPromises = [];
+
+  //     if (fileList.studentPhoto[0]?.originFileObj) {
+  //       uploadPromises.push(
+  //         uploadFile({
+  //           file: fileList.studentPhoto[0].originFileObj,
+  //           type: 'student_photo'
+  //         }).then(res => ({
+  //           key: 'studentPhoto',
+  //           url: res?.data?.[0]?.url
+  //         }))
+  //       );
+  //     }
+
+  //     if (fileList.uploadEducationProof[0]?.originFileObj) {
+  //       uploadPromises.push(
+  //         uploadFile({
+  //           file: fileList.uploadEducationProof[0].originFileObj,
+  //           type: 'education_proof'
+  //         }).then(res => ({
+  //           key: 'uploadEducationProof',
+  //           url: res?.data?.[0]?.url
+  //         }))
+  //       );
+  //     }
+
+  //     if (fileList.uploadIdentityProof[0]?.originFileObj) {
+  //       uploadPromises.push(
+  //         uploadFile({
+  //           file: fileList.uploadIdentityProof[0].originFileObj,
+  //           type: 'identity_proof'
+  //         }).then(res => ({
+  //           key: 'uploadIdentityProof',
+  //           url: res?.data?.[0]?.url
+  //         }))
+  //       );
+  //     }
+
+  //     const uploadResults = await Promise.all(uploadPromises);
+  //     console.log("Upload results:", uploadResults);
+
+  //     const studentData = { ...values };
+
+  //     uploadResults.forEach(({ key, url }) => {
+  //       console.log("Processing key:", key);
+  //       console.log("Processing url:", url);
+  //       if (url) {
+  //         studentData[key] = url;
+  //       }
+  //     });
+
+  //     addStudent(studentData);
+  //   } catch (err) {
+  //     console.error("Submission error:", err);
+  //     message.error("Failed to submit student");
+  //   }
+  // };
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl bg-gray-50 p-4 md:p-8">
@@ -515,35 +604,35 @@ const handleCourseChange = (courseId: string) => {
 
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
-            <Form.Item
+              <Form.Item
                 label="Select Course"
                 name="selectedCourse"
                 rules={[{ required: true, message: "Course required" }]}
-            >
+              >
                 <Select
-                placeholder="Select a course"
-                loading={coursesLoading}
-                onChange={handleCourseChange}
+                  placeholder="Select a course"
+                  loading={coursesLoading}
+                  onChange={handleCourseChange}
                 >
-                {courseData?.map((course: courseData) => (
-                    <Option key={course._id} value={course._id }>
-                    {course.name}
+                  {courseData?.map((course: courseData) => (
+                    <Option key={course._id} value={course._id}>
+                      {course.name}
                     </Option>
-                ))}
+                  ))}
                 </Select>
-            </Form.Item>
+              </Form.Item>
             </Col>
 
             <Col xs={24} md={12}>
-            <Form.Item
+              <Form.Item
                 label="Course Duration"
                 name="courseDuration"
-            >
+              >
                 <Input
-                readOnly
-                className="bg-gray-50"
+                  readOnly
+                  className="bg-gray-50"
                 />
-            </Form.Item>
+              </Form.Item>
             </Col>
 
             <Col xs={24} md={12}>
@@ -630,7 +719,7 @@ const handleCourseChange = (courseId: string) => {
                   )}
                 </Upload>
 
-                {/* {previews.studentPhoto && (
+                {previews.studentPhoto && (
                   <div className="mt-2">
                     <img
                       src={previews.studentPhoto}
@@ -638,7 +727,7 @@ const handleCourseChange = (courseId: string) => {
                       className="h-32 w-32 rounded-lg border object-cover shadow-sm"
                     />
                   </div>
-                )} */}
+                )}
               </Form.Item>
             </Col>
 
@@ -670,7 +759,7 @@ const handleCourseChange = (courseId: string) => {
                   )}
                 </Upload>
 
-                {/* {previews.uploadEducationProof ? (
+                {previews.uploadEducationProof ? (
                   <div className="mt-2">
                     <img
                       src={previews.uploadEducationProof}
@@ -687,7 +776,7 @@ const handleCourseChange = (courseId: string) => {
                       (PDF document uploaded)
                     </div>
                   </div>
-                )} */}
+                )}
               </Form.Item>
             </Col>
 
@@ -719,7 +808,7 @@ const handleCourseChange = (courseId: string) => {
                   )}
                 </Upload>
 
-                {/* {previews.uploadIdentityProof ? (
+                {previews.uploadIdentityProof ? (
                   <div className="mt-2">
                     <img
                       src={previews.uploadIdentityProof}
@@ -736,7 +825,7 @@ const handleCourseChange = (courseId: string) => {
                       (PDF document uploaded)
                     </div>
                   </div>
-                )} */}
+                )}
               </Form.Item>
             </Col>
           </Row>
