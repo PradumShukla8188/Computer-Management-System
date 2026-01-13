@@ -1,13 +1,14 @@
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries } from "@tanstack/react-query";
 
 import axios from "axios";
 import { ApiHitter } from "@/lib/axiosApi/apiHitter";
 import { Card } from "antd";
 import dynamic from "next/dynamic";
 import { CustomLoader } from "@/components/common";
+import { useRouter } from "next/navigation";
 
 const Select = dynamic(() => import("react-select"), { ssr: false });
 
@@ -17,16 +18,16 @@ type StudentOption = {
 };
 
 type CourseOption = {
-  label: string;
-  value: string;
-  amount: number;
+    label: string;
+    value: string;
+    amount: number;
 };
 
 type FeesFormData = {
-  student: StudentOption | null;
-  userId: string;
-  courseId: CourseOption | null; // ✅ FIXED
-  amount: number;
+    student?: StudentOption | null;
+    studentId?: string | null;
+    courseId?: string | null; // ✅ FIXED
+    amount: number;
 };
 
 
@@ -40,17 +41,18 @@ export default function StudentFeesForm({
     initialData,
     isUpdate = false,
 }: Props) {
+    const router = useRouter();
     const {
         register,
         handleSubmit,
         control,
         reset,
+        setValue,
         watch,
         formState: { errors },
     } = useForm<FeesFormData>({
         defaultValues: initialData || {
-            student: null,
-            userId: "",
+            studentId: null,
             courseId: null,
             amount: 0,
         },
@@ -71,8 +73,8 @@ export default function StudentFeesForm({
                     );
 
                     return resApiHitter.data.map((student: any) => ({
-                        label: student.name,
-                        value: student._id,
+                        label: student?.name,
+                        value: student?._id,
                     }));
                 },
             },
@@ -93,7 +95,7 @@ export default function StudentFeesForm({
                     return response?.data?.map((course: any) => ({
                         label: course?.name,
                         value: course?._id,
-                        amount: Number(course?.totalFees),
+                        amount: Number(course?.monthlyFees),
                     }));;
                 },
             },
@@ -101,48 +103,77 @@ export default function StudentFeesForm({
     });
     const isLoading = results.some((result: any) => result.isLoading);
 
-    console.log("Results of queries:", results?.[1]?.data);
     const [studentsQuery, coursesQuery] = results;
 
     const students = studentsQuery.data ?? [];
     const courses = coursesQuery.data ?? [];
-    console.log("Students for Select:", students);
-    console.log("Courses for Select:", courses);
+
 
     /* ---------------- Add / Update fees ---------------- */
     const feesMutation = useMutation({
         mutationFn: async (data: FeesFormData) => {
             const payload = {
-                studentId: data.student?.value,
-                userId: data.userId,
-                courseId: data.courseId,
-                amount: data.amount,
+                studentId: data?.studentId,
+                userId: data?.studentId,
+                courseId: data?.courseId,
+                amount: data?.amount,
             };
+
+
 
             if (isUpdate) {
                 return axios.put("/api/student-fees", payload);
             } else {
-                return axios.post("/api/student-fees", payload);
+                return await ApiHitter("POST", "ADD_STUDENT_FEES", payload,"");
             }
         },
         onSuccess: () => {
             alert(isUpdate ? "Fees updated successfully" : "Fees added successfully");
             reset();
+            router.push("/student-fees");
         },
     });
 
     /* ---------------- Submit ---------------- */
     const onSubmit = (data: FeesFormData) => {
         console.log("Form Data Submitted:", data);
-        // feesMutation.mutate(data);
+        feesMutation.mutate(data);
     };
 
-    const studentselected = watch("student");
-    const courseSelected = watch("courseId");
+     const handleCourseChange = ( selectedCourse: CourseOption | null) => {
+        console.log("Selected course:", selectedCourse);
+        setValue("courseId", selectedCourse?.value, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });
+        if (selectedCourse) {
+            setValue("amount", selectedCourse?.amount, {
+                shouldValidate: true,
+                shouldDirty: true,
+            });
+        }   
+    }
+    const handleStudentChange = ( selectedStudent: StudentOption | null) => {
+        console.log("Selected student:", selectedStudent);
+        setValue("student", selectedStudent, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });
+        
+        setValue("studentId", selectedStudent?.value, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });  
+    }
+
+
 
     if (isLoading) {
         return <CustomLoader />;
     }
+
+
+   
 
     return (
         <Card className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -165,6 +196,7 @@ export default function StudentFeesForm({
                             <Select
                                 {...field}
                                 options={students}
+                                onChange={(e)=>handleStudentChange(e as StudentOption)}
                                 placeholder="Select student"
                             />
                         )}
@@ -178,13 +210,13 @@ export default function StudentFeesForm({
                 <div>
                     <label className="block font-medium mb-1">Student ID (userId)<span className="required">*</span></label>
                     <input
-                        value={studentselected ? studentselected?.value : ''}
-                        {...register("userId", { required: "Student ID is required" })}
+                        type="text"
+                        {...register("studentId", { required: "Student ID is required" })}
                         readOnly
                         className="w-full rounded border px-3 py-2"
                     />
-                    {errors.userId && (
-                        <p className="required">{errors?.userId?.message}</p>
+                    {errors?.studentId && (
+                        <p className="required">{errors?.studentId?.message}</p>
                     )}
                 </div>
 
@@ -199,6 +231,7 @@ export default function StudentFeesForm({
                             <Select
                                 {...field}
                                 options={courses}
+                                onChange={(e)=>handleCourseChange( e as CourseOption)}                                
                                 placeholder="Select course"
                             />
                         )}
@@ -213,7 +246,7 @@ export default function StudentFeesForm({
                     <label className="block font-medium mb-1">Amount<span className="required">*</span></label>
                     <input
                         type="number"
-                        value={courseSelected ? courseSelected?.amount : 0}
+                    
                         readOnly
                         {...register("amount", {
                             required: "Amount is required",

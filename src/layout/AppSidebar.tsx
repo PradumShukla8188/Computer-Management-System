@@ -74,9 +74,9 @@ const navItems: NavItem[] = [
   {
     name: "Student Fees",
     icon: <DollarSign size={20} />,
-    path: '/fees/list',
+    path: '/student-fees',
     subItems: [
-      { name: "Add Fee", path: "/fees/add", pro: false },
+      { name: "Add Fee", path: "/student-fees/add-fees", pro: false },
       // { name: "Fees Collection", path: "/fees/list", pro: false },
     ],
   },

@@ -31,6 +31,7 @@ export const apiEndPoints = {
   GET_NOTICE: '/notice',
   ADD_NOTICE: '/notice',
   DELETE_NOTICE: '/notice',
+  ADD_STUDENT_FEES: '/student/fees/add'
 
 };
 
