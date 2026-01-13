@@ -21,6 +21,15 @@ export const apiEndPoints = {
   DELETE_STUDENT_MARKS: "/marks",
   GET_ALL_STUDENT_MARKS: "/marks/list",
   UPDATE_STUDENT_MARKS: "/marks",
+  ADD_EXAM: "/exam",
+  GET_EXAMS_LIST: "/exam",
+  GET_EXAM_BY_ID: "/exam",
+  EDIT_EXAM: "/exam",
+  DELETE_EXAM: "/exam",
+  GET_NOTICE: '/notice',
+  ADD_NOTICE: '/notice',
+  DELETE_NOTICE: '/notice',
+
 };
 
 export type APIENDPOINTS_TYPE = keyof typeof apiEndPoints;

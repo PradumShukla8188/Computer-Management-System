@@ -1000,11 +1000,14 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
   useEffect(() => {
     if (isEditMode && (studentData || initialData)) {
       const data = studentData || initialData;
+      console.log("sdata", data?.courseId?._id)
       reset({
         ...data,
+        courseId: data.courseId?._id,
         dob: data.dob ? new Date(data.dob) : null,
         dateOfAdmission: data.dateOfAdmission ? new Date(data.dateOfAdmission) : null,
       });
+
 
       if (data.studentPhoto) {
         setPreviews((prev) => ({ ...prev, studentPhoto: data.studentPhoto }));
