@@ -15,6 +15,8 @@ const Select = dynamic(() => import("react-select"), { ssr: false });
 type StudentOption = {
     label: string;
     value: string;
+    fatherName: string;
+    rollNo: string;
 };
 
 type CourseOption = {
@@ -25,6 +27,8 @@ type CourseOption = {
 
 type FeesFormData = {
     student?: StudentOption | null;
+    fatherName?: string;
+    rollNo?: string;
     studentId?: string | null;
     courseId?: string | null; // ✅ FIXED
     amount: number;
@@ -75,6 +79,8 @@ export default function StudentFeesForm({
                     return resApiHitter.data.map((student: any) => ({
                         label: student?.name,
                         value: student?._id,
+                        fatherName: student?.fatherName,
+                        rollNo: student?.rollNo,
                     }));
                 },
             },
@@ -164,29 +170,47 @@ export default function StudentFeesForm({
             shouldValidate: true,
             shouldDirty: true,
         });  
+        setValue("fatherName", selectedStudent?.fatherName, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });
+        setValue("rollNo", selectedStudent?.rollNo, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });
     }
-
-
 
     if (isLoading) {
         return <CustomLoader />;
     }
 
-
-   
-
     return (
-        <Card className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+
+         <div className="mx-auto min-h-screen max-w-6xl bg-gray-50 p-4 md:p-8">
+          {/* Header Section */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+                👨‍🎓  Add Fees
+              </h1>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Fill the detail to add student fees
+              </p>
+            </div>
+           
+          </div>
+        <Card className="rounded-xl w-full border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="max-w-md space-y-4 rounded-xl border p-6 shadow"
+                className="max-w-full space-y-4 rounded-xl border p-6 shadow"
             >
                 <h2 className="text-xl font-semibold">
                     {isUpdate ? "Update Student Fees" : "Add Student Fees"}
                 </h2>
 
                 {/* Student Name (React Select) */}
-                <div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div >
                     <label className="block font-medium mb-1">Student Name<span className="required">*</span></label>
                     <Controller
                         name="student"
@@ -206,6 +230,23 @@ export default function StudentFeesForm({
                     )}
                 </div>
 
+                <div>
+                    <label className="block font-medium mb-1">Father Name<span className="required">*</span></label>
+                    <input
+                        type="text"
+                        placeholder="Father name"
+                        {...register("fatherName", { required: "Father Name is required" })}
+                        readOnly
+                        className="w-full rounded border px-3 py-2"
+                    />
+                    {errors?.fatherName && (
+                        <p className="required">{errors?.fatherName?.message}</p>
+                    )}
+                </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+
                 {/* Student ID */}
                 <div>
                     <label className="block font-medium mb-1">Student ID (userId)<span className="required">*</span></label>
@@ -219,8 +260,22 @@ export default function StudentFeesForm({
                         <p className="required">{errors?.studentId?.message}</p>
                     )}
                 </div>
+                <div>
+                    <label className="block font-medium mb-1">Roll Number<span className="required">*</span></label>
+                    <input
+                        type="text"
+                        {...register("rollNo", { required: "Roll Number is required" })}
+                        readOnly
+                        className="w-full rounded border px-3 py-2"
+                    />
+                    {errors?.rollNo && (
+                        <p className="required">{errors?.rollNo?.message}</p>
+                    )}
+                </div>
+                </div>
 
                 {/* Course ID */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                     <label className="block font-medium mb-1">Course ID<span className="required">*</span></label>
                     <Controller
@@ -259,6 +314,7 @@ export default function StudentFeesForm({
                         <p className="required">{errors?.amount?.message}</p>
                     )}
                 </div>
+                </div>
 
                 <button
                     type="submit"
@@ -273,5 +329,6 @@ export default function StudentFeesForm({
                 </button>
             </form>
         </Card>
+        </div>
     );
 }
