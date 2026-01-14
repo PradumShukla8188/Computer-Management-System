@@ -89,6 +89,11 @@ const navItems: NavItem[] = [
       // { name: "List", path: "/notice", pro: false },
     ],
   },
+  {
+    name: "Institue Setting",
+    icon: <UserCircleIcon size={20} />,
+    path: "/institue-setting",
+  }
 ];
 
 const AppSidebar: React.FC = () => {
