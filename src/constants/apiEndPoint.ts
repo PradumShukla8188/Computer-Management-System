@@ -31,7 +31,12 @@ export const apiEndPoints = {
   GET_NOTICE: '/notice',
   ADD_NOTICE: '/notice',
   DELETE_NOTICE: '/notice',
-  ADD_STUDENT_FEES: '/student/fees/add'
+  ADD_STUDENT_FEES: '/student/fees/add',
+  GET_INSTITUTE_SETTINGS: '/institute-settings',
+  GET_INSTITUTE_SETTINGS_BY_ID: '/institute-settings',
+  UPDATE_INSTITUTE_SETTINGS: '/institute-settings',
+  DELETE_INSTITUTE_SETTINGS: '/institute-settings',
+  ADD_INSTITUTE_SETTINGS: '/institute-settings',
 
 };
 
