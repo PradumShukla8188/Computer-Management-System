@@ -245,6 +245,8 @@ export default function StudentFeesForm({
         return <CustomLoader />;
     }
 
+    console.log("Student Data for Edit:", studentData);
+
     return (
 
         <div className="mx-auto min-h-screen max-w-6xl bg-gray-50 p-4 md:p-8">
