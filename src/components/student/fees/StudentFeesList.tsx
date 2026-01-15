@@ -221,4 +221,3 @@ const StudentFeesList = () => {
   );
 }
 export default StudentFeesList;
-
