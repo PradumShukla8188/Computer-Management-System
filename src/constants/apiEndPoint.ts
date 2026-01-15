@@ -37,6 +37,9 @@ export const apiEndPoints = {
   UPDATE_INSTITUTE_SETTINGS: '/institute-settings',
   DELETE_INSTITUTE_SETTINGS: '/institute-settings',
   ADD_INSTITUTE_SETTINGS: '/institute-settings',
+  GET_STUDENT_FEES_BY_ID:"/student/fees",
+  UPDATE_STUDENT_FEES: "/student/fees/update",
+  DELETE_STUDENT_FEES: "/student/fees/delete",
 
 };
 
