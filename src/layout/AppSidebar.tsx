@@ -13,6 +13,7 @@ import {
   PlugInIcon,
   UserCircleIcon,
 } from "../icons/index";
+import { FileProtectOutlined } from "@ant-design/icons";
 import {
   BookOpen,
   Users,
@@ -93,6 +94,16 @@ const navItems: NavItem[] = [
     name: "Institue Setting",
     icon: <UserCircleIcon size={20} />,
     path: "/institue-setting",
+  },
+  {
+    name: "Certificates",
+    icon: <FileProtectOutlined size={20} />,
+    path: "/certificate/list",
+    subItems: [
+        { name: "Designer", path: "/certificate/designer", pro: false },
+        { name: "Issue Certificate", path: "/certificate/issue", pro: false },
+        { name: "Issued List", path: "/certificate/list", pro: false },
+    ],
   }
 ];
 

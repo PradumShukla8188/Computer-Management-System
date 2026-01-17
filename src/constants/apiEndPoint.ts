@@ -34,7 +34,12 @@ export const apiEndPoints = {
   UPDATE_INSTITUTE_SETTINGS: '/institute-settings',
   DELETE_INSTITUTE_SETTINGS: '/institute-settings',
   ADD_INSTITUTE_SETTINGS: '/institute-settings',
-
+  GET_CERTIFICATE_TEMPLATES: '/certificate/template',
+  ADD_CERTIFICATE_TEMPLATE: '/certificate/template',
+  UPDATE_CERTIFICATE_TEMPLATE: '/certificate/template',
+  DELETE_CERTIFICATE_TEMPLATE: '/certificate/template',
+  ISSUE_CERTIFICATE: '/certificate/issue',
+  GET_ISSUED_CERTIFICATES: '/certificate/issued',
 };
 
 export type APIENDPOINTS_TYPE = keyof typeof apiEndPoints;
