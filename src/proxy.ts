@@ -3,11 +3,11 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export function proxy(req: NextRequest) {
-    const BYPASS_AUTH = true;
+  //   const BYPASS_AUTH = true;
 
-  if (BYPASS_AUTH) {
-    return NextResponse.next();
-  }
+  // if (BYPASS_AUTH) {
+  //   return NextResponse.next();
+  // }
   const token = req.cookies.get("token")?.value; // or session cookie
 
   const { pathname } = req.nextUrl;
