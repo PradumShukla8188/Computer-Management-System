@@ -75,9 +75,9 @@ const navItems: NavItem[] = [
   {
     name: "Student Fees",
     icon: <DollarSign size={20} />,
-    path: '/fees/list',
+    path: '/student-fees',
     subItems: [
-      { name: "Add Fee", path: "/fees/add", pro: false },
+      { name: "Add Fee", path: "/student-fees/add-fees", pro: false },
       // { name: "Fees Collection", path: "/fees/list", pro: false },
     ],
   },
@@ -192,7 +192,7 @@ const AppSidebar: React.FC = () => {
                   <Link
                     href={nav.path}
                     className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${isItemActive || isSubmenuOpen
-                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
+                      ? "bg-linear-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                       } ${!isExpanded && !isHovered
                         ? "lg:justify-center"
@@ -200,7 +200,7 @@ const AppSidebar: React.FC = () => {
                       }`}
                   >
                     <span
-                      className={`flex-shrink-0 ${isItemActive || isSubmenuOpen
+                      className={`shrink-0 ${isItemActive || isSubmenuOpen
                         ? "text-white"
                         : "text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"
                         }`}
@@ -232,7 +232,7 @@ const AppSidebar: React.FC = () => {
                   <button
                     onClick={() => handleSubmenuToggle(index, menuType)}
                     className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${isSubmenuOpen
-                      ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
+                      ? "bg-linear-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                       } ${!isExpanded && !isHovered
                         ? "lg:justify-center"
@@ -240,7 +240,7 @@ const AppSidebar: React.FC = () => {
                       }`}
                   >
                     <span
-                      className={`flex-shrink-0 ${isSubmenuOpen
+                      className={`shrink-0 ${isSubmenuOpen
                         ? "text-white"
                         : "text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"
                         }`}
@@ -267,7 +267,7 @@ const AppSidebar: React.FC = () => {
                 <Link
                   href={nav.path}
                   className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${isItemActive
-                    ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
+                    ? "bg-linear-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     } ${!isExpanded && !isHovered
                       ? "lg:justify-center"
@@ -275,7 +275,7 @@ const AppSidebar: React.FC = () => {
                     }`}
                 >
                   <span
-                    className={`flex-shrink-0 ${isItemActive
+                    className={`shrink-0 ${isItemActive
                       ? "text-white"
                       : "text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400"
                       }`}
@@ -340,18 +340,18 @@ const AppSidebar: React.FC = () => {
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-[9998] lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-9998 lg:hidden transition-opacity duration-300"
           onClick={() => useSidebar().toggleMobileSidebar()}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-800 z-[9999] transition-all duration-300 ease-in-out ${isExpanded || isMobileOpen
-          ? "w-[280px]"
+        className={`fixed top-0 left-0 h-screen bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-800 z-9999 transition-all duration-300 ease-in-out ${isExpanded || isMobileOpen
+          ? "w-70"
           : isHovered
-            ? "w-[280px]"
-            : "w-[75px]"
+            ? "w-70"
+            : "w-18.75"
           } ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
           } lg:translate-x-0`}
         onMouseEnter={() => !isExpanded && setIsHovered(true)}
@@ -359,7 +359,7 @@ const AppSidebar: React.FC = () => {
       >
         {/* Logo Section */}
         <div
-          className={`flex items-center h-[73px] px-5 border-b border-gray-200 dark:border-gray-800 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+          className={`flex items-center h-18.25 px-5 border-b border-gray-200 dark:border-gray-800 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
             }`}
         >
           <Link href="/" className="flex items-center gap-3">
@@ -381,7 +381,7 @@ const AppSidebar: React.FC = () => {
                 />
               </>
             ) : (
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 rounded-xl bg-linear-to-r from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-lg">S</span>
               </div>
             )}
@@ -415,7 +415,7 @@ const AppSidebar: React.FC = () => {
           {!isExpanded && !isHovered && !isMobileOpen && (
             <div className="p-4 border-t border-gray-200 dark:border-gray-800">
               <div className="flex justify-center">
-                <div className="w-1.5 h-8 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></div>
+                <div className="w-1.5 h-8 bg-linear-to-b from-blue-500 to-indigo-600 rounded-full"></div>
               </div>
             </div>
           )}
