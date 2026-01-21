@@ -143,10 +143,6 @@ export default function StudentFeesForm({
     /* ---------------- Add / Update fees ---------------- */
     const feesMutation = useMutation({
         mutationFn: async (data: FeesFormData) => {
-
-
-
-
             if (studentId) {
                 const payload = {
                     _id: studentId,
@@ -342,9 +338,9 @@ export default function StudentFeesForm({
                         <div>
                             <label className="block font-medium mb-1">Course ID<span className="required">*</span></label>
                             <Controller
-                                name="courseId"
+                                name="course"
                                 control={control}
-                                rules={{ required: "Course ID is required" }}
+                                rules={{ required: "Course is required" }}
                                 render={({ field }) => (
                                     <Select
                                         {...field}
@@ -354,8 +350,8 @@ export default function StudentFeesForm({
                                     />
                                 )}
                             />
-                            {errors.courseId && (
-                                <p className="required">{errors?.courseId?.message}</p>
+                            {errors.course && (
+                                <p className="required">{errors?.course?.message}</p>
                             )}
                         </div>
 
