@@ -114,9 +114,9 @@ export default function StudentMarksListPage() {
     });
 
     const uniqueCourses = Array.from(
-        new Set(marksData.map((m: StudentMark) => m.courseId._id))
+        new Set(marksData.map((m: StudentMark) => m?.courseId?._id))
     ).map((id) => {
-        const mark = marksData.find((m: StudentMark) => m.courseId._id === id);
+        const mark = marksData.find((m: StudentMark) => m?.courseId?._id === id);
         return { id, name: mark?.courseId?.name || '' };
     });
 
