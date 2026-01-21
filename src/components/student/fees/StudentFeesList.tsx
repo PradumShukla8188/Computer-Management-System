@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Card } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import {  useState } from "react";
+import { useState } from "react";
 import { CustomLoader } from "@/components/common";
 import CommonConfirmModal from "@/lib/popup/CommonConfirmModal";
 import { toast } from "@/lib/toast";
@@ -15,9 +15,9 @@ const StudentFeesList = () => {
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [selectedStudentFeedId, setSelectedStudentFeedId] = useState<string|null>(null);
+  const [selectedStudentFeedId, setSelectedStudentFeedId] = useState<string | null>(null);
 
-  const { data: dataSource, isLoading,refetch } = useQuery({
+  const { data: dataSource, isLoading, refetch } = useQuery({
     queryKey: ['student-fees-list'],
     queryFn: async () => ApiHitter('GET', 'GET_STUDENT_FEES_LIST', {}, '', { showError: true }),
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -54,9 +54,9 @@ const StudentFeesList = () => {
     );
   }
 
-  const deleteFeesMutate=useMutation({
+  const deleteFeesMutate = useMutation({
     mutationFn: async (selectedStudentFeedId: string) => {
-      await ApiHitter("DELETE", "DELETE_STUDENT_FEES", {_id:selectedStudentFeedId},"");
+      await ApiHitter("DELETE", "DELETE_STUDENT_FEES", { _id: selectedStudentFeedId }, "");
     },
     onSuccess: (result) => {
       refetch();
@@ -68,20 +68,20 @@ const StudentFeesList = () => {
     }
   });
 
-  function handleFeesDelete(e: React.MouseEvent<HTMLButtonElement>,feesId:string){
+  function handleFeesDelete(e: React.MouseEvent<HTMLButtonElement>, feesId: string) {
     e.preventDefault();
     setSelectedStudentFeedId(feesId);
     setShowModal(true);
   }
 
-  function deleteFeesFunc(){
-    if(selectedStudentFeedId){
+  function deleteFeesFunc() {
+    if (selectedStudentFeedId) {
       deleteFeesMutate.mutate(selectedStudentFeedId)
     };
     setShowModal(false);
   }
 
-   const toggleAccordion = (index: number) => {
+  const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
@@ -102,15 +102,15 @@ const StudentFeesList = () => {
           </p>
         </div>
         <Link href="/student-fees/add-fees">
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      size="large"
-                      className="rounded-lg bg-blue-600 hover:bg-blue-700"
-                    >
-                      Add Fees
-                    </Button>
-                  </Link>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="large"
+            className="rounded-lg bg-blue-600 hover:bg-blue-700"
+          >
+            Add Fees
+          </Button>
+        </Link>
 
       </div>
       <Card className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -123,88 +123,87 @@ const StudentFeesList = () => {
               Month Wise Fees Details
             </h2>
           </div>
-           
+
         </div>
 
-       <div className="w-full">
-      {monthWiseData?.length ? (
-        monthWiseData.map((record: any, index: number) => (
-          <div
-            key={index}
-            className="mb-3 rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
-          >
-            {/* ===== HEADER ===== */}
-            <button
-              onClick={() => toggleAccordion(index)}
-              className="flex w-full items-center justify-between px-4 py-3 text-left"
-            >
-              <span className="font-bold text-gray-800 dark:text-white">
-                {record?.month} {record?.year}
-              </span>
-
-              <span
-                className={`transition-transform duration-100 ${
-                  openIndex === index ? "rotate-180" : ""
-                }`}
+        <div className="w-full">
+          {monthWiseData?.length ? (
+            monthWiseData.map((record: any, index: number) => (
+              <div
+                key={index}
+                className="mb-3 rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
               >
-                ▼
-              </span>
-            </button>
+                {/* ===== HEADER ===== */}
+                <button
+                  onClick={() => toggleAccordion(index)}
+                  className="flex w-full items-center justify-between px-4 py-3 text-left"
+                >
+                  <span className="font-bold text-gray-800 dark:text-white">
+                    {record?.month} {record?.year}
+                  </span>
 
-            {/* ===== BODY ===== */}
-            {openIndex === index && (
-              <div className="px-3 pb-4">
-                {/* HEADER ROW */}
-                <div className="mb-2 flex rounded bg-gray-100 px-3 py-2 font-semibold dark:bg-gray-700">
-                  <div className="flex-1">Student Name</div>
-                  <div className="flex-1">Roll Number</div>
-                  <div className="flex-1">Fees</div>
-                  <div className="w-30 text-center">Actions</div>
-                </div>
-
-                {/* DATA ROWS */}
-                {record?.data?.map((item: any, studentIndex: number) => (
-                  <div
-                    key={studentIndex}
-                    className="mb-2 flex items-center rounded border px-3 py-2"
+                  <span
+                    className={`transition-transform duration-100 ${openIndex === index ? "rotate-180" : ""
+                      }`}
                   >
-                    <div className="flex-1">
-                      {item?.studentId?.name}
+                    ▼
+                  </span>
+                </button>
+
+                {/* ===== BODY ===== */}
+                {openIndex === index && (
+                  <div className="px-3 pb-4">
+                    {/* HEADER ROW */}
+                    <div className="mb-2 flex rounded bg-gray-100 px-3 py-2 font-semibold dark:bg-gray-700">
+                      <div className="flex-1">Student Name</div>
+                      <div className="flex-1">Roll Number</div>
+                      <div className="flex-1">Fees</div>
+                      <div className="w-30 text-center">Actions</div>
                     </div>
 
-                    <div className="flex-1">
-                      {item?.studentId?.rollNo}
-                    </div>
+                    {/* DATA ROWS */}
+                    {record?.data?.map((item: any, studentIndex: number) => (
+                      <div
+                        key={studentIndex}
+                        className="mb-2 flex items-center rounded border px-3 py-2"
+                      >
+                        <div className="flex-1">
+                          {item?.studentId?.name}
+                        </div>
 
-                    <div className="flex-1">
-                      ₹ {item?.amount}
-                    </div>
+                        <div className="flex-1">
+                          {item?.studentId?.rollNo}
+                        </div>
 
-                    <div className="flex w-30 justify-center gap-3">
-                      <Link 
-                      href={`/student-fees/edit-fees/${item?._id}`}
-                      className="text-blue-600 hover:text-blue-800">
-                        <EditOutlined />
-                      </Link>
+                        <div className="flex-1">
+                          ₹ {item?.amount}
+                        </div>
 
-                      <button 
-                      onClick={(e)=>handleFeesDelete(e,item?._id)}
-                      className="text-red-600 hover:text-red-800">
-                        <DeleteOutlined />
-                      </button>
-                    </div>
+                        <div className="flex w-30 justify-center gap-3">
+                          <Link
+                            href={`/student-fees/edit-fees/${item?._id}`}
+                            className="text-blue-600 hover:text-blue-800">
+                            <EditOutlined />
+                          </Link>
+
+                          <button
+                            onClick={(e) => handleFeesDelete(e, item?._id)}
+                            className="text-red-600 hover:text-red-800">
+                            <DeleteOutlined />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
-            )}
-          </div>
-        ))
-      ) : (
-        <div className="py-4 text-center text-gray-500">
-          No data found
+            ))
+          ) : (
+            <div className="py-4 text-center text-gray-500">
+              No data found
+            </div>
+          )}
         </div>
-      )}
-    </div>
 
       </Card>
 

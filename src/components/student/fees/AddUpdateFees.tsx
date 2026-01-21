@@ -245,8 +245,6 @@ export default function StudentFeesForm({
         return <CustomLoader />;
     }
 
-    console.log("Student Data for Edit:", studentData);
-
     return (
 
         <div className="mx-auto min-h-screen max-w-6xl bg-gray-50 p-4 md:p-8">
@@ -254,10 +252,10 @@ export default function StudentFeesForm({
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-                        👨‍🎓  {studentId ? "Edit Fees" : "Add Fees"}
+                        👨‍🎓  Add Fees
                     </h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        `Fill the detail to {studentId ? "edit" : "add"} student fees`
+                        Fill the detail to add student fees
                     </p>
                 </div>
 
@@ -282,7 +280,6 @@ export default function StudentFeesForm({
                                 render={({ field }) => (
                                     <Select
                                         {...field}
-                                        value={field.value}
                                         options={students}
                                         onChange={(e) => handleStudentChange(e as StudentOption)}
                                         placeholder="Select student"
@@ -343,21 +340,20 @@ export default function StudentFeesForm({
                         <div>
                             <label className="block font-medium mb-1">Course ID<span className="required">*</span></label>
                             <Controller
-                                name="course"
+                                name="courseId"
                                 control={control}
                                 rules={{ required: "Course ID is required" }}
                                 render={({ field }) => (
                                     <Select
-                                        // {...field}
-                                        value={field.value}
+                                        {...field}
                                         options={courses}
                                         onChange={(e) => handleCourseChange(e as CourseOption)}
                                         placeholder="Select course"
                                     />
                                 )}
                             />
-                            {errors.course && (
-                                <p className="required">{errors?.course?.message}</p>
+                            {errors.courseId && (
+                                <p className="required">{errors?.courseId?.message}</p>
                             )}
                         </div>
 
