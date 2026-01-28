@@ -4,6 +4,8 @@ import { useSidebar } from "@/context/SidebarContext";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
+import SidebarNew from "@/layout/SidebarNew";
+import { Sidebar } from "lucide-react";
 import React from "react";
 
 
@@ -24,7 +26,8 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen xl:flex">
       {/* Sidebar and Backdrop */}
-      <AppSidebar />
+      {/* <AppSidebar /> */}
+      <SidebarNew/>
       <Backdrop />
       {/* Main Content Area */}
       <div
