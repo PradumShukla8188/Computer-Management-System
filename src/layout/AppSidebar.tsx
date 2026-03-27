@@ -12,6 +12,7 @@ import {
   PieChartIcon,
   PlugInIcon,
   UserCircleIcon,
+  PageIcon,
 } from "../icons/index";
 import { FileProtectOutlined } from "@ant-design/icons";
 import {
@@ -91,6 +92,15 @@ const navItems: NavItem[] = [
     ],
   },
   {
+    name: "CMS Pages",
+    icon: <PageIcon size={20} />,
+    path: "/cms-pages/list",
+    subItems: [
+      { name: "Add", path: "/cms-pages/add", pro: false },
+      // { name: "List", path: "/cms-pages", pro: false },
+    ],
+  },
+  {
     name: "Institue Setting",
     icon: <UserCircleIcon size={20} />,
     path: "/institue-setting",
@@ -100,9 +110,9 @@ const navItems: NavItem[] = [
     icon: <FileProtectOutlined size={20} />,
     path: "/certificate/list",
     subItems: [
-        { name: "Designer", path: "/certificate/designer", pro: false },
-        { name: "Issue Certificate", path: "/certificate/issue", pro: false },
-        { name: "Issued List", path: "/certificate/list", pro: false },
+      { name: "Designer", path: "/certificate/designer", pro: false },
+      { name: "Issue Certificate", path: "/certificate/issue", pro: false },
+      { name: "Issued List", path: "/certificate/list", pro: false },
     ],
   }
 ];

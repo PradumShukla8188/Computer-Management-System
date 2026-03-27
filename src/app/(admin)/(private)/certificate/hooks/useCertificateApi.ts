@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApiHitter } from "@/lib/axiosApi/apiHitter";
+import { axiosInstance } from "@/lib/axiosApi/axiosInstance";
 
 // Fetch all certificate templates
 export const useCertificateTemplates = () => {
@@ -48,6 +49,7 @@ export const useIssueCertificate = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issued-certificates"] });
+      queryClient.invalidateQueries({ queryKey: ["eligible-certificate-students"] });
     },
   });
 };
@@ -63,13 +65,28 @@ export const useIssuedCertificates = () => {
   });
 };
 
-// Fetch student list (reused from student modules but placed here for convenience if not available elsewhere)
-export const useStudentList = () => {
+export const useEligibleCertificateStudents = () => {
   return useQuery({
-    queryKey: ["students-short-list"],
+    queryKey: ["eligible-certificate-students"],
     queryFn: async () => {
-      const res = await ApiHitter("GET", "GET_STUDENT_LIST", {}, "");
+      const res = await ApiHitter("GET", "GET_ELIGIBLE_CERTIFICATE_STUDENTS", {}, "");
       return res.data || [];
     },
   });
+};
+
+export const downloadIssuedCertificatePdf = async (certificateId: string, fileName?: string) => {
+  const res = await axiosInstance.get(`/certificate/issued/${certificateId}/pdf`, {
+    responseType: "blob",
+  });
+
+  const blob = new Blob([res.data], { type: "application/pdf" });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName || `certificate-${certificateId}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 };

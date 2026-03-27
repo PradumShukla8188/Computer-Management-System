@@ -43,9 +43,15 @@ export const apiEndPoints = {
   DELETE_CERTIFICATE_TEMPLATE: '/certificate/template',
   ISSUE_CERTIFICATE: '/certificate/issue',
   GET_ISSUED_CERTIFICATES: '/certificate/issued',
+  GET_ELIGIBLE_CERTIFICATE_STUDENTS: '/certificate/eligible-students',
   GET_STUDENT_FEES_BY_ID: "/student/fees",
   UPDATE_STUDENT_FEES: "/student/fees/update",
   DELETE_STUDENT_FEES: "/student/fees/delete",
+  ADD_CMS_PAGE: '/cms-pages',
+  GET_CMS_PAGES: '/cms-pages',
+  GET_CMS_PAGE_BY_ID: '/cms-pages',
+  UPDATE_CMS_PAGE: '/cms-pages',
+  DELETE_CMS_PAGE: '/cms-pages',
 
 };
 
