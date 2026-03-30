@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import SelectInstitute from "./SelectInstitute";
 
 interface LoginFormValues {
   email: string;
@@ -19,22 +20,51 @@ interface LoginFormValues {
   remember: boolean;
 }
 
-interface LoginResponse {
-  data?: {
-    success: boolean;
-    token: string;
-    message?: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-  };
+export interface UserInstitute {
+  _id: string;
+  userId: string;
+  instituteId: Institute;
+  roleId: Role;
+  isActive: boolean;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface Institute {
+  _id: string;
+  name: string;
+  subdomain: string;
+}
+
+export interface Role {
+  _id: string;
+  name: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  token?: string;
+  preAuthToken?: string;
+  requiresInstituteSelection?: boolean;
+  email: string;
+  firstName: string;
+  lastName: string;
+
+  // when multiple institutes
+  institutes?: UserInstitute[];
+
+  // when single institute
+  selectedInstitute?: UserInstitute;
 }
 
 export default function SignInForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState<string>("");
+  const [showInstitute, setShowInstitute] = useState(false);
+  const [institutes, setInstitutes] = useState<UserInstitute[]>([]);
 
   const {
     register,
@@ -62,11 +92,23 @@ export default function SignInForm() {
         showError: true,
       }),
     onSuccess: (res: LoginResponse) => {
-      console.log("login success res ==>", res);
-      if (res?.data?.token) {
+      if (res.requiresInstituteSelection) {
+        const isProduction = process.env.NODE_ENV === "production";
+        if (res.preAuthToken) {
+          Cookies.set("preAuthToken", res.preAuthToken, {
+            secure: isProduction,
+            sameSite: "strict",
+            expires: 1,
+          });
+        }
+
+        setShowInstitute(true);
+        setInstitutes(res.institutes || []);
+      }
+      if (res?.token) {
         const isProduction = process.env.NODE_ENV === "production";
 
-        Cookies.set("token", res.data.token, {
+        Cookies.set("token", res.token, {
           secure: isProduction,
           sameSite: "strict",
           expires: 7,
@@ -86,6 +128,37 @@ export default function SignInForm() {
     mutate(data);
   };
 
+  const { mutate: postLoginMutate, isPending: postLoginPending } = useMutation({
+    mutationFn: (body: any) => {
+      const preAuthToken = Cookies.get("preAuthToken");
+      return ApiHitter("POST", "POST_LOGIN", { preAuthToken, instituteId: body }, "", {
+        showSuccess: true,
+        successMessage: "Logged in successfully",
+        showError: true,
+      });
+    },
+    onSuccess: (res: LoginResponse) => {
+      const isProduction = process.env.NODE_ENV === "production";
+
+      if (res.token)
+        Cookies.set("token", res.token, {
+          secure: isProduction,
+          sameSite: "strict",
+          expires: 7,
+        });
+
+      router.push("/");
+      router.refresh();
+    },
+    onError: (error: Error) => {
+      console.log("post login error res ==>", error);
+    },
+  });
+
+  const handlePostLogin = (val: string) => {
+    postLoginMutate(val);
+  };
+
   return (
     <div className="flex w-full flex-1 flex-col lg:w-1/2">
       <div className="mx-auto mb-5 w-full max-w-md sm:pt-10">
@@ -101,9 +174,7 @@ export default function SignInForm() {
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
         <div>
           <div className="mb-5 sm:mb-8">
-            <h1 className="sm:text-title-md mb-2 font-semibold text-gray-800">
-              Sign In
-            </h1>
+            <h1 className="sm:text-title-md mb-2 font-semibold text-gray-800">Sign In</h1>
             <p className="text-sm text-gray-500">
               Enter your email and password to sign in!
             </p>
@@ -135,9 +206,7 @@ export default function SignInForm() {
                   error={!!errors.email}
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.email.message}
-                  </p>
+                  <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
                 )}
               </div>
 
@@ -163,9 +232,7 @@ export default function SignInForm() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer p-1"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
                       <EyeIcon className="h-5 w-5 fill-gray-500" />
@@ -175,9 +242,7 @@ export default function SignInForm() {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
+                  <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
                 )}
               </div>
 
@@ -235,6 +300,14 @@ export default function SignInForm() {
           </div>
         </div>
       </div>
+
+      {showInstitute && (
+        <SelectInstitute
+          data={institutes}
+          loading={postLoginPending}
+          onSelect={(val) => handlePostLogin(val)}
+        />
+      )}
     </div>
   );
 }
