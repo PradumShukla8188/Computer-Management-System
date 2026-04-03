@@ -1,61 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { ApiHitter } from "@/lib/axiosApi/apiHitter";
 import {
+  ArrowLeftOutlined,
+  DeleteOutlined,
+  FileTextOutlined,
+  LeftOutlined,
+  PlusOutlined,
+  RightOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
   Form,
   Input,
   InputNumber,
-  Select,
-  Button,
-  Steps,
-  Card,
-  Typography,
-  Space,
-  Divider,
-  message,
-  Row,
-  Col,
   List,
+  message,
   Popconfirm,
+  Row,
+  Select,
+  Steps,
+  Typography,
 } from "antd";
-import {
-  ArrowLeftOutlined,
-  RightOutlined,
-  LeftOutlined,
-  SaveOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  BookOutlined,
-  FileTextOutlined,
-} from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ApiHitter } from "@/lib/axiosApi/apiHitter";
-import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
 
-interface Subject {
-  id: string;
-  name: string;
-  description?: string;
-}
-
 interface CourseFormProps {
   mode: "add" | "edit";
-  courseId?: string;
-  initialData?: any;
 }
 
-export default function CourseForm({
-  mode,
-}: CourseFormProps) {
+export default function CourseForm({ mode }: CourseFormProps) {
   const [form] = Form.useForm();
   const router = useRouter();
   const [current, setCurrent] = useState(0);
-  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [modules, setModules] = useState<any[]>([]);
   const isEditMode = mode === "edit";
 
   /* ===================== MUTATION ===================== */
@@ -63,44 +51,15 @@ export default function CourseForm({
     mutationFn: (data: any) =>
       ApiHitter("POST", "ADD_COURSE", data, "", {
         showSuccess: true,
-        successMessage: `Course ${
-          isEditMode ? "updated" : "created"
-        } successfully`,
+        successMessage: `Course ${isEditMode ? "updated" : "created"} successfully`,
         showError: true,
       }),
     onSuccess: () => {
       form.resetFields();
-      setSubjects([]);
+      setModules([]);
       router.push("/courses");
     },
   });
-
-  /* ===================== SUBJECT HANDLERS ===================== */
-  const handleAddSubject = () => {
-    form
-      .validateFields(["subjectName", "subjectDescription"])
-      .then((values) => {
-        setSubjects((prev) => [
-          ...prev,
-          {
-            id: `sub-${Date.now()}`,
-            name: values.subjectName,
-            description: values.subjectDescription,
-          },
-        ]);
-
-        form.setFieldsValue({
-          subjectName: "",
-          subjectDescription: "",
-        });
-
-        message.success("Subject added");
-      });
-  };
-
-  const deleteSubject = (index: number) => {
-    setSubjects(subjects.filter((_, i) => i !== index));
-  };
 
   /* ===================== SUBMIT ===================== */
   const handleSubmit = () => {
@@ -112,12 +71,7 @@ export default function CourseForm({
       description: values.description,
       durationInMonths: values.durationInMonths,
       monthlyFees: values.monthlyFees,
-      totalFees: values.totalFees,
-      status: values.status,
-      subjects: subjects.map((s) => ({
-        name: s.name,
-        description: s.description,
-      })),
+      syllabus: modules,
     };
 
     saveCourse(payload);
@@ -125,13 +79,13 @@ export default function CourseForm({
 
   const steps = [
     { title: "Course Details", icon: <FileTextOutlined /> },
-    { title: "Subjects", icon: <BookOutlined /> },
+    { title: "Modules & Topics", icon: <FileTextOutlined /> },
     { title: "Review", icon: <SaveOutlined /> },
   ];
 
   return (
     <div className="space-y-6">
-      {/* ===================== HEADER ===================== */}
+      {/* HEADER */}
       <div className="flex items-center gap-4">
         <Link href="/courses">
           <Button type="text" icon={<ArrowLeftOutlined />} />
@@ -140,13 +94,11 @@ export default function CourseForm({
           <Title level={2} className="!mb-1">
             {isEditMode ? "Edit Course" : "Add New Course"}
           </Title>
-          <Text type="secondary">
-            Create a course with subjects
-          </Text>
+          <Text type="secondary">Create a course with modules and topics</Text>
         </div>
       </div>
 
-      {/* ===================== STEPS ===================== */}
+      {/* STEPS */}
       <Card>
         <Steps current={current} items={steps} />
       </Card>
@@ -157,11 +109,7 @@ export default function CourseForm({
           <Card title="Course Information">
             <Row gutter={16}>
               <Col span={12}>
-                <Form.Item
-                  label="Course Name"
-                  name="name"
-                  rules={[{ required: true }]}
-                >
+                <Form.Item label="Course Name" name="name" rules={[{ required: true }]}>
                   <Input size="large" />
                 </Form.Item>
               </Col>
@@ -185,7 +133,7 @@ export default function CourseForm({
             </Form.Item>
 
             <Row gutter={16}>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item
                   label="Duration (Months)"
                   name="durationInMonths"
@@ -194,7 +142,7 @@ export default function CourseForm({
                   <InputNumber min={1} className="w-full" size="large" />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Form.Item
                   label="Monthly Fees"
                   name="monthlyFees"
@@ -203,23 +151,9 @@ export default function CourseForm({
                   <InputNumber min={0} className="w-full" size="large" />
                 </Form.Item>
               </Col>
-              <Col span={8}>
-                <Form.Item
-                  label="Total Fees"
-                  name="totalFees"
-                  rules={[{ required: true }]}
-                >
-                  <InputNumber min={0} className="w-full" size="large" />
-                </Form.Item>
-              </Col>
             </Row>
 
-            <Form.Item
-              label="Status"
-              name="status"
-              initialValue="Active"
-              rules={[{ required: true }]}
-            >
+            <Form.Item label="Status" name="status" initialValue="Active">
               <Select size="large">
                 <Option value="Active">Active</Option>
                 <Option value="Inactive">Inactive</Option>
@@ -231,22 +165,38 @@ export default function CourseForm({
         {/* ===================== STEP 2 ===================== */}
         {current === 1 && (
           <div className="space-y-4">
-            <Card title="Add Subjects">
+            <Card title="Add Module & Topic">
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
-                    label="Subject Name"
-                    name="subjectName"
+                    label="Module Title"
+                    name="moduleTitle"
                     rules={[{ required: true }]}
                   >
                     <Input />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
+                  <Form.Item label="Module Description" name="moduleDescription">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Divider />
+
+              <Row gutter={16}>
+                <Col span={12}>
                   <Form.Item
-                    label="Subject Description"
-                    name="subjectDescription"
+                    label="Topic Name"
+                    name="topicName"
+                    rules={[{ required: true }]}
                   >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item label="Topic Description" name="topicDescription">
                     <Input />
                   </Form.Item>
                 </Col>
@@ -256,35 +206,76 @@ export default function CourseForm({
                 type="primary"
                 block
                 icon={<PlusOutlined />}
-                onClick={handleAddSubject}
+                onClick={() => {
+                  form.validateFields(["moduleTitle", "topicName"]).then((values) => {
+                    setModules((prev) => {
+                      const index = prev.findIndex((m) => m.title === values.moduleTitle);
+
+                      if (index !== -1) {
+                        const updated = [...prev];
+                        updated[index].topics.push({
+                          name: values.topicName,
+                          description: values.topicDescription,
+                        });
+                        return updated;
+                      }
+
+                      return [
+                        ...prev,
+                        {
+                          title: values.moduleTitle,
+                          description: values.moduleDescription,
+                          topics: [
+                            {
+                              name: values.topicName,
+                              description: values.topicDescription,
+                            },
+                          ],
+                        },
+                      ];
+                    });
+
+                    form.setFieldsValue({
+                      topicName: "",
+                      topicDescription: "",
+                    });
+
+                    message.success("Added successfully");
+                  });
+                }}
               >
-                Add Subject
+                Add Topic
               </Button>
             </Card>
 
-            {subjects.length > 0 && (
-              <Card title={`Subjects (${subjects.length})`}>
+            {modules.length > 0 && (
+              <Card title={`Modules (${modules.length})`}>
                 <List
-                  dataSource={subjects}
-                  renderItem={(item, index) => (
+                  dataSource={modules}
+                  renderItem={(module, index) => (
                     <List.Item
                       actions={[
                         <Popconfirm
-                          title="Delete subject?"
-                          onConfirm={() => deleteSubject(index)}
+                          title="Delete module?"
+                          onConfirm={() =>
+                            setModules((prev) => prev.filter((_, i) => i !== index))
+                          }
                         >
-                          <Button
-                            type="text"
-                            danger
-                            icon={<DeleteOutlined />}
-                          />
+                          <Button type="text" danger icon={<DeleteOutlined />} />
                         </Popconfirm>,
                       ]}
                     >
-                      <List.Item.Meta
-                        title={item.name}
-                        description={item.description}
-                      />
+                      <div className="w-full">
+                        <Text strong>{module.title}</Text>
+                        <br />
+                        <Text type="secondary">{module.description}</Text>
+
+                        <div className="mt-2 pl-4">
+                          {module.topics.map((t: any, i: number) => (
+                            <div key={i}>• {t.name}</div>
+                          ))}
+                        </div>
+                      </div>
                     </List.Item>
                   )}
                 />
@@ -295,24 +286,27 @@ export default function CourseForm({
 
         {/* ===================== STEP 3 ===================== */}
         {current === 2 && (
-          <Card title="Review Course">
+          <Card title="Review">
             <Text strong className="text-lg">
               {form.getFieldValue("name")}
             </Text>
+
             <Divider />
 
-            <Text>Subjects: {subjects.length}</Text>
-            <div className="mt-3 space-y-2">
-              {subjects.map((s, i) => (
-                <div key={s.id} className="p-2 bg-gray-50 rounded">
+            <Text>Modules: {modules.length}</Text>
+
+            <div className="mt-3 space-y-3">
+              {modules.map((m, i) => (
+                <div key={i} className="rounded bg-gray-50 p-3">
                   <Text strong>
-                    {i + 1}. {s.name}
+                    {i + 1}. {m.title}
                   </Text>
-                  {s.description && (
-                    <Text type="secondary" className="block text-xs">
-                      {s.description}
-                    </Text>
-                  )}
+
+                  <div className="mt-1 ml-3">
+                    {m.topics.map((t: any, j: number) => (
+                      <div key={j}>- {t.name}</div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -347,7 +341,7 @@ export default function CourseForm({
                 icon={<SaveOutlined />}
                 onClick={handleSubmit}
               >
-                Create Course
+                {isEditMode ? "Update Course" : "Create Course"}
               </Button>
             )}
           </div>

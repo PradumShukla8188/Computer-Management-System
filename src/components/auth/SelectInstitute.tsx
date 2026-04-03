@@ -21,7 +21,7 @@ const SelectInstitute = ({
         <p className="mt-1 text-sm text-gray-500">Choose where you want to continue</p>
       </div>
 
-      <div className="flex max-h-[300px] flex-col gap-3 overflow-y-auto pr-1">
+      <div className="flex max-h-[300px] flex-col gap-3 overflow-y-auto pr-1 pb-2">
         {data?.map((item: any) => {
           const institute = item?.instituteId;
           const role = item?.roleId?.name;
