@@ -1,0 +1,11 @@
+.setting-custom input,
+.setting-custom button,
+.setting-custom select,
+.setting-custom optgroup,
+.setting-custom textarea {
+    color: #fff !important;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    margin: 0;
+}

@@ -25,12 +25,13 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
+    console.error("API Error:", error?.response || error);
     if (error?.response?.status === 401) {
       console.warn("Unauthorized → logging out");
-      
+
       // Clear token from cookies
       Cookies.remove("token");
-      
+
       // Redirect to signin
       if (typeof window !== "undefined") {
         window.location.href = "/signin";

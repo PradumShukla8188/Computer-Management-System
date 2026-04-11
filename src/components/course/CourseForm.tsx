@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { ApiHitter } from "@/lib/axiosApi/apiHitter";
 import {
   Form,
   Input,
@@ -31,12 +30,18 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Module, Topic } from "@/interfaces/courses";
+import { ApiHitter } from "@/lib/axiosApi/apiHitter";
 import { useMutation } from "@tanstack/react-query";
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
+
+interface Subject {
+  id: string;
+  name: string;
+  description?: string;
+}
 
 interface CourseFormProps {
   mode: "add" | "edit";
@@ -46,154 +51,87 @@ interface CourseFormProps {
 
 export default function CourseForm({
   mode,
-  courseId,
-  initialData,
 }: CourseFormProps) {
   const [form] = Form.useForm();
   const router = useRouter();
   const [current, setCurrent] = useState(0);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const isEditMode = mode === "edit";
 
-  // State for syllabus and topics
-  const [syllabus, setSyllabus] = useState<Module[]>([]);
-  const [currentTopics, setCurrentTopics] = useState<Topic[]>([]);
-
-  // Add/Edit course mutation
+  /* ===================== MUTATION ===================== */
   const { mutate: saveCourse, isPending } = useMutation({
-    mutationFn: (data: any) => {
-      return ApiHitter("POST", "ADD_COURSE", data, "", {
+    mutationFn: (data: any) =>
+      ApiHitter("POST", "ADD_COURSE", data, "", {
         showSuccess: true,
-        successMessage: `Course ${isEditMode ? "updated" : "added"} successfully`,
+        successMessage: `Course ${
+          isEditMode ? "updated" : "created"
+        } successfully`,
         showError: true,
-      });
-    },
+      }),
     onSuccess: () => {
       form.resetFields();
-      setSyllabus([]);
+      setSubjects([]);
       router.push("/courses");
-    },
-    onError: (error: any) => {
-      message.error(
-        error?.response?.data?.message ||
-          `Failed to ${isEditMode ? "update" : "add"} course`
-      );
     },
   });
 
-  // Handle course details submission (Step 1)
-  const handleCourseDetails = () => {
+  /* ===================== SUBJECT HANDLERS ===================== */
+  const handleAddSubject = () => {
     form
-      .validateFields([
-        "name",
-        "shortName",
-        "description",
-        "durationInMonths",
-        "monthlyFees",
-        "totalFees",
-        "status",
-      ])
-      .then(() => {
-        setCurrent(1);
-      });
-  };
-
-  // Add syllabus item
-  const handleAddSyllabus = () => {
-    form
-      .validateFields(["syllabusTitle", "syllabusDescription"])
+      .validateFields(["subjectName", "subjectDescription"])
       .then((values) => {
-        const newSyllabus: Module = {
-          _id: `temp-${Date.now()}`,
-          title: values.syllabusTitle,
-          description: values.syllabusDescription,
-          courseId: "", // Will be set when course is created
-          topics: currentTopics,
-        };
+        setSubjects((prev) => [
+          ...prev,
+          {
+            id: `sub-${Date.now()}`,
+            name: values.subjectName,
+            description: values.subjectDescription,
+          },
+        ]);
 
-        setSyllabus([...syllabus, newSyllabus]);
         form.setFieldsValue({
-          syllabusTitle: "",
-          syllabusDescription: "",
+          subjectName: "",
+          subjectDescription: "",
         });
-        setCurrentTopics([]);
-        message.success("Module added successfully");
+
+        message.success("Subject added");
       });
   };
 
-  // Add topic to current syllabus
-  const handleAddTopic = () => {
-    form
-      .validateFields(["topicName", "topicDescription"])
-      .then((values) => {
-        const newTopic: Topic = {
-          _id: `topic-temp-${Date.now()}`,
-          name: values.topicName,
-          description: values.topicDescription,
-          moduleId: "", // Will be set when module is created
-        };
-
-        setCurrentTopics([...currentTopics, newTopic]);
-        form.setFieldsValue({ topicName: "", topicDescription: "" });
-        message.success("Topic added to module");
-      });
+  const deleteSubject = (index: number) => {
+    setSubjects(subjects.filter((_, i) => i !== index));
   };
 
-  // Delete syllabus item
-  const deleteSyllabus = (index: number) => {
-    const newSyllabus = syllabus.filter((_, i) => i !== index);
-    setSyllabus(newSyllabus);
-    message.success("Module deleted");
-  };
-
-  // Delete topic
-  const deleteTopic = (index: number) => {
-    const newTopics = currentTopics.filter((_, i) => i !== index);
-    setCurrentTopics(newTopics);
-    message.success("Topic deleted");
-  };
-
-  // Final submission
+  /* ===================== SUBMIT ===================== */
   const handleSubmit = () => {
-    // Get all form values, including those from unmounted steps
     const values = form.getFieldsValue(true);
-    
-    const courseData = {
+
+    const payload = {
       name: values.name,
       shortName: values.shortName,
       description: values.description,
       durationInMonths: values.durationInMonths,
       monthlyFees: values.monthlyFees,
-      syllabus: syllabus.map((item) => ({
-        title: item.title,
-        description: item.description,
-        topics: item.topics.map((topic) => ({
-          name: topic.name,
-          description: topic.description,
-        })),
+      totalFees: values.totalFees,
+      status: values.status,
+      subjects: subjects.map((s) => ({
+        name: s.name,
+        description: s.description,
       })),
     };
 
-    saveCourse(courseData);
+    saveCourse(payload);
   };
 
   const steps = [
-    {
-      title: "Course Details",
-      icon: <FileTextOutlined />,
-    },
-    {
-      title: "Syllabus & Topics",
-      icon: <BookOutlined />,
-    },
-    {
-      title: "Review",
-      icon: <SaveOutlined />,
-    },
+    { title: "Course Details", icon: <FileTextOutlined /> },
+    { title: "Subjects", icon: <BookOutlined /> },
+    { title: "Review", icon: <SaveOutlined /> },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* ===================== HEADER ===================== */}
       <div className="flex items-center gap-4">
         <Link href="/courses">
           <Button type="text" icon={<ArrowLeftOutlined />} />
@@ -203,47 +141,37 @@ export default function CourseForm({
             {isEditMode ? "Edit Course" : "Add New Course"}
           </Title>
           <Text type="secondary">
-            {isEditMode
-              ? "Update course details"
-              : "Complete all steps to create a new course"}
+            Create a course with subjects
           </Text>
         </div>
       </div>
 
-      {/* Stepper */}
+      {/* ===================== STEPS ===================== */}
       <Card>
         <Steps current={current} items={steps} />
       </Card>
 
-      {/* Form */}
-      <Form form={form} layout="vertical" preserve={true}>
-        {/* Step 1: Course Details */}
+      <Form form={form} layout="vertical" preserve>
+        {/* ===================== STEP 1 ===================== */}
         {current === 0 && (
           <Card title="Course Information">
             <Row gutter={16}>
-              <Col xs={24} md={12}>
+              <Col span={12}>
                 <Form.Item
                   label="Course Name"
                   name="name"
-                  rules={[
-                    { required: true, message: "Course name is required" },
-                  ]}
+                  rules={[{ required: true }]}
                 >
-                  <Input
-                    placeholder="e.g., Full Stack Web Development"
-                    size="large"
-                  />
+                  <Input size="large" />
                 </Form.Item>
               </Col>
-              <Col xs={24} md={12}>
+              <Col span={12}>
                 <Form.Item
                   label="Short Name"
                   name="shortName"
-                  rules={[
-                    { required: true, message: "Short name is required" },
-                  ]}
+                  rules={[{ required: true }]}
                 >
-                  <Input placeholder="e.g., MERN-2024" size="large" />
+                  <Input size="large" />
                 </Form.Item>
               </Col>
             </Row>
@@ -251,64 +179,37 @@ export default function CourseForm({
             <Form.Item
               label="Description"
               name="description"
-              rules={[{ required: true, message: "Description is required" }]}
+              rules={[{ required: true }]}
             >
-              <TextArea
-                rows={4}
-                placeholder="Brief description of the course..."
-                maxLength={500}
-                showCount
-              />
+              <TextArea rows={4} />
             </Form.Item>
 
             <Row gutter={16}>
-              <Col xs={24} md={8}>
+              <Col span={8}>
                 <Form.Item
-                  label="Duration (months)"
+                  label="Duration (Months)"
                   name="durationInMonths"
-                  rules={[{ required: true, message: "Duration is required" }]}
+                  rules={[{ required: true }]}
                 >
-                  <InputNumber
-                    min={1}
-                    max={48}
-                    placeholder="6"
-                    className="w-full"
-                    size="large"
-                  />
+                  <InputNumber min={1} className="w-full" size="large" />
                 </Form.Item>
               </Col>
-              <Col xs={24} md={8}>
+              <Col span={8}>
                 <Form.Item
-                  label="Monthly Fees (₹)"
+                  label="Monthly Fees"
                   name="monthlyFees"
-                  rules={[{ required: true, message: "Monthly fees required" }]}
+                  rules={[{ required: true }]}
                 >
-                  <InputNumber
-                    min={0}
-                    placeholder="5000"
-                    className="w-full"
-                    size="large"
-                    formatter={(value) =>
-                      `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                  />
+                  <InputNumber min={0} className="w-full" size="large" />
                 </Form.Item>
               </Col>
-              <Col xs={24} md={8}>
+              <Col span={8}>
                 <Form.Item
-                  label="Total Fees (₹)"
+                  label="Total Fees"
                   name="totalFees"
-                  rules={[{ required: true, message: "Total fees required" }]}
+                  rules={[{ required: true }]}
                 >
-                  <InputNumber
-                    min={0}
-                    placeholder="30000"
-                    className="w-full"
-                    size="large"
-                    formatter={(value) =>
-                      `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    }
-                  />
+                  <InputNumber min={0} className="w-full" size="large" />
                 </Form.Item>
               </Col>
             </Row>
@@ -316,8 +217,8 @@ export default function CourseForm({
             <Form.Item
               label="Status"
               name="status"
-              rules={[{ required: true, message: "Status is required" }]}
               initialValue="Active"
+              rules={[{ required: true }]}
             >
               <Select size="large">
                 <Option value="Active">Active</Option>
@@ -327,284 +228,126 @@ export default function CourseForm({
           </Card>
         )}
 
-        {/* Step 2: Syllabus & Topics */}
+        {/* ===================== STEP 2 ===================== */}
         {current === 1 && (
           <div className="space-y-4">
-            <Card title="Add Module to Syllabus">
-              <Form.Item label="Module Title" name="syllabusTitle">
-                <Input
-                  placeholder="e.g., Frontend Fundamentals"
-                  size="large"
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="Module Description"
-                name="syllabusDescription"
-              >
-                <TextArea
-                  rows={2}
-                  placeholder="HTML, CSS, and JS basics"
-                />
-              </Form.Item>
-
-              <Divider>Add Topics to this Module</Divider>
-
+            <Card title="Add Subjects">
               <Row gutter={16}>
-                <Col xs={24} md={12}>
-                  <Form.Item label="Topic Name" name="topicName">
-                    <Input placeholder="e.g., Introduction to React" />
+                <Col span={12}>
+                  <Form.Item
+                    label="Subject Name"
+                    name="subjectName"
+                    rules={[{ required: true }]}
+                  >
+                    <Input />
                   </Form.Item>
                 </Col>
-                <Col xs={24} md={12}>
-                  <Form.Item label="Topic Description" name="topicDescription">
-                    <Input placeholder="Basic concepts of components" />
+                <Col span={12}>
+                  <Form.Item
+                    label="Subject Description"
+                    name="subjectDescription"
+                  >
+                    <Input />
                   </Form.Item>
                 </Col>
               </Row>
 
-              <Space className="mb-4">
-                <Button
-                  type="dashed"
-                  icon={<PlusOutlined />}
-                  onClick={handleAddTopic}
-                >
-                  Add Topic
-                </Button>
-              </Space>
-
-              {/* Current Topics List */}
-              {currentTopics.length > 0 && (
-                <>
-                  <Text strong className="block mb-2">
-                    Topics in this module ({currentTopics.length}):
-                  </Text>
-                  <List
-                    size="small"
-                    bordered
-                    dataSource={currentTopics}
-                    className="mb-4"
-                    renderItem={(topic, index) => (
-                      <List.Item
-                        actions={[
-                          <Button
-                            key="delete"
-                            type="text"
-                            danger
-                            size="small"
-                            icon={<DeleteOutlined />}
-                            onClick={() => deleteTopic(index)}
-                          />,
-                        ]}
-                      >
-                        <List.Item.Meta
-                          title={topic.name}
-                          description={topic.description}
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </>
-              )}
-
               <Button
                 type="primary"
                 block
-                size="large"
                 icon={<PlusOutlined />}
-                onClick={handleAddSyllabus}
+                onClick={handleAddSubject}
               >
-                Save & Add Module
+                Add Subject
               </Button>
             </Card>
 
-            {/* Added Syllabus List */}
-            {syllabus.length > 0 && (
-              <Card title={`Syllabus Modules (${syllabus.length})`}>
-                {syllabus.map((item, index) => (
-                  <Card
-                    key={item._id}
-                    className="mb-3"
-                    size="small"
-                    title={
-                      <Space>
-                        <BookOutlined />
-                        <Text strong>{item.title}</Text>
-                      </Space>
-                    }
-                    extra={
-                      <Popconfirm
-                        title="Delete Module"
-                        description="Are you sure you want to delete this module?"
-                        onConfirm={() => deleteSyllabus(index)}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <Button
-                          type="text"
-                          danger
-                          icon={<DeleteOutlined />}
-                          size="small"
+            {subjects.length > 0 && (
+              <Card title={`Subjects (${subjects.length})`}>
+                <List
+                  dataSource={subjects}
+                  renderItem={(item, index) => (
+                    <List.Item
+                      actions={[
+                        <Popconfirm
+                          title="Delete subject?"
+                          onConfirm={() => deleteSubject(index)}
                         >
-                          Delete
-                        </Button>
-                      </Popconfirm>
-                    }
-                  >
-                    <Text type="secondary" className="block mb-2">
-                      {item.description}
-                    </Text>
-                    {item.topics.length > 0 && (
-                      <div className="pl-3 border-l-2 border-blue-300">
-                        <Text type="secondary" className="text-xs">
-                          {item.topics.length} topic(s):
-                        </Text>
-                        <ul className="list-disc list-inside mt-1">
-                          {item.topics.map((topic) => (
-                            <li
-                              key={topic._id}
-                              className="text-sm text-gray-600"
-                            >
-                              {topic.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </Card>
-                ))}
+                          <Button
+                            type="text"
+                            danger
+                            icon={<DeleteOutlined />}
+                          />
+                        </Popconfirm>,
+                      ]}
+                    >
+                      <List.Item.Meta
+                        title={item.name}
+                        description={item.description}
+                      />
+                    </List.Item>
+                  )}
+                />
               </Card>
             )}
           </div>
         )}
 
-        {/* Step 3: Review */}
+        {/* ===================== STEP 3 ===================== */}
         {current === 2 && (
-          <Card title="Review Course Details">
-            <div className="space-y-4">
-              <div>
-                <Text type="secondary">Course Name:</Text>
-                <div>
-                  <Text strong className="text-lg">
-                    {form.getFieldValue("name")}
+          <Card title="Review Course">
+            <Text strong className="text-lg">
+              {form.getFieldValue("name")}
+            </Text>
+            <Divider />
+
+            <Text>Subjects: {subjects.length}</Text>
+            <div className="mt-3 space-y-2">
+              {subjects.map((s, i) => (
+                <div key={s.id} className="p-2 bg-gray-50 rounded">
+                  <Text strong>
+                    {i + 1}. {s.name}
                   </Text>
-                </div>
-              </div>
-
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Text type="secondary">Short Name:</Text>
-                  <div>
-                    <Text strong>{form.getFieldValue("shortName")}</Text>
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <Text type="secondary">Duration:</Text>
-                  <div>
-                    <Text strong>
-                      {form.getFieldValue("durationInMonths")} months
+                  {s.description && (
+                    <Text type="secondary" className="block text-xs">
+                      {s.description}
                     </Text>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Text type="secondary">Monthly Fees:</Text>
-                  <div>
-                    <Text strong className="text-green-600">
-                      ₹
-                      {form
-                        .getFieldValue("monthlyFees")
-                        ?.toLocaleString("en-IN")}
-                    </Text>
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <Text type="secondary">Total Fees:</Text>
-                  <div>
-                    <Text strong className="text-green-600">
-                      ₹
-                      {form
-                        .getFieldValue("totalFees")
-                        ?.toLocaleString("en-IN")}
-                    </Text>
-                  </div>
-                </Col>
-              </Row>
-
-              <div>
-                <Text type="secondary">Description:</Text>
-                <div>
-                  <Text>{form.getFieldValue("description")}</Text>
+                  )}
                 </div>
-              </div>
-
-              <Divider />
-
-              <div>
-                <Text type="secondary" className="text-base">
-                  Syllabus Modules: <strong>{syllabus.length}</strong>
-                </Text>
-                <div className="mt-3 space-y-2">
-                  {syllabus.map((item, index) => (
-                    <div
-                      key={item._id}
-                      className="p-3 bg-gray-50 dark:bg-gray-800 rounded"
-                    >
-                      <Text strong>
-                        {index + 1}. {item.title}
-                      </Text>
-                      <Text type="secondary" className="block text-xs">
-                        {item.topics.length} topic(s)
-                      </Text>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </Card>
         )}
 
-        {/* Navigation Buttons */}
+        {/* ===================== NAVIGATION ===================== */}
         <Card>
           <div className="flex justify-between">
             <Button
-              size="large"
-              onClick={() => setCurrent(current - 1)}
+              onClick={() => setCurrent((c) => c - 1)}
               disabled={current === 0}
               icon={<LeftOutlined />}
             >
               Previous
             </Button>
 
-            {current < steps.length - 1 && (
+            {current < 2 && (
               <Button
                 type="primary"
-                size="large"
-                onClick={() => {
-                  if (current === 0) {
-                    handleCourseDetails();
-                  } else {
-                    setCurrent(current + 1);
-                  }
-                }}
+                onClick={() => setCurrent((c) => c + 1)}
                 icon={<RightOutlined />}
-                iconPosition="end"
               >
                 Next
               </Button>
             )}
 
-            {current === steps.length - 1 && (
+            {current === 2 && (
               <Button
                 type="primary"
-                size="large"
-                onClick={handleSubmit}
                 loading={isPending}
                 icon={<SaveOutlined />}
+                onClick={handleSubmit}
               >
-                {isEditMode ? "Update Course" : "Create Course"}
+                Create Course
               </Button>
             )}
           </div>

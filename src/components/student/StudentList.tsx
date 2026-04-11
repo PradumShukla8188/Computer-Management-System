@@ -37,18 +37,32 @@ export default function StudentList() {
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [courseFilter, setCourseFilter] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
 
   // Fetch students from API (falls back to static data)
-  const { data: studentsData, isLoading } = useQuery({
-    queryKey: ["students"],
-    queryFn: async () => {
-      const response = await ApiHitter("GET", "GET_STUDENT_LIST", {}, "", {
+const { data: studentsResponse, isLoading } = useQuery({
+  queryKey: ["students", page, pageSize],
+  queryFn: async () => {
+    const response = await ApiHitter(
+      "GET",
+      "GET_STUDENT_LIST",
+      {},
+      `?page=${page}&limit=${pageSize}`,
+      {
         showError: false,
         showSuccess: false,
-      });
-      return response?.data || [];
-    },
-  });
+      }
+    );
+    return response;
+  },
+  // keepPreviousData: true,
+}); 
+
+const studentsData = studentsResponse?.data || [];
+const totalStudents = studentsResponse?.total || 0;
+
 
   // Filter students based on search and filters
   const filteredStudents = useMemo(() => {
@@ -404,15 +418,21 @@ export default function StudentList() {
             dataSource={filteredStudents}
             rowKey="_id"
             loading={isLoading}
-            // scroll={{ x: 1200 }}
             pagination={{
-              pageSize: 10,
+              current: page,
+              pageSize,
+              total: totalStudents,
               showSizeChanger: true,
+              onChange: (newPage, newPageSize) => {
+                setPage(newPage);
+                setPageSize(newPageSize);
+              },
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} students`,
             }}
             className="student-table"
           />
+
         </div>
       </Card>
     </div>
