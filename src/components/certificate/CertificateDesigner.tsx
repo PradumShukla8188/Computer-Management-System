@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Stage, Layer, Text, Rect, Image as KonvaImage, Transformer } from 'react-konva';
 import useImage from 'use-image';
-import { Space, Button, Input, Select, ColorPicker, Slider, Typography, Card, Divider, Tabs, List, Tooltip } from 'antd';
+import { Space, Button, Input, Select, ColorPicker, Slider, Typography, Card, Divider, Tabs, List, Tooltip, message } from 'antd';
 import { 
   PlusOutlined, 
   FontColorsOutlined, 
@@ -15,8 +15,12 @@ import {
   AlignLeftOutlined,
   AlignRightOutlined,
   BlockOutlined,
-  PieChartOutlined
+  PieChartOutlined,
+  DownloadOutlined,
+  ThunderboltOutlined,
+  EyeOutlined
 } from '@ant-design/icons';
+import { SST_CERTIFICATE_TEMPLATE } from './SSTCertificateTemplate';
 
 const { Title, Text: AntText } = Typography;
 const { TabPane } = Tabs;
@@ -30,12 +34,17 @@ interface Element {
   fontSize?: number;
   fontFamily?: string;
   fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
   width?: number;
   height?: number;
   src?: string;
   rotation?: number;
   isPlaceholder?: boolean;
   fontWeight?: string;
+  align?: 'left' | 'center' | 'right';
+  offsetX?: number;
+  offsetY?: number;
 }
 
 const URLImage = ({ src, x, y, width, height, id, isSelected, onSelect, onChange }: any) => {
@@ -152,6 +161,67 @@ const EditableText = ({ id, x, y, text, fontSize, fill, fontFamily, fontWeight, 
   );
 };
 
+const EditableRect = ({ id, x, y, width, height, fill, stroke, strokeWidth, isSelected, onSelect, onChange }: any) => {
+  const shapeRef = useRef<any>(null);
+  const trRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (isSelected) {
+      trRef.current.nodes([shapeRef.current]);
+      trRef.current.getLayer().batchDraw();
+    }
+  }, [isSelected]);
+
+  return (
+    <>
+      <Rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={fill}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        id={id}
+        ref={shapeRef}
+        draggable
+        onClick={onSelect}
+        onTap={onSelect}
+        onDragEnd={(e) => {
+          onChange({
+            x: e.target.x(),
+            y: e.target.y(),
+          });
+        }}
+        onTransformEnd={(e) => {
+          const node = shapeRef.current;
+          const scaleX = node.scaleX();
+          const scaleY = node.scaleY();
+          node.scaleX(1);
+          node.scaleY(1);
+          onChange({
+            x: node.x(),
+            y: node.y(),
+            width: Math.max(5, node.width() * scaleX),
+            height: Math.max(5, node.height() * scaleY),
+          });
+        }}
+      />
+      {isSelected && (
+        <Transformer
+          ref={trRef}
+          boundBoxFunc={(oldBox, newBox) => {
+            if (newBox.width < 5 || newBox.height < 5) {
+              return oldBox;
+            }
+            return newBox;
+          }}
+        />
+      )}
+    </>
+  );
+};
+
 export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any) => void }, ref) => {
   const [elements, setElements] = useState<Element[]>([
     { id: '1', type: 'text', x: 561, y: 150, text: 'CERTIFICATE', fontSize: 40, fontFamily: 'Arial', fill: '#000', fontWeight: 'bold' },
@@ -165,6 +235,7 @@ export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any
   const [stageSize, setStageSize] = useState({ width: 1123, height: 794 });
   const [scale, setScale] = useState(1);
   const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
+  const [isExporting, setIsExporting] = useState(false);
   
   const stageRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -175,7 +246,7 @@ export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any
       if (containerRef.current) {
         const { width, height } = containerRef.current.getBoundingClientRect();
         setContainerDimensions({ width, height });
-        const newScale = Math.min((width - 40) / 1123, (height - 40) / 794);
+        const newScale = Math.min((width - 40) / stageSize.width, (height - 40) / stageSize.height);
         setScale(Math.max(0.1, Math.min(newScale, 1.5)));
       }
     };
@@ -208,8 +279,40 @@ export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any
   useImperativeHandle(ref, () => ({
     save,
     addText,
-    addImage
+    addImage,
+    downloadPdf
   }));
+  
+  const loadSSTTemplate = () => {
+    setElements(SST_CERTIFICATE_TEMPLATE.elements as any);
+    setStageSize(SST_CERTIFICATE_TEMPLATE.dimensions);
+    setSelectedId(null);
+    message.success('SST Template loaded successfully!');
+  };
+
+  const downloadPdf = async () => {
+    const { jsPDF } = await import('jspdf');
+    setIsExporting(true);
+    
+    setTimeout(() => {
+      try {
+        const dataUrl = stageRef.current.toDataURL({ pixelRatio: 3 });
+        const pdf = new jsPDF({
+          orientation: stageSize.width > stageSize.height ? 'landscape' : 'portrait',
+          unit: 'mm',
+          format: [stageSize.width * 0.264583, stageSize.height * 0.264583]
+        });
+
+        pdf.addImage(dataUrl, 'PNG', 0, 0, stageSize.width * 0.264583, stageSize.height * 0.264583);
+        pdf.save('certificate-preview.pdf');
+      } catch (err) {
+        console.error(err);
+        message.error('Failed to generate PDF');
+      } finally {
+        setIsExporting(false);
+      }
+    }, 100);
+  };
   
   const addText = (text: string = 'New Text', isPlaceholder: boolean = false) => {
     const newElement: Element = {
@@ -297,6 +400,25 @@ export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any
                 </div>
               </div>
             </TabPane>
+
+            <TabPane tab="Templates" key="templates">
+              <div className="py-3 px-1">
+                <Button 
+                  block 
+                  type="primary" 
+                  ghost 
+                  icon={<ThunderboltOutlined />} 
+                  onClick={loadSSTTemplate}
+                  className="mb-4"
+                >
+                  Load SST Template
+                </Button>
+                <Divider className="my-2" />
+                <AntText type="secondary" className="text-[10px]">
+                  Loading a template will replace all current elements on the canvas.
+                </AntText>
+              </div>
+            </TabPane>
             
             <TabPane tab="Layers" key="layers">
               <div className="py-2 overflow-y-auto max-h-[calc(100vh-220px)]">
@@ -330,14 +452,20 @@ export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any
 
         {/* Canvas Area */}
         <div 
-          className="flex-1 bg-[#f0f2f5] p-4 flex items-center justify-center overflow-hidden relative"
+          className="flex-1 bg-[#f0f2f5] p-4 flex flex-col items-center justify-center overflow-hidden relative"
           ref={containerRef}
         >
+          <div className="mb-4 flex gap-2">
+             <Button icon={<PlusOutlined />} onClick={() => addText()} size="small">Add Text</Button>
+             <Button icon={<FileImageOutlined />} onClick={() => document.getElementById('logo-upload')?.click()} size="small">Add Image</Button>
+             <Button icon={<DownloadOutlined />} onClick={downloadPdf} loading={isExporting} size="small" type="primary">Download PDF Preview</Button>
+          </div>
+
           <div 
-            className="bg-white shadow-xl flex items-center justify-center overflow-hidden"
+            className="bg-white shadow-xl flex items-center justify-center overflow-hidden relative"
             style={{ 
-              width: 1123 * scale, 
-              height: 794 * scale,
+              width: stageSize.width * scale, 
+              height: stageSize.height * scale,
               flexShrink: 0
             }}
           >
@@ -385,6 +513,19 @@ export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any
                       />
                     );
                   }
+                  if (el.type === 'rect') {
+                    return (
+                      <EditableRect
+                        key={el.id}
+                        {...el}
+                        isSelected={el.id === selectedId}
+                        onSelect={() => setSelectedId(el.id)}
+                        onChange={(newAttrs: any) => {
+                          updateSelectedElement(newAttrs);
+                        }}
+                      />
+                    );
+                  }
                   return null;
                 })}
               </Layer>
@@ -394,7 +535,7 @@ export const CertificateDesigner = forwardRef(({ onSave }: { onSave?: (data: any
           <div className="absolute bottom-4 right-4 flex items-center gap-3 bg-white px-4 py-2 rounded-2xl shadow-lg text-[10px] font-bold text-gray-400 border border-gray-100 uppercase tracking-widest">
              <span className="flex items-center gap-1"><PieChartOutlined style={{fontSize: 10}} /> {Math.round(scale * 100)}%</span>
              <div className="w-[1px] h-3 bg-gray-200" />
-             <span>1123 x 794 PX</span>
+             <span>{stageSize.width} x {stageSize.height} PX</span>
           </div>
         </div>
 

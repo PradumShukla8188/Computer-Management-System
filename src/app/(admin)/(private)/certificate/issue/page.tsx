@@ -2,9 +2,10 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Button, Card, Col, Divider, Form, Row, Select, Space, Tag, Typography, message } from "antd";
-import { CheckCircleOutlined, FileProtectOutlined, SaveOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, DownloadOutlined, FileProtectOutlined, SaveOutlined } from "@ant-design/icons";
 import CertificateViewer from "@/components/certificate/CertificateViewer";
-import { useCertificateTemplates, useEligibleCertificateStudents, useIssueCertificate } from "../hooks/useCertificateApi";
+import ModernCertificate from "@/components/certificate/ModernCertificate";
+import { downloadIssuedCertificatePdf, useCertificateTemplates, useEligibleCertificateStudents, useIssueCertificate } from "../hooks/useCertificateApi";
 
 const { Title, Text } = Typography;
 
@@ -66,6 +67,7 @@ export default function IssueCertificatePage() {
 
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [previewData, setPreviewData] = useState<any>({});
+  const [lastIssuedId, setLastIssuedId] = useState<string | null>(null);
 
   const selectedStudentId = Form.useWatch("studentId", form);
 
@@ -105,7 +107,12 @@ export default function IssueCertificatePage() {
         data: mapStudentToCertificateData(student),
       },
       {
-        onSuccess: () => {
+        onSuccess: (response: any) => {
+          console.log("Certificate Issue Response:", response);
+          const issuedId = response?.data?._id || response?.data?.id || response?._id || response?.id;
+          if (issuedId) {
+            setLastIssuedId(issuedId);
+          }
           form.resetFields();
           setSelectedTemplate(null);
           setPreviewData({});
@@ -203,20 +210,73 @@ export default function IssueCertificatePage() {
         </Col>
 
         <Col xs={24} xl={14}>
-          <Card title="Certificate Preview" className="shadow-sm">
+          <Card 
+            title="Certificate Preview" 
+            className="shadow-sm"
+            extra={
+              lastIssuedId && (
+                <Button 
+                  type="primary" 
+                  icon={<DownloadOutlined />} 
+                  onClick={() => downloadIssuedCertificatePdf(lastIssuedId)}
+                >
+                  Download Last Issued
+                </Button>
+              )
+            }
+          >
             {selectedTemplate ? (
               <div className="rounded-2xl border bg-slate-50 p-4">
-                <CertificateViewer
-                  design={selectedTemplate.design}
-                  dimensions={selectedTemplate.dimensions}
-                  backgroundImage={selectedTemplate.backgroundImage}
-                  data={previewData}
-                />
+                {selectedTemplate.name?.toLowerCase().includes("advanced") ? (
+                  <div className="flex justify-center">
+                    <div className="scale-[0.6] origin-top">
+                       <ModernCertificate
+                        certificateNo={previewData.certificate_no || "PENDING"}
+                        enrollmentNo={previewData.enrollment_no || previewData.roll_no}
+                        studentName={previewData.student_full_name}
+                        fatherName={previewData.father_name}
+                        motherName={previewData.mother_name}
+                        dob={previewData.date_of_birth}
+                        courseName={previewData.course_name}
+                        securedPercent={previewData.secured_percent}
+                        grade={previewData.grade}
+                        session={previewData.session}
+                        centerCode={previewData.center_code || "SSTCI/2262025"}
+                        centerName={previewData.center_name}
+                        centerAddress={previewData.center_address}
+                        issueDate={previewData.issue_date}
+                        studentPhotoUrl={previewData.student_photo}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <CertificateViewer
+                    design={selectedTemplate.design}
+                    dimensions={selectedTemplate.dimensions}
+                    backgroundImage={selectedTemplate.backgroundImage}
+                    data={previewData}
+                  />
+                )}
               </div>
             ) : (
               <div className="flex h-96 items-center justify-center rounded-xl border border-dashed text-gray-400">
                 Select a template and eligible student to preview the certificate
               </div>
+            )}
+            
+            {lastIssuedId && (
+              <Alert
+                message="Certificate Issued Successfully"
+                description="The certificate has been recorded. You can now download the official PDF."
+                type="success"
+                showIcon
+                className="mt-4"
+                action={
+                  <Button size="small" type="primary" icon={<DownloadOutlined />} onClick={() => downloadIssuedCertificatePdf(lastIssuedId)}>
+                    Download PDF
+                  </Button>
+                }
+              />
             )}
           </Card>
         </Col>

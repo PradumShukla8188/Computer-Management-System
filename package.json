@@ -39,6 +39,7 @@
     "konva": "^10.2.0",
     "lucide-react": "^0.562.0",
     "next": "16.1.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.2",
     "react-apexcharts": "^1.8.0",
     "react-datepicker": "^9.1.0",

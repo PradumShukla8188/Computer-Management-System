@@ -3,9 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Table, Space, Button, Card, Typography, Modal, Tag, message } from 'antd';
 import { DownloadOutlined, PrinterOutlined, EyeOutlined } from '@ant-design/icons';
-import jsPDF from 'jspdf';
-import CertificateViewer, { CertificateViewerHandle } from '@/components/certificate/CertificateViewer';
-import { useIssuedCertificates } from '../hooks/useCertificateApi';
+import ModernCertificate from '@/components/certificate/ModernCertificate';
+import { downloadIssuedCertificatePdf, printIssuedCertificatePdf, useIssuedCertificates } from '../hooks/useCertificateApi';
 
 const { Title } = Typography;
 
@@ -35,28 +34,21 @@ const buildQrCodeUrl = (record: any) =>
   `https://quickchart.io/qr?size=170&margin=1&text=${encodeURIComponent(buildCertificateQrText(record))}`;
 
 const buildViewerData = (record: any) => ({
+  certificate_no: record?.certificateNumber || '',
+  enrollment_no: record?.studentId?.rollNo || '',
   student_name: record?.studentId?.name || '',
-  student_full_name: record?.studentId?.name || '',
-  name: record?.studentId?.name || '',
   father_name: record?.studentId?.fatherName || '',
   mother_name: record?.studentId?.motherName || '',
-  date_of_birth: record?.studentId?.dob ? new Date(record.studentId.dob).toLocaleDateString('en-GB').replace(/\//g, '-') : '',
-  dob: record?.studentId?.dob ? new Date(record.studentId.dob).toLocaleDateString('en-GB').replace(/\//g, '-') : '',
+  dob: record?.studentId?.dob ? new Date(record.studentId.dob).toLocaleDateString('en-GB') : '',
   course_name: record?.studentId?.courseId?.name || record?.studentId?.courseName || '',
-  course: record?.studentId?.courseId?.name || record?.studentId?.courseName || '',
-  duration: record?.studentId?.courseDuration || '',
-  roll_no: record?.studentId?.rollNo || '',
-  roll_number: record?.studentId?.rollNo || '',
-  registration_number: record?.data?.registration_number || record?.certificateNumber || '',
-  certificate_number: record?.certificateNumber || '',
-  issue_date: record?.issuedAt ? new Date(record.issuedAt).toLocaleDateString('en-GB').replace(/\//g, '-') : '',
-  date: record?.issuedAt ? new Date(record.issuedAt).toLocaleDateString('en-GB').replace(/\//g, '-') : '',
-  student_photo: record?.studentId?.studentPhoto || '',
-  institute_name: 'SST COMPUTER & WELL KNOWLEDGE INSTITUTE',
-  institute_address: 'Dikunni Dhikunni, Uttar Pradesh 241203',
-  institute_contact: '9519222486, 7376486686',
-  qr_code: buildQrCodeUrl(record),
-  ...(record?.data || {}),
+  secured_percent: record?.data?.secured_percent || record?.data?.securedPercent || '',
+  grade: record?.data?.grade || '',
+  session: record?.data?.session || '',
+  center_code: record?.data?.center_code || record?.data?.centerCode || 'SSTCI/2262025',
+  center_name: 'SST COMPUTER & WELL KNOWLEDGE INSTITUTE',
+  center_address: '12, Radhe ,Dhikunni Bharawan, Hardoi Uttar Pradesh 241203',
+  issue_date: record?.issuedAt ? new Date(record.issuedAt).toLocaleDateString('en-GB') : '',
+  student_photo_url: record?.studentId?.studentPhoto || '',
 });
 
 const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -67,7 +59,6 @@ export default function IssuedCertificateListPage() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<'download' | null>(null);
-  const viewerRef = useRef<CertificateViewerHandle | null>(null);
 
   const openPreview = (cert: any, action: 'download' | null = null) => {
     setViewingCert(cert);
@@ -75,87 +66,19 @@ export default function IssuedCertificateListPage() {
     setPendingAction(action);
   };
 
-  const exportCertificateImage = async () => {
-    for (let attempt = 0; attempt < 8; attempt += 1) {
-      if (viewerRef.current?.isReady()) {
-        const image = viewerRef.current.exportAsDataUrl(2);
-        if (image) {
-          return image;
-        }
-      }
-      await wait(250);
-    }
-
-    throw new Error('Certificate preview is still loading. Please try again.');
-  };
-
   const handleDownload = async (cert: any) => {
     try {
       setDownloadingId(cert._id);
-      const imageDataUrl = await exportCertificateImage();
-      const dimensions = cert?.templateId?.dimensions || { width: 1123, height: 794 };
-      const pdf = new jsPDF({
-        orientation: dimensions.width >= dimensions.height ? 'landscape' : 'portrait',
-        unit: 'px',
-        format: [dimensions.width, dimensions.height],
-      });
-
-      pdf.addImage(imageDataUrl, 'PNG', 0, 0, dimensions.width, dimensions.height);
-      pdf.save(`${cert.certificateNumber || cert._id}.pdf`);
+      await downloadIssuedCertificatePdf(cert._id, `certificate-${cert.certificateNumber || cert._id}.pdf`);
     } catch (error: any) {
-      message.error(error?.message || 'Failed to download certificate PDF');
+      message.error('Failed to download certificate PDF');
     } finally {
       setDownloadingId(null);
     }
   };
 
   const handlePrint = async (cert: any) => {
-    try {
-      const imageDataUrl = await exportCertificateImage();
-      const dimensions = cert?.templateId?.dimensions || { width: 1123, height: 794 };
-      const printWindow = window.open('', '_blank', 'width=1400,height=900');
-
-      if (!printWindow) {
-        message.error('Please allow popups to print the certificate.');
-        return;
-      }
-
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>${cert?.certificateNumber || 'Certificate'}</title>
-            <style>
-              @page {
-                size: ${dimensions.width}px ${dimensions.height}px;
-                margin: 0;
-              }
-              html, body {
-                margin: 0;
-                padding: 0;
-                background: #ffffff;
-              }
-              body {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              }
-              img {
-                width: 100%;
-                max-width: ${dimensions.width}px;
-                height: auto;
-                display: block;
-              }
-            </style>
-          </head>
-          <body>
-            <img src="${imageDataUrl}" alt="Certificate" onload="window.focus(); window.print();" />
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-    } catch (error: any) {
-      message.error(error?.message || 'Failed to print certificate');
-    }
+    await printIssuedCertificatePdf(cert._id);
   };
 
   useEffect(() => {
@@ -187,13 +110,18 @@ export default function IssuedCertificateListPage() {
       key: 'action',
       render: (_: any, record: any) => (
         <Space size="middle">
-          <Button icon={<EyeOutlined />} onClick={() => openPreview(record)} />
+          <Button icon={<EyeOutlined />} onClick={() => openPreview(record)} title="View Preview" />
           <Button
             icon={<DownloadOutlined />}
             loading={downloadingId === record._id}
-            onClick={() => openPreview(record, 'download')}
+            onClick={() => handleDownload(record)}
+            title="Download PDF"
           />
-          <Button icon={<PrinterOutlined />} onClick={() => openPreview(record)} />
+          <Button 
+            icon={<PrinterOutlined />} 
+            onClick={() => handlePrint(record)} 
+            title="Direct Print"
+          />
         </Space>
       ),
     },
@@ -235,14 +163,26 @@ export default function IssuedCertificateListPage() {
         ]}
       >
         {viewingCert && (
-          <div className="rounded-2xl bg-slate-100 p-4">
-            <CertificateViewer
-              ref={viewerRef}
-              design={viewingCert.templateId?.design || []}
-              dimensions={viewingCert.templateId?.dimensions || { width: 1123, height: 794 }}
-              backgroundImage={viewingCert.templateId?.backgroundImage}
-              data={buildViewerData(viewingCert)}
-            />
+          <div className="rounded-2xl bg-slate-100 p-4 flex justify-center overflow-auto">
+            <div className="scale-[0.8] origin-top">
+                <ModernCertificate
+                certificateNo={buildViewerData(viewingCert).certificate_no}
+                enrollmentNo={buildViewerData(viewingCert).enrollment_no}
+                studentName={buildViewerData(viewingCert).student_name}
+                fatherName={buildViewerData(viewingCert).father_name}
+                motherName={buildViewerData(viewingCert).mother_name}
+                dob={buildViewerData(viewingCert).dob}
+                courseName={buildViewerData(viewingCert).course_name}
+                securedPercent={buildViewerData(viewingCert).secured_percent}
+                grade={buildViewerData(viewingCert).grade}
+                session={buildViewerData(viewingCert).session}
+                centerCode={buildViewerData(viewingCert).center_code}
+                centerName={buildViewerData(viewingCert).center_name}
+                centerAddress={buildViewerData(viewingCert).center_address}
+                issueDate={buildViewerData(viewingCert).issue_date}
+                studentPhotoUrl={buildViewerData(viewingCert).student_photo_url}
+                />
+            </div>
           </div>
         )}
       </Modal>
