@@ -381,6 +381,7 @@ const AppSidebar: React.FC = () => {
                   alt="Logo"
                   width={120}
                   height={40}
+                  unoptimized
                 />
                 <Image
                   className="hidden dark:block transition-all duration-300"
@@ -388,6 +389,7 @@ const AppSidebar: React.FC = () => {
                   alt="Logo"
                   width={120}
                   height={40}
+                  unoptimized
                 />
               </>
             ) : (

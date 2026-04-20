@@ -43,12 +43,12 @@ export default function ModernCertificate({
   studentPhotoUrl = '',
 }: CertificateProps) {
   return (
-    <div className="flex justify-center items-center bg-gray-200 p-4 text-gray-900 overflow-auto" style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}>
+    <div className="flex justify-center items-center p-4 overflow-auto" style={{ backgroundColor: '#e5e7eb', color: '#111827', fontFamily: 'Arial, Helvetica, sans-serif' }}>
       {/* Outer Certificate Border with complex gold styling */}
-      <div className="relative w-[900px] h-auto bg-white p-[6px] shadow-2xl shrink-0"
-        style={{ background: 'linear-gradient(135deg, rgba(234,213,141,1) 0%, rgba(200,165,65,1) 50%, rgba(234,213,141,1) 100%)' }}>
+      <div className="relative w-[900px] h-auto p-[6px] shadow-2xl shrink-0"
+        style={{ backgroundColor: '#ffffff', background: 'linear-gradient(135deg, rgba(234,213,141,1) 0%, rgba(200,165,65,1) 50%, rgba(234,213,141,1) 100%)' }}>
 
-        <div className="w-full h-full bg-white border-[4px] border-[#c0993d] outline outline-2 outline-offset-2 outline-[#c0993d] p-10 relative overflow-hidden">
+        <div className="w-full h-full border-[4px] border-[#c0993d] outline outline-2 outline-offset-2 outline-[#c0993d] p-10 relative overflow-hidden" style={{ backgroundColor: '#ffffff' }}>
 
           {/* Faint Background Watermark Image */}
           <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none mt-8">
@@ -107,9 +107,9 @@ export default function ModernCertificate({
           <div className="relative z-10 w-full h-full flex flex-col">
 
             {/* Header row: Cert No & Enroll No */}
-            <div className="flex justify-between font-bold text-sm tracking-wide text-amber-900 mb-6 px-4">
-              <span>Certificate No: <span className="text-black text-[15px]">{certificateNo || 'Pending'}</span></span>
-              <span>Enrollment No: <span className="text-black text-[15px]">{enrollmentNo || 'Pending'}</span></span>
+            <div className="flex justify-between font-bold text-sm tracking-wide mb-6 px-4" style={{ color: '#78350f' }}>
+              <span>Certificate No: <span style={{ color: '#000000', fontSize: '15px' }}>{certificateNo || 'Pending'}</span></span>
+              <span>Enrollment No: <span style={{ color: '#000000', fontSize: '15px' }}>{enrollmentNo || 'Pending'}</span></span>
             </div>
 
             {/* Top Logos Row */}
@@ -140,7 +140,7 @@ export default function ModernCertificate({
             </div>
 
             {/* Subtitles & Corporate Info */}
-            <div className="text-center mt-3 text-[13px] leading-[1.3] text-gray-900 font-bold">
+            <div className="text-center mt-3 text-[13px] leading-[1.3] font-bold" style={{ color: '#111827' }}>
               <p>An ISO 9001:2026 Certified Institute</p>
               <p>Registered Under Ministry of Corporate Affairs (Govt. of India)</p>
               <p className="font-[900] text-[14px]">Udyam Registration No.: UDYAM-UP-35-0054566</p>
@@ -167,14 +167,19 @@ export default function ModernCertificate({
 
               {/* Right Box (Student Photo) */}
               <div className="w-[120px] flex-shrink-0 flex justify-end">
-                <div className="w-[110px] h-[140px] bg-white overflow-hidden border-[3px] border-gray-300 shadow-sm p-1">
-                  <img src={process.env.NEXT_PUBLIC_BACKEND_API_URL + "uploads/" + studentPhotoUrl || 'https://placehold.co/120x150?text=Photo'} alt="Student" className="w-full h-full object-cover" />
+                <div className="w-[110px] h-[140px] overflow-hidden border-[3px] border-gray-300 shadow-sm p-1" style={{ backgroundColor: '#ffffff' }}>
+                  <img 
+                    src={process.env.NEXT_PUBLIC_BACKEND_API_URL + "uploads/" + studentPhotoUrl || 'https://placehold.co/120x150?text=Photo'} 
+                    alt="Student" 
+                    className="w-full h-full object-cover" 
+                    crossOrigin="anonymous"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Main Content Area: Student Details Grid */}
-            <div className="relative mt-8 px-6 text-[15px] text-black font-[900] w-full z-20">
+            <div className="relative mt-8 px-6 text-[15px] font-[900] w-full z-20" style={{ color: '#000000' }}>
 
               {/* Top Grid for Personal Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[125px_3fr_130px_3fr] gap-x-2 gap-y-4 items-start w-full text-[10px] md:text-[15px]">
@@ -193,8 +198,8 @@ export default function ModernCertificate({
 
               {/* Course Completion Section */}
               <div className="text-center mt-6 mb-6">
-                <p className="text-[#900000] font-[800] text-[16px]">Has Successfully Completed the Course:</p>
-                <p className="text-[22px] font-[900] text-black tracking-wide mt-0">{courseName}</p>
+                <p className="font-[800] text-[16px]" style={{ color: '#900000' }}>Has Successfully Completed the Course:</p>
+                <p className="text-[22px] font-[900] tracking-wide mt-0" style={{ color: '#000000' }}>{courseName}</p>
               </div>
 
               {/* Bottom Grid for Academic Info */}
@@ -216,7 +221,7 @@ export default function ModernCertificate({
                 </div>
                 <div className="flex w-[50%] justify-start pl-2">
                   <div className="w-[110px] text-left">Center Code:</div>
-                  <div className="text-black">{centerCode}</div>
+                  <div style={{ color: '#000000' }}>{centerCode}</div>
                 </div>
               </div>
             </div>
@@ -251,8 +256,8 @@ export default function ModernCertificate({
                 <div className="font-[900] text-[#900000] text-lg mb-2 uppercase text-center w-full">
                   ISSUE DATE: {issueDate}
                 </div>
-                <div className="w-[105%] max-w-[480px] bg-gray-100 rounded-[50px] py-1 px-3 text-center text-[10px] font-bold text-gray-700 shadow-md">
-                  <div className="text-[#900000]">90% & Above 'A+' Grade, 80% & Above 'A' Grade, 70% & Above 'B' Grade,</div>
+                <div className="w-[105%] max-w-[480px] rounded-[50px] py-1 px-3 text-center text-[10px] font-bold shadow-md" style={{ backgroundColor: '#f3f4f6', color: '#374151' }}>
+                  <div style={{ color: '#900000' }}>90% & Above 'A+' Grade, 80% & Above 'A' Grade, 70% & Above 'B' Grade,</div>
                   <div>60% & Above 'C' Grade, 50% & Above 'D' Grade, Below 40% 'Fail'</div>
                 </div>
               </div>
@@ -270,12 +275,12 @@ export default function ModernCertificate({
             </div>
 
             {/* Footer Address */}
-            <div className="text-center mt-6 text-[11px] font-bold text-gray-800">
+            <div className="text-center mt-6 text-[11px] font-bold" style={{ color: '#1f2937' }}>
               <p>Head Office: {centerAddress}</p>
-              <div className="flex justify-center gap-6 text-[#900000] mt-1 text-[10px]">
-                <span>Visit On US : <span className="text-blue-800">www.sstci.in</span></span>
-                <span>Verify Tab in <span className="text-blue-800">www.sstci.in/certificate-verify</span></span>
-                <span className="text-blue-800">info@sstci.in</span>
+              <div className="flex justify-center gap-6 mt-1 text-[10px]" style={{ color: '#900000' }}>
+                <span>Visit On US : <span style={{ color: '#1e40af' }}>www.sstci.in</span></span>
+                <span>Verify Tab in <span style={{ color: '#1e40af' }}>www.sstci.in/certificate-verify</span></span>
+                <span style={{ color: '#1e40af' }}>info@sstci.in</span>
               </div>
             </div>
 

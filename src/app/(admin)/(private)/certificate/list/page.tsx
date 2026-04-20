@@ -3,7 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Table, Space, Button, Card, Typography, Modal, Tag, message } from 'antd';
 import { DownloadOutlined, PrinterOutlined, EyeOutlined } from '@ant-design/icons';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import ModernCertificate from '@/components/certificate/ModernCertificate';
+import CertificateViewer, { CertificateViewerHandle } from '@/components/certificate/CertificateViewer';
 import { downloadIssuedCertificatePdf, printIssuedCertificatePdf, useIssuedCertificates } from '../hooks/useCertificateApi';
 
 const { Title } = Typography;
@@ -59,6 +62,9 @@ export default function IssuedCertificateListPage() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<'download' | null>(null);
+  const certificateRef = useRef<HTMLDivElement>(null);
+  const viewerRef = useRef<CertificateViewerHandle>(null);
+  const captureRef = useRef<HTMLDivElement>(null);
 
   const openPreview = (cert: any, action: 'download' | null = null) => {
     setViewingCert(cert);
@@ -69,8 +75,40 @@ export default function IssuedCertificateListPage() {
   const handleDownload = async (cert: any) => {
     try {
       setDownloadingId(cert._id);
+      
+      // If we have a viewer ref (canvas based), use its download method
+      if (isPreviewOpen && viewerRef.current && !cert.templateId?.name?.toLowerCase().includes('advanced')) {
+        await viewerRef.current.downloadPdf(`certificate-${cert.certificateNumber || cert._id}.pdf`);
+        return;
+      }
+
+      // If we are in preview mode and the capture ref is available, use client-side html2canvas
+      const elementToCapture = captureRef.current || certificateRef.current;
+      if (isPreviewOpen && elementToCapture) {
+        const canvas = await html2canvas(elementToCapture, {
+          scale: 3, // High resolution
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+          unit: 'px',
+          format: [canvas.width, canvas.height],
+        });
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save(`certificate-${cert.certificateNumber || cert._id}.pdf`);
+        return;
+      }
+      
+      // Fallback or direct list download
       await downloadIssuedCertificatePdf(cert._id, `certificate-${cert.certificateNumber || cert._id}.pdf`);
     } catch (error: any) {
+      console.error('Download error:', error);
       message.error('Failed to download certificate PDF');
     } finally {
       setDownloadingId(null);
@@ -78,7 +116,45 @@ export default function IssuedCertificateListPage() {
   };
 
   const handlePrint = async (cert: any) => {
-    await printIssuedCertificatePdf(cert._id);
+    try {
+      const elementToCapture = captureRef.current || certificateRef.current;
+      if (isPreviewOpen && elementToCapture) {
+        const canvas = await html2canvas(elementToCapture, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(`
+            <html>
+              <head>
+                <title>Certificate Print - ${cert.certificateNumber}</title>
+                <style>
+                  body { margin: 0; display: flex; justify-content: center; align-items: center; background: #fff; }
+                  img { max-width: 100%; height: auto; }
+                  @page { size: auto; margin: 0mm; padding: 0; }
+                </style>
+              </head>
+              <body>
+                <img src="${imgData}" onload="window.print(); window.close();" />
+              </body>
+            </html>
+          `);
+          printWindow.document.close();
+        }
+        return;
+      }
+      
+      await printIssuedCertificatePdf(cert._id);
+    } catch (error) {
+      console.error('Print error:', error);
+      message.error('Failed to print certificate');
+    }
   };
 
   useEffect(() => {
@@ -163,26 +239,64 @@ export default function IssuedCertificateListPage() {
         ]}
       >
         {viewingCert && (
-          <div className="rounded-2xl bg-slate-100 p-4 flex justify-center overflow-auto">
-            <div className="scale-[0.8] origin-top">
-                <ModernCertificate
-                certificateNo={buildViewerData(viewingCert).certificate_no}
-                enrollmentNo={buildViewerData(viewingCert).enrollment_no}
-                studentName={buildViewerData(viewingCert).student_name}
-                fatherName={buildViewerData(viewingCert).father_name}
-                motherName={buildViewerData(viewingCert).mother_name}
-                dob={buildViewerData(viewingCert).dob}
-                courseName={buildViewerData(viewingCert).course_name}
-                securedPercent={buildViewerData(viewingCert).secured_percent}
-                grade={buildViewerData(viewingCert).grade}
-                session={buildViewerData(viewingCert).session}
-                centerCode={buildViewerData(viewingCert).center_code}
-                centerName={buildViewerData(viewingCert).center_name}
-                centerAddress={buildViewerData(viewingCert).center_address}
-                issueDate={buildViewerData(viewingCert).issue_date}
-                studentPhotoUrl={buildViewerData(viewingCert).student_photo_url}
+          <div className="p-4 flex justify-center overflow-auto min-h-[600px] rounded-2xl" style={{ backgroundColor: '#f1f5f9' }}>
+             {/* Hidden full-scale container for high quality capture */}
+             <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', pointerEvents: 'none' }}>
+                <div ref={captureRef}>
+                   <ModernCertificate
+                    certificateNo={buildViewerData(viewingCert).certificate_no}
+                    enrollmentNo={buildViewerData(viewingCert).enrollment_no}
+                    studentName={buildViewerData(viewingCert).student_name}
+                    fatherName={buildViewerData(viewingCert).father_name}
+                    motherName={buildViewerData(viewingCert).mother_name}
+                    dob={buildViewerData(viewingCert).dob}
+                    courseName={buildViewerData(viewingCert).course_name}
+                    securedPercent={buildViewerData(viewingCert).secured_percent}
+                    grade={buildViewerData(viewingCert).grade}
+                    session={buildViewerData(viewingCert).session}
+                    centerCode={buildViewerData(viewingCert).center_code}
+                    centerName={buildViewerData(viewingCert).center_name}
+                    centerAddress={buildViewerData(viewingCert).center_address}
+                    issueDate={buildViewerData(viewingCert).issue_date}
+                    studentPhotoUrl={buildViewerData(viewingCert).student_photo_url}
+                    />
+                </div>
+             </div>
+
+            {viewingCert.templateId?.name?.toLowerCase().includes('advanced') || (!viewingCert.templateId) ? (
+              <div className="scale-[0.8] origin-top" ref={certificateRef}>
+                  <ModernCertificate
+                  certificateNo={buildViewerData(viewingCert).certificate_no}
+                  enrollmentNo={buildViewerData(viewingCert).enrollment_no}
+                  studentName={buildViewerData(viewingCert).student_name}
+                  fatherName={buildViewerData(viewingCert).father_name}
+                  motherName={buildViewerData(viewingCert).mother_name}
+                  dob={buildViewerData(viewingCert).dob}
+                  courseName={buildViewerData(viewingCert).course_name}
+                  securedPercent={buildViewerData(viewingCert).secured_percent}
+                  grade={buildViewerData(viewingCert).grade}
+                  session={buildViewerData(viewingCert).session}
+                  centerCode={buildViewerData(viewingCert).center_code}
+                  centerName={buildViewerData(viewingCert).center_name}
+                  centerAddress={buildViewerData(viewingCert).center_address}
+                  issueDate={buildViewerData(viewingCert).issue_date}
+                  studentPhotoUrl={buildViewerData(viewingCert).student_photo_url}
+                  />
+              </div>
+            ) : (
+              <div className="w-full">
+                 <CertificateViewer
+                  ref={viewerRef}
+                  design={viewingCert.templateId?.design || []}
+                  dimensions={viewingCert.templateId?.dimensions || { width: 1123, height: 794 }}
+                  backgroundImage={viewingCert.templateId?.backgroundImage}
+                  data={{
+                    ...buildViewerData(viewingCert),
+                    ...viewingCert.data
+                  }}
                 />
-            </div>
+              </div>
+            )}
           </div>
         )}
       </Modal>
