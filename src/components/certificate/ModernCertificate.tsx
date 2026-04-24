@@ -168,10 +168,10 @@ export default function ModernCertificate({
               {/* Right Box (Student Photo) */}
               <div className="w-[120px] flex-shrink-0 flex justify-end">
                 <div className="w-[110px] h-[140px] overflow-hidden border-[3px] border-gray-300 shadow-sm p-1" style={{ backgroundColor: '#ffffff' }}>
-                  <img 
-                    src={process.env.NEXT_PUBLIC_BACKEND_API_URL + "uploads/" + studentPhotoUrl || 'https://placehold.co/120x150?text=Photo'} 
-                    alt="Student" 
-                    className="w-full h-full object-cover" 
+                  <img
+                    src={process.env.NEXT_PUBLIC_BACKEND_API_URL + "uploads/" + studentPhotoUrl || 'https://placehold.co/120x150?text=Photo'}
+                    alt="Student"
+                    className="w-full h-full object-cover"
                     crossOrigin="anonymous"
                   />
                 </div>
@@ -206,18 +206,18 @@ export default function ModernCertificate({
               <div className="flex justify-between items-center w-full mt-2">
                 <div className="flex w-[50%]">
                   <div className="w-[120px] text-left">And Secured:</div>
-                  <div>{securedPercent}</div>
+                  <div>{securedPercent || '81 %'}</div>
                 </div>
                 <div className="flex w-[50%] justify-start pl-2">
                   <div className="w-[110px] text-left">In the Grade:</div>
-                  <div>{grade}</div>
+                  <div>{grade || 'A'}</div>
                 </div>
               </div>
 
               <div className="flex justify-between items-center w-full mt-3">
                 <div className="flex w-[50%]">
                   <div className="w-[120px] text-left">Session:</div>
-                  <div>{session}</div>
+                  <div>{session || '2025-2026'}</div>
                 </div>
                 <div className="flex w-[50%] justify-start pl-2">
                   <div className="w-[110px] text-left">Center Code:</div>
