@@ -13,12 +13,12 @@ export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Public routes (exact match)
-  const publicRoutes = ["/signin", "/signup"];
-  
-  // Routes that should be public with prefix matching
-  const publicPrefixes: string[] = [];
+  const publicRoutes = ["/signin", "/signup", "/verify-certificate"];
 
-  const isPublicRoute = publicRoutes.includes(pathname) || 
+  // Routes that should be public with prefix matching
+  const publicPrefixes: string[] = ["/images", "/uploads"];
+
+  const isPublicRoute = publicRoutes.includes(pathname) ||
     publicPrefixes.some(prefix => pathname.startsWith(prefix));
 
   // If user is already logged in, prevent opening login page
