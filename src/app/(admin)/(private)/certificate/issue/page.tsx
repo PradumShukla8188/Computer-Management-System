@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Button, Card, Col, Divider, Form, Row, Select, Space, Tag, Typography, message } from "antd";
+import { Alert, Button, Card, Col, Divider, Form, Input, Row, Select, Space, Tag, Typography, message } from "antd";
 import { CheckCircleOutlined, DownloadOutlined, FileProtectOutlined, SaveOutlined } from "@ant-design/icons";
 import CertificateViewer from "@/components/certificate/CertificateViewer";
 import ModernCertificate from "@/components/certificate/ModernCertificate";
@@ -85,11 +85,44 @@ export default function IssueCertificatePage() {
     }
   }, [templates, form]);
 
-  const handleFormChange = (_: any, allValues: any) => {
+  const calculateGrade = (percent: number) => {
+    if (percent >= 90) return "A+";
+    if (percent >= 80) return "A";
+    if (percent >= 70) return "B";
+    if (percent >= 60) return "C";
+    if (percent >= 50) return "D";
+    if (percent < 40) return "Fail";
+    return "Fail"; // Default for 40-49 if not specified, or just let user override
+  };
+
+  const handleFormChange = (changedValues: any, allValues: any) => {
     const student = students.find((item: any) => item._id === allValues.studentId);
     const template = templates.find((item: any) => item._id === allValues.templateId);
 
-    setPreviewData(student ? mapStudentToCertificateData(student) : {});
+    // If student changed, set initial percentage and grade
+    if (changedValues.studentId && student) {
+      const initialPercent = student.securedPercent || "0";
+      const initialGrade = calculateGrade(Number(initialPercent));
+      form.setFieldsValue({
+        securedPercent: initialPercent,
+        grade: initialGrade
+      });
+      allValues.securedPercent = initialPercent;
+      allValues.grade = initialGrade;
+    }
+
+    // If percentage changed, update grade
+    if (changedValues.securedPercent) {
+      const newGrade = calculateGrade(Number(changedValues.securedPercent));
+      form.setFieldsValue({ grade: newGrade });
+      allValues.grade = newGrade;
+    }
+
+    setPreviewData(student ? {
+      ...mapStudentToCertificateData(student),
+      secured_percent: allValues.securedPercent + "%",
+      grade: allValues.grade
+    } : {});
     setSelectedTemplate(template || null);
   };
 
@@ -104,7 +137,13 @@ export default function IssueCertificatePage() {
       {
         studentId: values.studentId,
         templateId: values.templateId,
-        data: mapStudentToCertificateData(student),
+        grade: values.grade,
+        securedPercent: values.securedPercent + "%",
+        data: {
+          ...mapStudentToCertificateData(student),
+          grade: values.grade,
+          secured_percent: values.securedPercent + "%",
+        },
       },
       {
         onSuccess: (response: any) => {
@@ -174,6 +213,34 @@ export default function IssueCertificatePage() {
                 />
               </Form.Item>
 
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="securedPercent"
+                    label="Secured Percentage (%)"
+                    rules={[{ required: true, message: "Please enter percentage" }]}
+                  >
+                    <Input placeholder="e.g. 85" suffix="%" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="grade"
+                    label="Student Grade"
+                    rules={[{ required: true, message: "Please select student grade" }]}
+                  >
+                    <Select placeholder="Select student grade">
+                      <Select.Option value="A+">A+ (90% & Above)</Select.Option>
+                      <Select.Option value="A">A (80% & Above)</Select.Option>
+                      <Select.Option value="B">B (70% & Above)</Select.Option>
+                      <Select.Option value="C">C (60% & Above)</Select.Option>
+                      <Select.Option value="D">D (50% & Above)</Select.Option>
+                      <Select.Option value="Fail">Fail (Below 40%)</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+
               {selectedStudent && (
                 <Card size="small" className="mb-4 bg-slate-50">
                   <div className="flex flex-col gap-2 text-sm">
@@ -183,6 +250,7 @@ export default function IssueCertificatePage() {
                     </div>
                     <Text type="secondary">Roll No: {selectedStudent.rollNo || "-"}</Text>
                     <Text type="secondary">Course: {selectedStudent.courseId?.name || selectedStudent.courseName || "-"}</Text>
+                    <Text type="secondary">System Percentage: {selectedStudent.securedPercent || "0"}%</Text>
                     <Space wrap>
                       <Tag color="blue">Published marks available</Tag>
                       {selectedStudent.hasIssuedCertificate ? <Tag color="gold">Certificate already issued</Tag> : <Tag color="green">Ready to issue</Tag>}
@@ -210,27 +278,27 @@ export default function IssueCertificatePage() {
         </Col>
 
         <Col xs={24} xl={14}>
-          <Card 
-            title="Certificate Preview" 
+          <Card
+            title="Certificate Preview"
             className="shadow-sm"
-            extra={
-              lastIssuedId && (
-                <Button 
-                  type="primary" 
-                  icon={<DownloadOutlined />} 
-                  onClick={() => downloadIssuedCertificatePdf(lastIssuedId)}
-                >
-                  Download Last Issued
-                </Button>
-              )
-            }
+          // extra={
+          //   lastIssuedId && (
+          //     <Button 
+          //       type="primary" 
+          //       icon={<DownloadOutlined />} 
+          //       onClick={() => downloadIssuedCertificatePdf(lastIssuedId)}
+          //     >
+          //       Download Last Issued
+          //     </Button>
+          //   )
+          // }
           >
             {selectedTemplate ? (
               <div className="rounded-2xl border bg-slate-50 p-4">
                 {selectedTemplate.name?.toLowerCase().includes("advanced") ? (
                   <div className="flex justify-center">
                     <div className="scale-[0.6] origin-top">
-                       <ModernCertificate
+                      <ModernCertificate
                         certificateNo={previewData.certificate_no || "PENDING"}
                         enrollmentNo={previewData.enrollment_no || previewData.roll_no}
                         studentName={previewData.student_full_name}
@@ -246,6 +314,7 @@ export default function IssueCertificatePage() {
                         centerAddress={previewData.center_address}
                         issueDate={previewData.issue_date}
                         studentPhotoUrl={previewData.student_photo}
+                        qrCodeUrl={previewData.qr_code}
                       />
                     </div>
                   </div>
@@ -263,8 +332,8 @@ export default function IssueCertificatePage() {
                 Select a template and eligible student to preview the certificate
               </div>
             )}
-            
-            {lastIssuedId && (
+
+            {/* {lastIssuedId && (
               <Alert
                 message="Certificate Issued Successfully"
                 description="The certificate has been recorded. You can now download the official PDF."
@@ -277,7 +346,7 @@ export default function IssueCertificatePage() {
                   </Button>
                 }
               />
-            )}
+            )} */}
           </Card>
         </Col>
       </Row>

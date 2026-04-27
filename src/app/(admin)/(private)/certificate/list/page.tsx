@@ -49,7 +49,7 @@ const buildViewerData = (record: any) => ({
   session: record?.data?.session || '',
   center_code: record?.data?.center_code || record?.data?.centerCode || 'SSTCI/2262025',
   center_name: 'SST COMPUTER & WELL KNOWLEDGE INSTITUTE',
-  center_address: '12, Radhe ,Dhikunni Bharawan, Hardoi Uttar Pradesh 241203',
+  center_address: 'Dhikunni Chauraha, Sai Nath Road, Bharawan, Sandila,Hardoi, Uttar Pradesh 241203',
   issue_date: record?.issuedAt ? new Date(record.issuedAt).toLocaleDateString('en-GB') : '',
   student_photo_url: record?.studentId?.studentPhoto || '',
 });
@@ -75,7 +75,7 @@ export default function IssuedCertificateListPage() {
   const handleDownload = async (cert: any) => {
     try {
       setDownloadingId(cert._id);
-      
+
       // If we have a viewer ref (canvas based), use its download method
       if (isPreviewOpen && viewerRef.current && !cert.templateId?.name?.toLowerCase().includes('advanced')) {
         await viewerRef.current.downloadPdf(`certificate-${cert.certificateNumber || cert._id}.pdf`);
@@ -92,19 +92,19 @@ export default function IssuedCertificateListPage() {
           backgroundColor: '#ffffff',
           logging: false,
         });
-        
+
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({
           orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
           unit: 'px',
           format: [canvas.width, canvas.height],
         });
-        
+
         pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
         pdf.save(`certificate-${cert.certificateNumber || cert._id}.pdf`);
         return;
       }
-      
+
       // Fallback or direct list download
       await downloadIssuedCertificatePdf(cert._id, `certificate-${cert.certificateNumber || cert._id}.pdf`);
     } catch (error: any) {
@@ -126,7 +126,7 @@ export default function IssuedCertificateListPage() {
           backgroundColor: '#ffffff',
           logging: false,
         });
-        
+
         const imgData = canvas.toDataURL('image/png');
         const printWindow = window.open('', '_blank');
         if (printWindow) {
@@ -149,7 +149,7 @@ export default function IssuedCertificateListPage() {
         }
         return;
       }
-      
+
       await printIssuedCertificatePdf(cert._id);
     } catch (error) {
       console.error('Print error:', error);
@@ -193,9 +193,9 @@ export default function IssuedCertificateListPage() {
             onClick={() => handleDownload(record)}
             title="Download PDF"
           />
-          <Button 
-            icon={<PrinterOutlined />} 
-            onClick={() => handlePrint(record)} 
+          <Button
+            icon={<PrinterOutlined />}
+            onClick={() => handlePrint(record)}
             title="Direct Print"
           />
         </Space>
@@ -240,32 +240,10 @@ export default function IssuedCertificateListPage() {
       >
         {viewingCert && (
           <div className="p-4 flex justify-center overflow-auto min-h-[600px] rounded-2xl" style={{ backgroundColor: '#f1f5f9' }}>
-             {/* Hidden full-scale container for high quality capture */}
-             <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', pointerEvents: 'none' }}>
-                <div ref={captureRef}>
-                   <ModernCertificate
-                    certificateNo={buildViewerData(viewingCert).certificate_no}
-                    enrollmentNo={buildViewerData(viewingCert).enrollment_no}
-                    studentName={buildViewerData(viewingCert).student_name}
-                    fatherName={buildViewerData(viewingCert).father_name}
-                    motherName={buildViewerData(viewingCert).mother_name}
-                    dob={buildViewerData(viewingCert).dob}
-                    courseName={buildViewerData(viewingCert).course_name}
-                    securedPercent={buildViewerData(viewingCert).secured_percent}
-                    grade={buildViewerData(viewingCert).grade}
-                    session={buildViewerData(viewingCert).session}
-                    centerCode={buildViewerData(viewingCert).center_code}
-                    centerName={buildViewerData(viewingCert).center_name}
-                    centerAddress={buildViewerData(viewingCert).center_address}
-                    issueDate={buildViewerData(viewingCert).issue_date}
-                    studentPhotoUrl={buildViewerData(viewingCert).student_photo_url}
-                    />
-                </div>
-             </div>
-
-            {viewingCert.templateId?.name?.toLowerCase().includes('advanced') || (!viewingCert.templateId) ? (
-              <div className="scale-[0.8] origin-top" ref={certificateRef}>
-                  <ModernCertificate
+            {/* Hidden full-scale container for high quality capture */}
+            <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', pointerEvents: 'none' }}>
+              <div ref={captureRef}>
+                <ModernCertificate
                   certificateNo={buildViewerData(viewingCert).certificate_no}
                   enrollmentNo={buildViewerData(viewingCert).enrollment_no}
                   studentName={buildViewerData(viewingCert).student_name}
@@ -281,11 +259,33 @@ export default function IssuedCertificateListPage() {
                   centerAddress={buildViewerData(viewingCert).center_address}
                   issueDate={buildViewerData(viewingCert).issue_date}
                   studentPhotoUrl={buildViewerData(viewingCert).student_photo_url}
-                  />
+                />
+              </div>
+            </div>
+
+            {viewingCert.templateId?.name?.toLowerCase().includes('advanced') || (!viewingCert.templateId) ? (
+              <div className="scale-[0.8] origin-top" ref={certificateRef}>
+                <ModernCertificate
+                  certificateNo={buildViewerData(viewingCert).certificate_no}
+                  enrollmentNo={buildViewerData(viewingCert).enrollment_no}
+                  studentName={buildViewerData(viewingCert).student_name}
+                  fatherName={buildViewerData(viewingCert).father_name}
+                  motherName={buildViewerData(viewingCert).mother_name}
+                  dob={buildViewerData(viewingCert).dob}
+                  courseName={buildViewerData(viewingCert).course_name}
+                  securedPercent={buildViewerData(viewingCert).secured_percent}
+                  grade={buildViewerData(viewingCert).grade}
+                  session={buildViewerData(viewingCert).session}
+                  centerCode={buildViewerData(viewingCert).center_code}
+                  centerName={buildViewerData(viewingCert).center_name}
+                  centerAddress={buildViewerData(viewingCert).center_address}
+                  issueDate={buildViewerData(viewingCert).issue_date}
+                  studentPhotoUrl={buildViewerData(viewingCert).student_photo_url}
+                />
               </div>
             ) : (
               <div className="w-full">
-                 <CertificateViewer
+                <CertificateViewer
                   ref={viewerRef}
                   design={viewingCert.templateId?.design || []}
                   dimensions={viewingCert.templateId?.dimensions || { width: 1123, height: 794 }}

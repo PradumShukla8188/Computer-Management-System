@@ -23,6 +23,7 @@ interface CertificateProps {
   centerAddress?: string;
   issueDate?: string;
   studentPhotoUrl?: string;
+  qrCodeUrl?: string;
 }
 
 export default function ModernCertificate({
@@ -38,9 +39,10 @@ export default function ModernCertificate({
   session = '',
   centerCode = 'SSTCI/2262025',
   centerName = 'SST COMPUTER & WELL KNOWLEDGE INSTITUTE',
-  centerAddress = '12, Radhe ,Dhikunni Bharawan, Hardoi Uttar Pradesh 241203',
+  centerAddress = 'Dhikunni Chauraha, Sai Nath Road, Bharawan, Sandila,Hardoi, Uttar Pradesh 241203',
   issueDate = '',
   studentPhotoUrl = '',
+  qrCodeUrl = '',
 }: CertificateProps) {
   return (
     <div className="flex justify-center items-center p-4 overflow-auto" style={{ backgroundColor: '#e5e7eb', color: '#111827', fontFamily: 'Arial, Helvetica, sans-serif' }}>
@@ -153,7 +155,15 @@ export default function ModernCertificate({
 
             {/* Certificate Title & Photos Row */}
             <div className="flex justify-between items-center w-full px-8 mt-4 relative z-20">
-              <div className="w-[120px] flex-shrink-0"></div>
+              <div className="w-[120px] flex-shrink-0 flex justify-start items-center">
+                <div className="w-[110px] h-[110px] flex items-center justify-center bg-white shadow-sm border border-gray-200 p-1">
+                  {qrCodeUrl ? (
+                    <img src={qrCodeUrl} alt="QR Code" width={100} height={100} crossOrigin="anonymous" />
+                  ) : (
+                    <QRCodeSVG value={`${window.location.origin}/verify-certificate?certNo=${certificateNo}`} size={100} />
+                  )}
+                </div>
+              </div>
 
               {/* Certificate Cursive Word */}
               <div className="text-center flex-1 flex flex-col items-center mt-8 relative z-30">
@@ -169,7 +179,13 @@ export default function ModernCertificate({
               <div className="w-[120px] flex-shrink-0 flex justify-end">
                 <div className="w-[110px] h-[140px] overflow-hidden border-[3px] border-gray-300 shadow-sm p-1" style={{ backgroundColor: '#ffffff' }}>
                   <img
-                    src={process.env.NEXT_PUBLIC_BACKEND_API_URL + "uploads/" + studentPhotoUrl || 'https://placehold.co/120x150?text=Photo'}
+                    src={(() => {
+                      if (!studentPhotoUrl) return 'https://placehold.co/120x150?text=Photo';
+                      if (studentPhotoUrl.startsWith('http')) return studentPhotoUrl;
+                      const baseUrl = (process.env.NEXT_PUBLIC_BACKEND_API_URL || '').replace(/\/$/, '');
+                      const cleanPath = studentPhotoUrl.replace(/^\/+/, '').replace(/^uploads\//, '');
+                      return `${baseUrl}/uploads/${cleanPath}`;
+                    })()}
                     alt="Student"
                     className="w-full h-full object-cover"
                     crossOrigin="anonymous"
@@ -247,9 +263,12 @@ export default function ModernCertificate({
             {/* Bottom Row: Controller, QR, Signatory */}
             <div className="flex justify-between items-end mt-12 px-8 z-10 w-full static bottom-0">
 
-              <div className="text-center">
-                <div className="w-40 border-t border-black mb-1"></div>
-                <div className="font-bold text-[14px]">Controller of Exam</div>
+              <div className="text-center flex flex-col items-center">
+                <div className="h-12 flex items-end justify-center">
+                  <img src="/images/sign/amit-tam-sig.png" alt="Amit Kumar" className="h-12 object-contain mix-blend-multiply" />
+                </div>
+                <div className="w-40 border-t border-black"></div>
+                <div className="font-bold text-[14px] mt-1">Controller of Exam</div>
               </div>
 
               <div className="flex flex-col items-center flex-1">
@@ -262,13 +281,13 @@ export default function ModernCertificate({
                 </div>
               </div>
 
-              <div className="text-center flex flex-col items-end relative">
-                <div className="absolute bottom-[35px] left-[-70px]">
-                  <QRCodeSVG value={`https://spaptc.in/certificate-verify?cert=${certificateNo}`} size={60} />
-                </div>
+              <div className="text-center flex flex-col items-center">
                 <div className="w-40 flex flex-col items-center">
-                  <div className="w-40 border-t border-black mb-1"></div>
-                  <div className="font-bold text-[14px]">Authorized Signatory</div>
+                  <div className="h-12 flex items-end justify-center">
+                    <img src="/images/sign/dheeraj.png" alt="Dheeraj" className="h-14 object-contain mix-blend-multiply" />
+                  </div>
+                  <div className="w-40 border-t border-black"></div>
+                  <div className="font-bold text-[14px] mt-1">Authorized Signatory</div>
                 </div>
               </div>
 
@@ -278,8 +297,8 @@ export default function ModernCertificate({
             <div className="text-center mt-6 text-[11px] font-bold" style={{ color: '#1f2937' }}>
               <p>Head Office: {centerAddress}</p>
               <div className="flex justify-center gap-6 mt-1 text-[10px]" style={{ color: '#900000' }}>
-                <span>Visit On US : <span style={{ color: '#1e40af' }}>www.sstci.in</span></span>
-                <span>Verify Tab in <span style={{ color: '#1e40af' }}>www.sstci.in/certificate-verify</span></span>
+                <span>Visit On US : <span style={{ color: '#1e40af' }}>https://sstci-student-panel-cms.vercel.app/</span></span>
+                <span>Verify Tab in <span style={{ color: '#1e40af' }}>{process.env.NEXT_PUBLIC_BACKEND_API_URL}verify-certificate</span></span>
                 <span style={{ color: '#1e40af' }}>info@sstci.in</span>
               </div>
             </div>

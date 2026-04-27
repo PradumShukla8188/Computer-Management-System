@@ -39,7 +39,7 @@ export const useAddCertificateTemplate = () => {
 export const useIssueCertificate = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: { studentId: string; templateId: string; data: any }) => {
+    mutationFn: async (data: { studentId: string; templateId: string; grade?: string; securedPercent?: string; data: any }) => {
       return await ApiHitter(
         "POST",
         "ISSUE_CERTIFICATE",
@@ -160,4 +160,15 @@ export const printIssuedCertificatePdf = async (certificateId: string) => {
         console.error("Print Error:", error);
         message.error("Failed to trigger print. Try downloading the PDF instead.");
     }
+};
+export const usePublicSearchCertificates = (params: { search?: string; studentName?: string; dob?: string; searchType?: string }) => {
+  return useQuery({
+    queryKey: ["public-certificate-search", params],
+    queryFn: async () => {
+      if (!params.search && !params.studentName && !params.dob) return [];
+      const res = await axiosInstance.get("public/certificate/search", { params });
+      return res.data?.data || [];
+    },
+    enabled: !!(params.search || params.studentName || params.dob),
+  });
 };
