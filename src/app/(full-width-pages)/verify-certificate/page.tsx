@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { 
   Card, 
@@ -33,7 +33,7 @@ import dayjs from "dayjs";
 
 const { Title, Text } = Typography;
 
-export default function VerifyCertificatePage() {
+function VerifyCertificateContent() {
   const searchParams = useSearchParams();
   const certNoParam = searchParams.get("certNo");
   
@@ -271,5 +271,13 @@ export default function VerifyCertificatePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyCertificatePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Spin size="large" tip="Loading verification..." /></div>}>
+      <VerifyCertificateContent />
+    </Suspense>
   );
 }
