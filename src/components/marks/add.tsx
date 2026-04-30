@@ -20,9 +20,14 @@ type FormValues = {
     subjects: SubjectMark[];
 };
 
+type Subject = {
+    _id: string;
+    title: string;
+};
+
 export default function AddStudentMarksPage() {
     const queryClient = useQueryClient();
-    const [subjects, setSubjects] = useState([]);
+    const [subjects, setSubjects] = useState<Subject[]>([]);
 
     const {
         register,
@@ -40,12 +45,13 @@ export default function AddStudentMarksPage() {
         },
     });
 
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove, replace } = useFieldArray({
         control,
         name: 'subjects',
     });
 
     const courseId = watch('courseId');
+    const studentId = watch('studentId');
 
     // Fetch Students
     const { data: students = [], isLoading: studentsLoading } = useQuery({
@@ -71,22 +77,52 @@ export default function AddStudentMarksPage() {
         },
     });
 
-    // Fetch Subjects based on selected Course
+    // Auto-fill Course when Student is selected
     useEffect(() => {
-        if (!courseId) return;
-        setSubjects([]);
-        // Reset all subject fields when course changes
-        fields.forEach((_, index) => {
-            setValue(`subjects.${index}.subjectId`, '');
-        });
+        if (studentId && students.length > 0) {
+            const student = students.find((s: any) => s._id === studentId);
+            if (student) {
+                const cId = student.courseId?._id || student.courseId;
+                if (cId) {
+                    setValue('courseId', cId);
+                }
+            }
+        }
+    }, [studentId, students, setValue]);
+
+    // Fetch Subjects and pre-fill form when Course changes
+    useEffect(() => {
+        if (!courseId) {
+            setSubjects([]);
+            replace([{ subjectId: '', totalMarks: 0, obtainedMarks: 0 }]);
+            return;
+        }
 
         ApiHitter('GET', 'GET_SUBJECT_LIST', {}, courseId, {
             showError: true,
             showSuccess: false,
         })
-            .then((res) => setSubjects(res?.data || []))
-            .catch((err) => console.error(err));
-    }, [courseId, setValue]);
+            .then((res) => {
+                const subjectList = res?.data || [];
+                setSubjects(subjectList);
+
+                // Auto-fill subjects in the form
+                if (subjectList.length > 0) {
+                    const formattedSubjects = subjectList.map((sub: any) => ({
+                        subjectId: sub._id,
+                        totalMarks: 100,
+                        obtainedMarks: 0,
+                    }));
+                    replace(formattedSubjects);
+                } else {
+                    replace([{ subjectId: '', totalMarks: 100, obtainedMarks: 0 }]);
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                replace([{ subjectId: '', totalMarks: 100, obtainedMarks: 0 }]);
+            });
+    }, [courseId, replace]);
 
     // Mutation to add student marks
     // const addMarksMutation = useMutation({
@@ -510,44 +546,56 @@ export default function AddStudentMarksPage() {
                                                     <span className="text-red-500 ml-1">*</span>
                                                 </label>
                                                 <div className="relative">
-                                                    <select
-                                                        {...register(`subjects.${index}.subjectId`, {
-                                                            required: 'Please select a subject',
-                                                        })}
-                                                        className={`w-full px-4 py-3 bg-white border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none cursor-pointer ${errors.subjects?.[index]?.subjectId
-                                                            ? 'border-red-500'
-                                                            : 'border-gray-200'
-                                                            }`}
-                                                        disabled={!courseId || subjects.length === 0}
-                                                    >
-                                                        <option value="">
-                                                            {!courseId
-                                                                ? 'Select course first'
-                                                                : subjects.length === 0
-                                                                    ? 'Loading...'
-                                                                    : 'Select Subject'}
-                                                        </option>
-                                                        {subjects.map((s: any) => (
-                                                            <option key={s._id} value={s._id}>
-                                                                {s.title}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                                                        <svg
-                                                            className="w-5 h-5 text-gray-400"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
+                                                    {watch(`subjects.${index}.subjectId`) && subjects.find((s: any) => s._id === watch(`subjects.${index}.subjectId`)) ? (
+                                                        <div className="w-full px-4 py-3 bg-white border-2 border-blue-200 rounded-xl text-blue-800 font-bold flex items-center">
+                                                            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path d="M9 4.804A7.993 7.993 0 002 12a8 8 0 008 8 8 8 0 008-8c0-4.42-3.58-8-8-8zm0 2c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6z" />
+                                                            </svg>
+                                                            {subjects.find((s: Subject) => s._id === watch(`subjects.${index}.subjectId`))?.title}
+                                                            <input type="hidden" {...register(`subjects.${index}.subjectId`)} />
+                                                        </div>
+                                                    ) : (
+                                                        <select
+                                                            {...register(`subjects.${index}.subjectId`, {
+                                                                required: 'Please select a subject',
+                                                            })}
+                                                            className={`w-full px-4 py-3 bg-white border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none cursor-pointer ${errors.subjects?.[index]?.subjectId
+                                                                ? 'border-red-500'
+                                                                : 'border-gray-200'
+                                                                }`}
+                                                            disabled={!courseId || subjects.length === 0}
                                                         >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M19 9l-7 7-7-7"
-                                                            />
-                                                        </svg>
-                                                    </div>
+                                                            <option value="">
+                                                                {!courseId
+                                                                    ? 'Select course first'
+                                                                    : subjects.length === 0
+                                                                        ? 'Loading...'
+                                                                        : 'Select Subject'}
+                                                            </option>
+                                                            {subjects.map((s: any) => (
+                                                                <option key={s._id} value={s._id}>
+                                                                    {s.title}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    )}
+                                                    {!watch(`subjects.${index}.subjectId`) && (
+                                                        <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                                                            <svg
+                                                                className="w-5 h-5 text-gray-400"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={2}
+                                                                    d="M19 9l-7 7-7-7"
+                                                                />
+                                                            </svg>
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 {errors.subjects?.[index]?.subjectId && (
                                                     <p className="text-sm text-red-600 flex items-center mt-1">

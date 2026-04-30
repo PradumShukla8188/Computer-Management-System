@@ -421,9 +421,24 @@ export default function StudentMarksListPage() {
                                                     <h3 className="text-xl font-bold text-white">
                                                         {group.studentName}
                                                     </h3>
-                                                    <p className="text-blue-100 text-sm">
-                                                        {stats.count} Subject{stats.count !== 1 ? 's' : ''}
-                                                    </p>
+                                                    <div className="flex items-center space-x-3">
+                                                        <p className="text-blue-100 text-sm">
+                                                            {stats.count} Subject{stats.count !== 1 ? 's' : ''}
+                                                        </p>
+                                                        <span className="w-1 h-1 bg-blue-300 rounded-full"></span>
+                                                        <button 
+                                                            onClick={() => {
+                                                                const url = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}public/marksheet/download?studentId=${group.studentId}`;
+                                                                window.open(url, '_blank');
+                                                            }}
+                                                            className="flex items-center space-x-1 text-white hover:text-blue-200 transition-colors bg-white/20 px-3 py-1 rounded-lg text-xs font-bold"
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                            </svg>
+                                                            <span>Download Marksheet</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="text-right">

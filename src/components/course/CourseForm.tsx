@@ -63,9 +63,8 @@ export default function CourseForm({
     mutationFn: (data: any) =>
       ApiHitter("POST", "ADD_COURSE", data, "", {
         showSuccess: true,
-        successMessage: `Course ${
-          isEditMode ? "updated" : "created"
-        } successfully`,
+        successMessage: `Course ${isEditMode ? "updated" : "created"
+          } successfully`,
         showError: true,
       }),
     onSuccess: () => {
@@ -123,11 +122,22 @@ export default function CourseForm({
     saveCourse(payload);
   };
 
+
+
   const steps = [
     { title: "Course Details", icon: <FileTextOutlined /> },
     { title: "Subjects", icon: <BookOutlined /> },
     { title: "Review", icon: <SaveOutlined /> },
   ];
+
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    const { durationInMonths, monthlyFees } = allValues;
+
+    if (durationInMonths && monthlyFees) {
+      const total = durationInMonths * monthlyFees;
+      form.setFieldsValue({ totalFees: total });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -151,7 +161,7 @@ export default function CourseForm({
         <Steps current={current} items={steps} />
       </Card>
 
-      <Form form={form} layout="vertical" preserve>
+      <Form form={form} layout="vertical" preserve onValuesChange={handleValuesChange}>
         {/* ===================== STEP 1 ===================== */}
         {current === 0 && (
           <Card title="Course Information">

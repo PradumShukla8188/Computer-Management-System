@@ -25,9 +25,9 @@ export interface addStudent {
 }
 
 export interface courseData {
-    _id: string;
-    name: string;
-    durationInMonths: number
+  _id: string;
+  name: string;
+  durationInMonths: number
 }
 
 export interface Student {
@@ -56,4 +56,5 @@ export interface Student {
   studentPhoto: string;
   status?: "Active" | "Inactive" | "Pending";
   enrollmentNo?: string;
+  rollNo?: string;
 }

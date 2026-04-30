@@ -882,6 +882,7 @@ interface CourseData {
   _id: string;
   name: string;
   durationInMonths: number;
+  totalFees: number;
 }
 
 interface FormData {
@@ -1030,6 +1031,7 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
       const course = courseData.find((c: CourseData) => c._id === courseId);
       if (course) {
         setValue('courseDuration', `${course.durationInMonths} months`);
+        setValue('totalFees', course.totalFees);
       }
     }
   }, [courseId, courseData, setValue]);
@@ -1226,15 +1228,23 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
         }
         
         .react-datepicker-popper {
-          z-index: 9999 !important;
+          z-index: 9999999 !important;
         }
         
+        .react-datepicker-portal {
+          position: fixed;
+          z-index: 9999999 !important;
+          top: 0;
+          left: 0;
+        }
+
         .react-datepicker {
           font-family: inherit;
-          border: 2px solid #e5e7eb;
+          border: 1px solid #e5e7eb;
           border-radius: 1rem;
-          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
           font-size: 0.875rem;
+          background-color: white;
         }
         
         .react-datepicker__header {
@@ -1455,8 +1465,8 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
           {/* Personal Details */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-8 py-4 sm:py-6">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
                   <span className="text-xl sm:text-2xl">👤</span>
@@ -1516,6 +1526,10 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
                           className={`custom-datepicker-input ${errors.dob ? 'error' : ''}`}
                           wrapperClassName="w-full"
                           popperPlacement="bottom-start"
+                          portalId="datepicker-portal"
+                          autoComplete="off"
+                          onFocus={(e) => (e.target as HTMLInputElement).readOnly = true}
+                          onBlur={(e) => (e.target as HTMLInputElement).readOnly = false}
                         />
                       )}
                     />
@@ -1697,8 +1711,8 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
           </div>
 
           {/* Contact Information */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-4 sm:px-8 py-4 sm:py-6">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-4 sm:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
                   <span className="text-xl sm:text-2xl">📞</span>
@@ -1799,8 +1813,8 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
           </div>
 
           {/* Address Details */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-4 sm:px-8 py-4 sm:py-6">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-4 sm:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
                   <span className="text-xl sm:text-2xl">📍</span>
@@ -1919,8 +1933,8 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
           </div>
 
           {/* Education Details */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-amber-600 to-orange-600 px-4 sm:px-8 py-4 sm:py-6">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100">
+            <div className="bg-gradient-to-r from-amber-600 to-orange-600 px-4 sm:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
                   <span className="text-xl sm:text-2xl">🎓</span>
@@ -1998,6 +2012,10 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
                           wrapperClassName="w-full"
                           disabled={isEditMode}
                           popperPlacement="bottom-start"
+                          portalId="datepicker-portal"
+                          autoComplete="off"
+                          onFocus={(e) => (e.target as HTMLInputElement).readOnly = true}
+                          onBlur={(e) => (e.target as HTMLInputElement).readOnly = false}
                         />
                       )}
                     />
@@ -2114,8 +2132,8 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
           </div>
 
           {/* Upload Documents */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-rose-600 to-red-600 px-4 sm:px-8 py-4 sm:py-6">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100">
+            <div className="bg-gradient-to-r from-rose-600 to-red-600 px-4 sm:px-8 py-4 sm:py-6 rounded-t-2xl sm:rounded-t-3xl">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
                   <span className="text-xl sm:text-2xl">📄</span>
@@ -2351,6 +2369,7 @@ export default function StudentForm({ mode, studentId, initialData }: StudentFor
           </div>
         </form>
       </div>
+      <div id="datepicker-portal" />
     </div>
   );
 }

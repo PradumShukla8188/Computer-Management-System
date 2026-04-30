@@ -1586,6 +1586,7 @@ export default function AddStudent() {
   });
 
   const [courseDuration, setCourseDuration] = useState("");
+  const [totalFees, setTotalFees] = useState("");
 
   // Get courses
   const { data: courseData = [], isLoading: coursesLoading } = useQuery({
@@ -1693,6 +1694,15 @@ export default function AddStudent() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Sync specific states for auto-filled fields
+    if (name === "totalFees") {
+      setTotalFees(value);
+    }
+    if (name === "courseDuration") {
+      setCourseDuration(value);
+    }
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -1700,16 +1710,32 @@ export default function AddStudent() {
 
   const handleCourseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const courseId = e.target.value;
-    setFormData((prev) => ({ ...prev, selectedCourse: courseId }));
-
     const selected = courseData.find((c: CourseData) => c._id === courseId);
+
     if (selected) {
-      setCourseDuration(`${selected.durationInMonths} months`);
-      setFormData((prev) => ({ ...prev, totalFees: selected.totalFees.toString() }));
+      const fees = selected.totalFees.toString();
+      const duration = `${selected.durationInMonths} months`;
+
+      setCourseDuration(duration);
+      setTotalFees(fees);
+
+      setFormData((prev) => ({
+        ...prev,
+        selectedCourse: courseId,
+        totalFees: fees,
+        courseDuration: duration,
+      }));
     } else {
       setCourseDuration("");
-      setFormData((prev) => ({ ...prev, totalFees: "" }));
+      setTotalFees("");
+      setFormData((prev) => ({
+        ...prev,
+        selectedCourse: courseId,
+        totalFees: "",
+        courseDuration: "",
+      }));
     }
+
     if (errors.selectedCourse) {
       setErrors((prev) => ({ ...prev, selectedCourse: "" }));
     }
@@ -1759,6 +1785,7 @@ export default function AddStudent() {
     setFiles({ studentPhoto: null, educationProof: null, identityProof: null });
     setPreviews({ studentPhoto: null, educationProof: null, identityProof: null });
     setCourseDuration("");
+    setTotalFees("");
     setErrors({});
   };
 
@@ -2284,7 +2311,7 @@ export default function AddStudent() {
                   type="number"
                   placeholder="Auto-filled from course"
                   required
-                  value={formData.totalFees || ""}
+                  value={totalFees || ""}
                 />
                 <FormSelect
                   label="Exam Mode"

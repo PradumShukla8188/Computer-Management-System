@@ -52,6 +52,9 @@ export const apiEndPoints = {
   GET_CMS_PAGE_BY_ID: '/cms-pages',
   UPDATE_CMS_PAGE: '/cms-pages',
   DELETE_CMS_PAGE: '/cms-pages',
+  GET_ELIGIBLE_MARKSHEET_STUDENTS: '/marks/eligible-students',
+  ISSUE_MARKSHEET: '/marksheet/issue',
+  GET_ISSUED_MARKSHEETS: '/marksheet/issued',
 
 };
 

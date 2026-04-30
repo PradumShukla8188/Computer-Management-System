@@ -113,6 +113,8 @@ const navItems: NavItem[] = [
       { name: "Designer", path: "/certificate/designer", pro: false },
       { name: "Issue Certificate", path: "/certificate/issue", pro: false },
       { name: "Issued List", path: "/certificate/list", pro: false },
+      { name: "Issue Marksheet", path: "/marksheet/issue", pro: false },
+      { name: "Issued Marksheet List", path: "/marksheet/list", pro: false },
     ],
   }
 ];

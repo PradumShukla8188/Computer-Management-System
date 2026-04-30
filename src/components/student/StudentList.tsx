@@ -3,27 +3,27 @@
 import { Student } from "@/interfaces/addStudent";
 import { ApiHitter } from "@/lib/axiosApi/apiHitter";
 import {
-    DeleteOutlined,
-    DownloadOutlined,
-    EditOutlined,
-    EyeOutlined,
-    MoreOutlined,
-    PlusOutlined,
-    SearchOutlined,
-    UserOutlined,
+  DeleteOutlined,
+  DownloadOutlined,
+  EditOutlined,
+  EyeOutlined,
+  MoreOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import {
-    Avatar,
-    Button,
-    Card,
-    Dropdown,
-    Input,
-    Select,
-    Space,
-    Table,
-    Tag,
-    Tooltip,
+  Avatar,
+  Button,
+  Card,
+  Dropdown,
+  Input,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
@@ -42,26 +42,27 @@ export default function StudentList() {
 
 
   // Fetch students from API (falls back to static data)
-const { data: studentsResponse, isLoading } = useQuery({
-  queryKey: ["students", page, pageSize],
-  queryFn: async () => {
-    const response = await ApiHitter(
-      "GET",
-      "GET_STUDENT_LIST",
-      {},
-      `?page=${page}&limit=${pageSize}`,
-      {
-        showError: false,
-        showSuccess: false,
-      }
-    );
-    return response;
-  },
-  // keepPreviousData: true,
-}); 
+  const { data: studentsResponse, isLoading } = useQuery({
+    queryKey: ["students", page, pageSize],
+    queryFn: async () => {
+      const response = await ApiHitter(
+        "GET",
+        "GET_STUDENT_LIST",
+        {},
+        `?page=${page}&limit=${pageSize}`,
+        {
+          showError: false,
+          showSuccess: false,
+        }
+      );
+      return response;
+    },
+    // keepPreviousData: true,
+  });
 
-const studentsData = studentsResponse?.data || [];
-const totalStudents = studentsResponse?.total || 0;
+  const studentsData = studentsResponse?.data || [];
+  console.log("studentsData", studentsData);
+  const totalStudents = studentsResponse?.total || 0;
 
 
   // Filter students based on search and filters
@@ -97,7 +98,7 @@ const totalStudents = studentsResponse?.total || 0;
   // Get unique courses for filter
   const uniqueCourses = useMemo((): string[] => {
     if (!Array.isArray(studentsData)) return [];
-    
+
     const courses = new Set(
       studentsData.map((s: Student) => s.courseName).filter(Boolean) as string[]
     );
@@ -156,7 +157,7 @@ const totalStudents = studentsResponse?.total || 0;
         <div className="flex items-center gap-3">
           <Avatar
             size={44}
-            src={record.studentPhoto}
+            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}uploads/${record.studentPhoto}`}
             icon={<UserOutlined />}
             className="border-2 border-gray-100"
           />
@@ -165,7 +166,7 @@ const totalStudents = studentsResponse?.total || 0;
               {record.name}
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              {record.enrollmentNo}
+              {record.rollNo}
             </div>
           </div>
         </div>
