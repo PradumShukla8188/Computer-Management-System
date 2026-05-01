@@ -1,66 +1,11 @@
-import type { Metadata } from "next";
-import dynamic from "next/dynamic";
-import { CustomLoader } from "@/components/common";
-
-const EcommerceMetrics = dynamic(
-  () => import("@/components/ecommerce/EcommerceMetrics").then(mod => ({ default: mod.EcommerceMetrics })),
-  { ssr: true, loading: () => <CustomLoader height="200px" /> }
-);
-
-const MonthlySalesChart = dynamic(
-  () => import("@/components/ecommerce/MonthlySalesChart"),
-  { ssr: true, loading: () => <CustomLoader height="400px" /> }
-);
-
-const StatisticsChart = dynamic(
-  () => import("@/components/ecommerce/StatisticsChart"),
-  { ssr: true, loading: () => <CustomLoader height="400px" /> }
-);
-
-// import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
-// import AddStudent from "@/components/student/addStudent";
-// import RecentOrders from "@/components/ecommerce/RecentOrders";
-// import DemographicCard from "@/components/ecommerce/DemographicCard";
+import type { Metadata } from 'next';
+import CMSDashboard from '@/components/ecommerce/CMSDashboard';
 
 export const metadata: Metadata = {
-  title:
-    "Computer Management System",
-  description: "This is Computer Management System",
+  title: 'Dashboard | Computer Management System',
+  description: 'SST Computer & Well Knowledge Institute — Admin Dashboard',
 };
 
-export default function Ecommerce() {
-  return (
-    <div className="grid grid-cols-12 gap-4 md:gap-6">
-
-      <div className="col-span-12">
-        <EcommerceMetrics />
-      </div>
-      <div className="col-span-12">
-        <MonthlySalesChart />
-      </div>
-      <div className="col-span-12">
-        <StatisticsChart />
-      </div>
-      {/* <div className="col-span-12 space-y-6 xl:col-span-7">
-        <EcommerceMetrics />
-
-        <MonthlySalesChart />
-      </div> */}
-      {/* <div className="col-span-12 xl:col-span-5">
-        <MonthlyTarget />
-      </div> */}
-
-      {/* <div className="col-span-12">
-        <StatisticsChart />
-      </div> */}
-
-      {/* <div className="col-span-12 xl:col-span-5">
-        <DemographicCard />
-      </div> */}
-
-      {/* <div className="col-span-12 xl:col-span-7">
-        <RecentOrders />
-      </div> */}
-    </div>
-  );
+export default function DashboardPage() {
+  return <CMSDashboard />;
 }

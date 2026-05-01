@@ -37,7 +37,7 @@ export default function MarksheetListPage() {
         const totalObtained = marks.reduce((sum: number, m: any) => sum + m.obtainedMarks, 0);
         const totalMax = marks.reduce((sum: number, m: any) => sum + m.totalMarks, 0);
         const percentage = totalMax > 0 ? ((totalObtained / totalMax) * 100).toFixed(2) : "0";
-        
+
         data.push({
           key: `${student._id}-${examName}`,
           student,
@@ -56,7 +56,7 @@ export default function MarksheetListPage() {
     return data;
   };
 
-  const filteredData = flattenData().filter(item => 
+  const filteredData = flattenData().filter(item =>
     item.studentName.toLowerCase().includes(searchText.toLowerCase()) ||
     item.rollNo.toLowerCase().includes(searchText.toLowerCase()) ||
     item.course.toLowerCase().includes(searchText.toLowerCase())
@@ -139,9 +139,9 @@ export default function MarksheetListPage() {
       render: (record: any) => (
         <Space>
           <Button icon={<EyeOutlined />} onClick={() => handlePreview(record)}>Preview</Button>
-          <Button 
-            type="primary" 
-            icon={<DownloadOutlined />} 
+          <Button
+            type="primary"
+            icon={<DownloadOutlined />}
             onClick={() => downloadIssuedMarksheetPdf(record.student._id, record.examName, `marksheet-${record.studentName}.pdf`)}
           >
             Download
@@ -153,7 +153,7 @@ export default function MarksheetListPage() {
 
   return (
     <div className="p-6">
-      <Card 
+      <Card
         title={<Space><FileTextOutlined className="text-blue-600" /> Issued Marksheet List</Space>}
         className="shadow-sm"
         extra={
@@ -165,9 +165,9 @@ export default function MarksheetListPage() {
           />
         }
       >
-        <Table 
-          columns={columns} 
-          dataSource={filteredData} 
+        <Table
+          columns={columns}
+          dataSource={filteredData}
           loading={isLoading}
           pagination={{ pageSize: 10 }}
         />
@@ -179,9 +179,9 @@ export default function MarksheetListPage() {
         onCancel={() => setPreviewVisible(false)}
         footer={[
           <Button key="close" onClick={() => setPreviewVisible(false)}>Close</Button>,
-          <Button 
-            key="download" 
-            type="primary" 
+          <Button
+            key="download"
+            type="primary"
             icon={<DownloadOutlined />}
             onClick={() => {
               if (currentPreview) {

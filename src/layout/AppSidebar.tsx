@@ -110,10 +110,10 @@ const navItems: NavItem[] = [
     icon: <FileProtectOutlined size={20} />,
     path: "/certificate/list",
     subItems: [
-      { name: "Designer", path: "/certificate/designer", pro: false },
+      // { name: "Designer", path: "/certificate/designer", pro: false },
       { name: "Issue Certificate", path: "/certificate/issue", pro: false },
       { name: "Issued List", path: "/certificate/list", pro: false },
-      { name: "Issue Marksheet", path: "/marksheet/issue", pro: false },
+      // { name: "Issue Marksheet", path: "/marksheet/issue", pro: false },
       { name: "Issued Marksheet List", path: "/marksheet/list", pro: false },
     ],
   }
@@ -379,10 +379,10 @@ const AppSidebar: React.FC = () => {
               <>
                 <Image
                   className="dark:hidden transition-all duration-300"
-                  src="/images/logo/SST-logo.png"
+                  src="/images/logo/s-t.png"
                   alt="Logo"
-                  width={120}
-                  height={40}
+                  width={180}
+                  height={80}
                   unoptimized
                 />
                 <Image
