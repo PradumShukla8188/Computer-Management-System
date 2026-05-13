@@ -90,9 +90,8 @@ export default function IssueCertificatePage() {
     if (percent >= 80) return "A";
     if (percent >= 70) return "B";
     if (percent >= 60) return "C";
-    if (percent >= 50) return "D";
-    if (percent < 40) return "Fail";
-    return "Fail"; // Default for 40-49 if not specified, or just let user override
+    if (percent >= 40) return "D";
+    return "Fail";
   };
 
   const handleFormChange = (changedValues: any, allValues: any) => {

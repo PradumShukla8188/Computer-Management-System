@@ -86,21 +86,42 @@ export default function IssuedCertificateListPage() {
       const elementToCapture = captureRef.current || certificateRef.current;
       if (isPreviewOpen && elementToCapture) {
         const canvas = await html2canvas(elementToCapture, {
-          scale: 3, // High resolution
+          scale: 4, // Ultra high resolution
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
           logging: false,
         });
 
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/png', 1.0);
         const pdf = new jsPDF({
-          orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
-          unit: 'px',
-          format: [canvas.width, canvas.height],
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
         });
 
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        
+        // Calculate scaling to fit A4 perfectly while maintaining aspect ratio
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        const ratio = imgWidth / imgHeight;
+        
+        // If the captured image is taller than A4, fit to height, otherwise fit to width
+        let finalWidth = pdfWidth;
+        let finalHeight = pdfWidth / ratio;
+        
+        if (finalHeight > pdfHeight) {
+          finalHeight = pdfHeight;
+          finalWidth = pdfHeight * ratio;
+        }
+
+        // Center the image on the A4 page
+        const xOffset = (pdfWidth - finalWidth) / 2;
+        const yOffset = (pdfHeight - finalHeight) / 2;
+
+        pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight, undefined, 'FAST');
         pdf.save(`certificate-${cert.certificateNumber || cert._id}.pdf`);
         return;
       }
@@ -187,7 +208,7 @@ export default function IssuedCertificateListPage() {
       render: (_: any, record: any) => (
         <Space size="middle">
           <Button icon={<EyeOutlined />} onClick={() => openPreview(record)} title="View Preview" />
-          <Button
+          {/* <Button
             icon={<DownloadOutlined />}
             loading={downloadingId === record._id}
             onClick={() => handleDownload(record)}
@@ -197,7 +218,7 @@ export default function IssuedCertificateListPage() {
             icon={<PrinterOutlined />}
             onClick={() => handlePrint(record)}
             title="Direct Print"
-          />
+          /> */}
         </Space>
       ),
     },
@@ -219,14 +240,14 @@ export default function IssuedCertificateListPage() {
         width={1100}
         footer={[
           <Button key="close" onClick={() => setIsPreviewOpen(false)}>Close</Button>,
-          <Button
-            key="print"
-            icon={<PrinterOutlined />}
-            disabled={!viewingCert}
-            onClick={() => viewingCert && handlePrint(viewingCert)}
-          >
-            Print
-          </Button>,
+          // <Button
+          //   key="print"
+          //   icon={<PrinterOutlined />}
+          //   disabled={!viewingCert}
+          //   onClick={() => viewingCert && handlePrint(viewingCert)}
+          // >
+          //   Print
+          // </Button>,
           <Button
             key="download"
             type="primary"
@@ -241,8 +262,8 @@ export default function IssuedCertificateListPage() {
         {viewingCert && (
           <div className="p-4 flex justify-center overflow-auto min-h-[600px] rounded-2xl" style={{ backgroundColor: '#f1f5f9' }}>
             {/* Hidden full-scale container for high quality capture */}
-            <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', pointerEvents: 'none' }}>
-              <div ref={captureRef}>
+            <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', pointerEvents: 'none', background: 'white' }}>
+              <div ref={captureRef} style={{ padding: '40px', background: 'white' }}>
                 <ModernCertificate
                   certificateNo={buildViewerData(viewingCert).certificate_no}
                   enrollmentNo={buildViewerData(viewingCert).enrollment_no}

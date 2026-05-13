@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { usePublicSearchCertificates } from "../../(admin)/(private)/certificate/hooks/useCertificateApi";
 import dayjs from "dayjs";
 import SmallCertificate from "@/components/certificate/SmallCertificate";
+import ModernMarksheet from "@/components/marksheet/ModernMarksheet";
 
 function VerifyCertificateContent() {
   const searchParams = useSearchParams();
@@ -21,12 +22,18 @@ function VerifyCertificateContent() {
   const { data: results = [], isLoading, isFetched } = usePublicSearchCertificates(searchCriteria);
 
   useEffect(() => {
+    const enrollmentParam = searchParams.get("enrollment") || searchParams.get("rollNo") || searchParams.get("roll");
+    
     if (certNoParam) {
       const criteria = { search: certNoParam, searchType: "certificateNo" };
       setSearchCriteria(criteria);
       setFormData(prev => ({ ...prev, search: certNoParam, searchType: "certificateNo" }));
+    } else if (enrollmentParam) {
+      const criteria = { search: enrollmentParam, searchType: "enrollment" };
+      setSearchCriteria(criteria);
+      setFormData(prev => ({ ...prev, search: enrollmentParam, searchType: "enrollment" }));
     }
-  }, [certNoParam]);
+  }, [certNoParam, searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,9 +62,9 @@ function VerifyCertificateContent() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04M12 21.482a11.955 11.955 0 01-8.618-3.04M12 21.482a11.955 11.955 0 008.618-3.04M12 21.482V11.177" />
             </svg>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">Certificate Verification</h1>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">Document Verification</h1>
           <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-            Verify the authenticity of student certificates issued by SST COMPUTER & WELL KNOWLEDGE INSTITUTE.
+            Verify the authenticity of student certificates and marksheets issued by SST COMPUTER & WELL KNOWLEDGE INSTITUTE.
           </p>
         </div>
 
@@ -144,7 +151,7 @@ function VerifyCertificateContent() {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    Verify Certificate
+                    Verify Document
                   </>
                 )}
               </button>
@@ -165,8 +172,8 @@ function VerifyCertificateContent() {
         ) : isFetched && results.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-slate-200">
             <img src="https://illustrations.popsy.co/blue/abstract-art-6.svg" alt="Not found" className="w-48 mx-auto mb-6" />
-            <h3 className="text-xl font-bold text-slate-900 mb-2">No Certificate Found</h3>
-            <p className="text-slate-500 max-w-sm mx-auto">We couldn't find any student record matching the details provided. Please check the inputs and try again.</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">No Document Found</h3>
+            <p className="text-slate-500 max-w-sm mx-auto">We couldn't find any student record or document matching the details provided. Please check the inputs and try again.</p>
           </div>
         ) : results.length > 0 ? (
           <div className="space-y-12 pb-20">
@@ -181,7 +188,7 @@ function VerifyCertificateContent() {
                   </div>
                   <div>
                     <h4 className="text-green-800 font-bold text-lg">Verified Successfully</h4>
-                    <p className="text-green-700 text-sm">This is an authentic certificate issued by our institute.</p>
+                    <p className="text-green-700 text-sm">This is an authentic document issued by our institute.</p>
                   </div>
                 </div>
 
@@ -260,29 +267,59 @@ function VerifyCertificateContent() {
                    </div>
                 </div>
 
-                {/* The Certificate Display */}
-                <div className="mt-12 w-full overflow-x-auto pb-8 flex justify-center">
-                   <div className="min-w-[700px] flex justify-center">
-                      {item.certificate && (
-                        <SmallCertificate
-                          certificateNo={item.certificate.certificateNumber}
-                          enrollmentNo={item.student.rollNo}
-                          studentName={item.student.name}
-                          fatherName={item.student.fatherName}
-                          motherName={item.student.motherName}
-                          dob={dayjs(item.student.dob).format("DD-MM-YYYY")}
-                          courseName={item.student.courseId?.name || item.student.courseName}
-                          securedPercent={item.student.securedPercent}
-                          grade={item.certificate.grade || item.student.grade}
-                          session={item.student.session}
-                          centerCode={item.student.centerCode}
-                          centerName="SST COMPUTER & WELL KNOWLEDGE INSTITUTE"
-                          issueDate={dayjs(item.certificate.issuedAt).format("DD-MM-YYYY")}
-                          studentPhotoUrl={item.student.studentPhoto}
-                          qrCodeUrl={item.certificate.data?.qr_code}
-                        />
-                      )}
-                   </div>
+                {/* The Document Display */}
+                <div className="mt-12 w-full space-y-16">
+                   {item.certificate && (
+                     <div className="w-full overflow-x-auto pb-8 flex flex-col items-center">
+                        <h5 className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em] mb-6">Original Certificate</h5>
+                        <div className="min-w-[700px]">
+                          <SmallCertificate
+                            certificateNo={item.certificate.certificateNumber}
+                            enrollmentNo={item.student.rollNo}
+                            studentName={item.student.name}
+                            fatherName={item.student.fatherName}
+                            motherName={item.student.motherName}
+                            dob={dayjs(item.student.dob).format("DD-MM-YYYY")}
+                            courseName={item.student.courseId?.name || item.student.courseName}
+                            securedPercent={item.student.securedPercent}
+                            grade={item.certificate.grade || item.student.grade}
+                            session={item.student.session}
+                            centerCode={item.student.centerCode}
+                            centerName="SST COMPUTER & WELL KNOWLEDGE INSTITUTE"
+                            issueDate={dayjs(item.certificate.issuedAt).format("DD-MM-YYYY")}
+                            studentPhotoUrl={item.student.studentPhoto}
+                            qrCodeUrl={item.certificate.data?.qr_code}
+                          />
+                        </div>
+                     </div>
+                   )}
+
+                   {item.marksheet && (
+                     <div className="w-full overflow-x-auto pb-8 flex flex-col items-center">
+                        <h5 className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em] mb-6">Original Marksheet</h5>
+                        <div className="min-w-[850px]">
+                          <ModernMarksheet
+                            marksheetNo={item.marksheet.rollNumber}
+                            rollNo={item.student.rollNo}
+                            studentName={item.student.name}
+                            fatherName={item.student.fatherName}
+                            motherName={item.student.motherName}
+                            dob={dayjs(item.student.dob).format("DD-MM-YYYY")}
+                            courseName={item.student.courseId?.name || item.student.courseName}
+                            session={item.student.session}
+                            centerCode={item.student.centerCode}
+                            issueDate={item.marksheet.issueDate}
+                            studentPhotoUrl={item.student.studentPhoto}
+                            subjects={item.marksheet.subjects}
+                            totalObtained={item.marksheet.totalObtained}
+                            totalMaximum={item.marksheet.totalMax}
+                            percentage={item.marksheet.percentage}
+                            grade={item.marksheet.grade}
+                            result={item.marksheet.totalObtained >= (item.marksheet.totalMax * 0.4) ? "PASSED" : "FAILED"}
+                          />
+                        </div>
+                     </div>
+                   )}
                 </div>
               </div>
             ))}

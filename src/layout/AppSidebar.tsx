@@ -387,7 +387,7 @@ const AppSidebar: React.FC = () => {
                 />
                 <Image
                   className="hidden dark:block transition-all duration-300"
-                  src="/images/logo/logo-dark.svg"
+                  src="/images/logo/s-t.png"
                   alt="Logo"
                   width={120}
                   height={40}

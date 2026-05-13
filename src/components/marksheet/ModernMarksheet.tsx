@@ -169,7 +169,7 @@ export default function ModernMarksheet({
                   {qrCodeUrl ? (
                     <img src={qrCodeUrl} alt="QR Code" width={100} height={100} crossOrigin="anonymous" />
                   ) : (
-                    <QRCodeSVG value={`${typeof window !== 'undefined' ? window.location.origin : ''}/verify-marksheet?rollNo=${rollNo}`} size={100} />
+                    <QRCodeSVG value={`${window.location.origin}/verify-certificate?certNo=${rollNo}`} size={100} />
                   )}
                 </div>
               </div>
