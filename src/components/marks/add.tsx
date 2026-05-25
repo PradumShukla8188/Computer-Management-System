@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type UIEvent } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiHitter } from '@/lib/axiosApi/apiHitter';
 import { toast } from '@/lib/toast';
+
+const STUDENTS_PAGE_SIZE = 10;
 
 type SubjectMark = {
     subjectId: string;
@@ -28,6 +30,7 @@ type Subject = {
 export default function AddStudentMarksPage() {
     const queryClient = useQueryClient();
     const [subjects, setSubjects] = useState<Subject[]>([]);
+    const [isStudentDropdownOpen, setIsStudentDropdownOpen] = useState(false);
 
     const {
         register,
@@ -53,17 +56,42 @@ export default function AddStudentMarksPage() {
     const courseId = watch('courseId');
     const studentId = watch('studentId');
 
-    // Fetch Students
-    const { data: students = [], isLoading: studentsLoading } = useQuery({
-        queryKey: ['students'],
-        queryFn: async () => {
-            const res = await ApiHitter('GET', 'GET_STUDENT_LIST', {}, '', {
+    // Fetch Students with pagination for the scrollable dropdown
+    const {
+        data: studentsPages,
+        isLoading: studentsLoading,
+        isFetchingNextPage: studentsFetchingNextPage,
+        hasNextPage: hasMoreStudents,
+        fetchNextPage: fetchNextStudentsPage,
+    } = useInfiniteQuery({
+        queryKey: ['students-for-marks'],
+        initialPageParam: 1,
+        queryFn: async ({ pageParam }) => {
+            const res = await ApiHitter('GET', 'GET_STUDENT_LIST', {}, `?page=${pageParam}&limit=${STUDENTS_PAGE_SIZE}`, {
                 showError: true,
                 showSuccess: false,
             });
-            return res?.data || [];
+            return res || { data: [], page: pageParam, totalPages: 1 };
+        },
+        getNextPageParam: (lastPage) => {
+            const currentPage = Number(lastPage?.page || 1);
+            const totalPages = Number(lastPage?.totalPages || 1);
+
+            return currentPage < totalPages ? currentPage + 1 : undefined;
         },
     });
+
+    const students = studentsPages?.pages.flatMap((page: any) => page?.data || []) || [];
+    const selectedStudent = students.find((s: any) => s._id === studentId);
+
+    const handleStudentListScroll = (event: UIEvent<HTMLDivElement>) => {
+        const target = event.currentTarget;
+        const isNearBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 24;
+
+        if (isNearBottom && hasMoreStudents && !studentsFetchingNextPage) {
+            fetchNextStudentsPage();
+        }
+    };
 
     // Fetch Courses
     const { data: courses = [], isLoading: coursesLoading } = useQuery({
@@ -263,25 +291,29 @@ export default function AddStudentMarksPage() {
                                         <span className="text-red-500 ml-1">*</span>
                                     </label>
                                     <div className="relative">
-                                        <select
+                                        <input
+                                            type="hidden"
                                             {...register('studentId', {
                                                 required: 'Please select a student',
                                             })}
+                                        />
+                                        <button
+                                            type="button"
                                             className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none cursor-pointer ${errors.studentId && touchedFields.studentId
                                                 ? 'border-red-500'
                                                 : 'border-gray-200'
-                                                }`}
+                                                } text-left`}
                                             disabled={studentsLoading}
+                                            onClick={() => setIsStudentDropdownOpen((open) => !open)}
                                         >
-                                            <option value="">
-                                                {studentsLoading ? 'Loading...' : 'Select Student'}
-                                            </option>
-                                            {students.map((s: any) => (
-                                                <option key={s._id} value={s._id}>
-                                                    {s.name}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            <span className={selectedStudent ? 'text-gray-900' : 'text-gray-500'}>
+                                                {studentsLoading
+                                                    ? 'Loading...'
+                                                    : selectedStudent
+                                                        ? `${selectedStudent.name}${selectedStudent.rollNo ? ` (${selectedStudent.rollNo})` : ''}`
+                                                        : 'Select Student'}
+                                            </span>
+                                        </button>
                                         <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
                                             <svg
                                                 className="w-5 h-5 text-gray-400"
@@ -297,6 +329,53 @@ export default function AddStudentMarksPage() {
                                                 />
                                             </svg>
                                         </div>
+                                        {isStudentDropdownOpen && !studentsLoading && (
+                                            <div
+                                                className="absolute z-30 mt-2 w-full max-h-64 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl"
+                                                onScroll={handleStudentListScroll}
+                                            >
+                                                {students.length === 0 ? (
+                                                    <div className="px-4 py-3 text-sm text-gray-500">
+                                                        No students found
+                                                    </div>
+                                                ) : (
+                                                    students.map((s: any) => (
+                                                        <button
+                                                            key={s._id}
+                                                            type="button"
+                                                            className={`w-full px-4 py-3 text-left text-sm hover:bg-blue-50 ${studentId === s._id
+                                                                ? 'bg-blue-100 text-blue-800 font-semibold'
+                                                                : 'text-gray-700'
+                                                                }`}
+                                                            onClick={() => {
+                                                                setValue('studentId', s._id, {
+                                                                    shouldDirty: true,
+                                                                    shouldTouch: true,
+                                                                    shouldValidate: true,
+                                                                });
+                                                                setIsStudentDropdownOpen(false);
+                                                            }}
+                                                        >
+                                                            <span className="block truncate">
+                                                                {s.name}{s.rollNo ? ` (${s.rollNo})` : ''}
+                                                            </span>
+                                                        </button>
+                                                    ))
+                                                )}
+
+                                                {studentsFetchingNextPage && (
+                                                    <div className="px-4 py-3 text-center text-sm text-gray-500">
+                                                        Loading more students...
+                                                    </div>
+                                                )}
+
+                                                {!hasMoreStudents && students.length > 0 && (
+                                                    <div className="px-4 py-2 text-center text-xs text-gray-400">
+                                                        All students loaded
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                     {touchedFields.studentId && errors.studentId && (
                                         <p className="text-sm text-red-600 flex items-center mt-1">
